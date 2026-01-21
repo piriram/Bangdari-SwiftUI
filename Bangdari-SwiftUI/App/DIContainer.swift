@@ -9,13 +9,12 @@ final class DIContainer {
 
     // MARK: - Repositories
 
-    // TODO: Repository 구현 후 추가
-    // var estateRepository: EstateRepository {
-    //     switch AppEnvironment.current {
-    //     case .live:
-    //         return RemoteEstateRepository()
-    //     case .mock:
-    //         return MockEstateRepository()
-    //     }
-    // }
+    var authRepository: AuthRepository {
+        switch AppEnvironment.current {
+        case .live:
+            return RemoteAuthRepository()
+        case .mock:
+            return RemoteAuthRepository() // TODO: MockAuthRepository
+        }
+    }
 }
