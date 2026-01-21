@@ -63,6 +63,120 @@ struct EstatePaginationResponse: Decodable {
     }
 }
 
+// MARK: - Estate Detail Response
+
+struct EstateDetailResponse: Decodable {
+    let estate_id: String
+    let category: String
+    let title: String
+    let deposit: Int
+    let monthly_rent: Int
+    let reservation_price: Int
+    let area: Double
+    let floors: String
+    let options: EstateOptions
+    let geolocation: Geolocation
+    let files: [String]
+    let creator: UserInfo
+    let is_liked: Bool
+    let is_reserved: Bool
+    let is_safe_estate: Bool
+    let is_recommended: Bool
+    let comments: [EstateComment]
+    let createdAt: String
+    let updatedAt: String
+
+    private enum CodingKeys: String, CodingKey {
+        case estate_id, category, title, deposit, monthly_rent, reservation_price
+        case area, floors, options, geolocation, files, creator
+        case is_liked, is_reserved, is_safe_estate, is_recommended
+        case comments, createdAt, updatedAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        estate_id = try container.decode(String.self, forKey: .estate_id)
+        category = try container.decode(String.self, forKey: .category)
+        title = try container.decode(String.self, forKey: .title)
+        deposit = try container.decode(Int.self, forKey: .deposit)
+        monthly_rent = try container.decode(Int.self, forKey: .monthly_rent)
+        reservation_price = try container.decode(Int.self, forKey: .reservation_price)
+        area = try container.decode(Double.self, forKey: .area)
+        floors = try container.decode(String.self, forKey: .floors)
+        options = try container.decode(EstateOptions.self, forKey: .options)
+        geolocation = try container.decode(Geolocation.self, forKey: .geolocation)
+        files = try container.decodeIfPresent([String].self, forKey: .files) ?? []
+        creator = try container.decode(UserInfo.self, forKey: .creator)
+        is_liked = try container.decode(Bool.self, forKey: .is_liked)
+        is_reserved = try container.decode(Bool.self, forKey: .is_reserved)
+        is_safe_estate = try container.decode(Bool.self, forKey: .is_safe_estate)
+        is_recommended = try container.decode(Bool.self, forKey: .is_recommended)
+        comments = try container.decodeIfPresent([EstateComment].self, forKey: .comments) ?? []
+        createdAt = try container.decode(String.self, forKey: .createdAt)
+        updatedAt = try container.decode(String.self, forKey: .updatedAt)
+    }
+}
+
+// MARK: - Estate Options
+
+struct EstateOptions: Decodable {
+    let option1: Bool
+    let option2: Bool
+    let option3: Bool
+    let option4: Bool
+    let option5: Bool
+    let option6: Bool
+    let option7: Bool
+    let option8: Bool
+    let option9: Bool
+    let option10: Bool
+
+    // 옵션 이름 매핑
+    static let optionNames = [
+        "에어컨", "냉장고", "세탁기", "가스레인지", "인덕션",
+        "전자레인지", "책상", "침대", "옷장", "신발장"
+    ]
+
+    var enabledOptions: [String] {
+        var result: [String] = []
+        let values = [option1, option2, option3, option4, option5,
+                      option6, option7, option8, option9, option10]
+        for (index, enabled) in values.enumerated() where enabled {
+            result.append(Self.optionNames[index])
+        }
+        return result
+    }
+}
+
+// MARK: - User Info
+
+struct UserInfo: Decodable {
+    let user_id: String
+    let nick: String
+    let profileImage: String?
+}
+
+// MARK: - Estate Comment
+
+struct EstateComment: Decodable {
+    let comment_id: String
+    let content: String
+    let creator: UserInfo
+    let createdAt: String
+    let updatedAt: String
+    let replies: [EstateComment]?
+}
+
+// MARK: - Like Request/Response
+
+struct EstateLikeRequest: Encodable {
+    let like_status: Bool
+}
+
+struct EstateLikeResponse: Decodable {
+    let like_status: Bool
+}
+
 // MARK: - Estate Topic
 
 struct EstateTopic: Decodable {

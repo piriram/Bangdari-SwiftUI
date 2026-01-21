@@ -53,4 +53,18 @@ final class RemoteEstateRepository: EstateRepository {
         let endpoint = APIEndpoint.myLikedEstates(next: next, limit: limit, category: category)
         return try await network.request(endpoint, type: EstatePaginationResponse.self)
     }
+
+    // MARK: - Detail
+
+    func fetchEstateDetail(estateId: String) async throws -> EstateDetailResponse {
+        let endpoint = APIEndpoint.estateDetail(estateId: estateId)
+        return try await network.request(endpoint, type: EstateDetailResponse.self)
+    }
+
+    func toggleLike(estateId: String, like: Bool) async throws -> Bool {
+        let endpoint = APIEndpoint.estateLike(estateId: estateId)
+        let body = EstateLikeRequest(like_status: like)
+        let response = try await network.request(endpoint, body: body, type: EstateLikeResponse.self)
+        return response.like_status
+    }
 }

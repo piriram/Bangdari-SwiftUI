@@ -22,4 +22,8 @@ protocol EstateRepository {
         limit: Int?,
         category: String?
     ) async throws -> EstatePaginationResponse
+
+    // Detail
+    func fetchEstateDetail(estateId: String) async throws -> EstateDetailResponse
+    func toggleLike(estateId: String, like: Bool) async throws -> Bool
 }

@@ -37,16 +37,19 @@ struct EstateListView: View {
         ScrollView {
             LazyVStack(spacing: 16) {
                 ForEach(intent.state.estates, id: \.estate_id) { estate in
-                    EstateRowView(estate: estate)
-                        .onAppear {
-                            // 무한 스크롤: 마지막 아이템 근처에서 추가 로딩
-                            if case .liked = mode,
-                               estate.estate_id == intent.state.estates.last?.estate_id {
-                                Task {
-                                    await intent.loadMoreLikedEstates()
-                                }
+                    NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
+                        EstateRowView(estate: estate)
+                    }
+                    .buttonStyle(.plain)
+                    .onAppear {
+                        // 무한 스크롤: 마지막 아이템 근처에서 추가 로딩
+                        if case .liked = mode,
+                           estate.estate_id == intent.state.estates.last?.estate_id {
+                            Task {
+                                await intent.loadMoreLikedEstates()
                             }
                         }
+                    }
                 }
 
                 // 추가 로딩 인디케이터
