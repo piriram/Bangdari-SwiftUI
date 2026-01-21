@@ -52,6 +52,7 @@ final class LoginIntent: ObservableObject {
         do {
             _ = try await authRepository.login(request: request)
             state.isLoginSuccess = true
+            NotificationCenter.default.post(name: .didLogin, object: nil)
         } catch let error as NetworkError {
             state.errorMessage = error.message
         } catch {

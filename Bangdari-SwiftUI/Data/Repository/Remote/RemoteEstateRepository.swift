@@ -5,6 +5,8 @@ import Foundation
 final class RemoteEstateRepository: EstateRepository {
     private let network = NetworkService.shared
 
+    // MARK: - Home
+
     func fetchTodayEstates() async throws -> [EstateSummaryResponse] {
         let response = try await network.request(.todayEstates, type: EstateListResponse.self)
         return response.data
@@ -23,5 +25,32 @@ final class RemoteEstateRepository: EstateRepository {
     func fetchMainBanners() async throws -> [Banner] {
         let response = try await network.request(.mainBanners, type: BannerResponse.self)
         return response.data
+    }
+
+    // MARK: - List
+
+    func fetchEstatesByLocation(
+        latitude: Double,
+        longitude: Double,
+        maxDistance: Int,
+        category: String?
+    ) async throws -> [EstateSummaryResponse] {
+        let endpoint = APIEndpoint.estatesGeolocation(
+            lat: latitude,
+            lng: longitude,
+            maxDistance: maxDistance,
+            category: category
+        )
+        let response = try await network.request(endpoint, type: EstateListResponse.self)
+        return response.data
+    }
+
+    func fetchMyLikedEstates(
+        next: String?,
+        limit: Int?,
+        category: String?
+    ) async throws -> EstatePaginationResponse {
+        let endpoint = APIEndpoint.myLikedEstates(next: next, limit: limit, category: category)
+        return try await network.request(endpoint, type: EstatePaginationResponse.self)
     }
 }

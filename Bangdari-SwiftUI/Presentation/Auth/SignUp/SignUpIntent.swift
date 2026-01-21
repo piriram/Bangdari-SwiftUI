@@ -114,6 +114,7 @@ final class SignUpIntent: ObservableObject {
         do {
             _ = try await authRepository.join(request: request)
             state.isSignUpSuccess = true
+            NotificationCenter.default.post(name: .didLogin, object: nil)
         } catch let error as NetworkError {
             state.errorMessage = error.message
         } catch {
