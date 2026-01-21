@@ -46,11 +46,12 @@ struct MainTabView: View {
                 Label("좋아요", systemImage: "heart")
             }
 
-            // TODO: 채팅, 마이페이지 탭 추가 예정
-            Text("채팅")
-                .tabItem {
-                    Label("채팅", systemImage: "bubble.left")
-                }
+            NavigationStack {
+                CommunityListView()
+            }
+            .tabItem {
+                Label("커뮤니티", systemImage: "bubble.left.and.bubble.right")
+            }
 
             NavigationStack {
                 MyPageView()

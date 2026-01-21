@@ -27,4 +27,13 @@ final class DIContainer: @unchecked Sendable {
             return RemoteEstateRepository() // TODO: MockEstateRepository
         }
     }
+
+    func makePostRepository() -> PostRepository {
+        switch AppEnvironment.current {
+        case .live:
+            return RemotePostRepository()
+        case .mock:
+            return RemotePostRepository() // TODO: MockPostRepository
+        }
+    }
 }

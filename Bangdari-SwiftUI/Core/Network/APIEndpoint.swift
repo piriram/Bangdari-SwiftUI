@@ -59,6 +59,21 @@ enum APIEndpoint {
     case videos
     case videoStream(videoId: String)
     case videoLike(videoId: String)
+
+    // Post (Community)
+    case uploadPostFiles
+    case createPost
+    case postsGeolocation(lat: Double, lng: Double, maxDistance: Int, category: String?)
+    case searchPosts(title: String?, next: String?, limit: Int?)
+    case postDetail(postId: String)
+    case updatePost(postId: String)
+    case deletePost(postId: String)
+    case postLike(postId: String)
+    case userPosts(userId: String, next: String?, limit: Int?)
+    case myLikedPosts(next: String?, limit: Int?)
+    case createPostComment(postId: String)
+    case updatePostComment(postId: String, commentId: String)
+    case deletePostComment(postId: String, commentId: String)
 }
 
 // MARK: - Endpoint Properties
@@ -113,6 +128,21 @@ extension APIEndpoint {
         case .videos: return "/v1/videos"
         case .videoStream(let videoId): return "/v1/videos/\(videoId)/stream"
         case .videoLike(let videoId): return "/v1/videos/\(videoId)/like"
+
+        // Post (Community)
+        case .uploadPostFiles: return "/v1/posts/files"
+        case .createPost: return "/v1/posts"
+        case .postsGeolocation: return "/v1/posts/geolocation"
+        case .searchPosts: return "/v1/posts/search"
+        case .postDetail(let postId): return "/v1/posts/\(postId)"
+        case .updatePost(let postId): return "/v1/posts/\(postId)"
+        case .deletePost(let postId): return "/v1/posts/\(postId)"
+        case .postLike(let postId): return "/v1/posts/\(postId)/like"
+        case .userPosts(let userId, _, _): return "/v1/posts/users/\(userId)"
+        case .myLikedPosts: return "/v1/posts/likes/me"
+        case .createPostComment(let postId): return "/v1/posts/\(postId)/comments"
+        case .updatePostComment(let postId, let commentId): return "/v1/posts/\(postId)/comments/\(commentId)"
+        case .deletePostComment(let postId, let commentId): return "/v1/posts/\(postId)/comments/\(commentId)"
         }
     }
 
@@ -122,17 +152,21 @@ extension APIEndpoint {
              .estateDetail, .myLikedEstates, .estatesGeolocation,
              .todayEstates, .hotEstates, .similarEstates, .todayTopic,
              .chatRooms, .chatMessages, .orders, .paymentReceipt,
-             .mainBanners, .videos, .videoStream:
+             .mainBanners, .videos, .videoStream,
+             .postsGeolocation, .searchPosts, .postDetail, .userPosts, .myLikedPosts:
             return .get
 
         case .validateEmail, .join, .login, .loginKakao, .loginApple, .logout,
              .uploadProfileImage, .estateLike, .createChatRoom, .sendMessage,
-             .uploadChatFiles, .createOrder, .validatePayment, .videoLike:
+             .uploadChatFiles, .createOrder, .validatePayment, .videoLike,
+             .uploadPostFiles, .createPost, .postLike, .createPostComment:
             return .post
 
-        case .updateDeviceToken, .updateMyProfile:
+        case .updateDeviceToken, .updateMyProfile, .updatePost, .updatePostComment:
             return .put
 
+        case .deletePost, .deletePostComment:
+            return .delete
         }
     }
 
@@ -169,6 +203,34 @@ extension APIEndpoint {
         case .chatMessages(_, let next):
             guard let next else { return nil }
             return [URLQueryItem(name: "next", value: next)]
+
+        case .postsGeolocation(let lat, let lng, let maxDistance, let category):
+            var items: [URLQueryItem] = [
+                URLQueryItem(name: "latitude", value: String(lat)),
+                URLQueryItem(name: "longitude", value: String(lng)),
+                URLQueryItem(name: "maxDistance", value: String(maxDistance))
+            ]
+            if let category { items.append(URLQueryItem(name: "category", value: category)) }
+            return items
+
+        case .searchPosts(let title, let next, let limit):
+            var items: [URLQueryItem] = []
+            if let title { items.append(URLQueryItem(name: "title", value: title)) }
+            if let next { items.append(URLQueryItem(name: "next", value: next)) }
+            if let limit { items.append(URLQueryItem(name: "limit", value: String(limit))) }
+            return items.isEmpty ? nil : items
+
+        case .userPosts(_, let next, let limit):
+            var items: [URLQueryItem] = []
+            if let next { items.append(URLQueryItem(name: "next", value: next)) }
+            if let limit { items.append(URLQueryItem(name: "limit", value: String(limit))) }
+            return items.isEmpty ? nil : items
+
+        case .myLikedPosts(let next, let limit):
+            var items: [URLQueryItem] = []
+            if let next { items.append(URLQueryItem(name: "next", value: next)) }
+            if let limit { items.append(URLQueryItem(name: "limit", value: String(limit))) }
+            return items.isEmpty ? nil : items
 
         default:
             return nil
