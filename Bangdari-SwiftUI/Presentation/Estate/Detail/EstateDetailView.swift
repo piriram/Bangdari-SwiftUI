@@ -63,9 +63,78 @@ struct EstateDetailView: View {
                         Divider()
                         commentsSection(estate.comments)
                     }
+
+                    // 유사 매물
+                    if !intent.state.similarEstates.isEmpty {
+                        Divider()
+                        similarEstatesSection
+                    }
                 }
                 .padding(.horizontal, 16)
             }
+        }
+    }
+
+    // MARK: - Similar Estates Section
+
+    private var similarEstatesSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("유사한 매물")
+                .font(.headline)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(intent.state.similarEstates, id: \.estate_id) { estate in
+                        NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
+                            similarEstateCard(estate)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+
+    private func similarEstateCard(_ estate: EstateSummaryResponse) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            AsyncImage(url: similarEstateImageURL(estate)) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.2))
+            }
+            .frame(width: 140, height: 100)
+            .clipped()
+            .cornerRadius(8)
+
+            Text(estate.category)
+                .font(.caption2)
+                .foregroundColor(.brown)
+
+            Text(estate.title)
+                .font(.caption)
+                .fontWeight(.medium)
+                .lineLimit(1)
+
+            Text(similarPriceText(estate))
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .frame(width: 140)
+    }
+
+    private func similarEstateImageURL(_ estate: EstateSummaryResponse) -> URL? {
+        guard let first = estate.files.first else { return nil }
+        return URL(string: Secrets.baseURL + "/" + first)
+    }
+
+    private func similarPriceText(_ estate: EstateSummaryResponse) -> String {
+        if estate.monthly_rent > 0 {
+            return "\(estate.deposit)/\(estate.monthly_rent)"
+        } else {
+            return "전세 \(estate.deposit)"
         }
     }
 

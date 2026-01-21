@@ -5,6 +5,7 @@ import Foundation
 
 struct EstateDetailState {
     var estate: EstateDetailResponse?
+    var similarEstates: [EstateSummaryResponse] = []
     var isLoading: Bool = false
     var isLikeLoading: Bool = false
     var errorMessage: String?
@@ -25,10 +26,10 @@ final class EstateDetailIntent: ObservableObject {
 
     init(
         estateId: String,
-        estateRepository: EstateRepository = DIContainer.shared.makeEstateRepository()
+        estateRepository: EstateRepository? = nil
     ) {
         self.estateId = estateId
-        self.estateRepository = estateRepository
+        self.estateRepository = estateRepository ?? DIContainer.shared.makeEstateRepository()
     }
 
     // MARK: - Actions
@@ -38,7 +39,11 @@ final class EstateDetailIntent: ObservableObject {
         state.errorMessage = nil
 
         do {
-            state.estate = try await estateRepository.fetchEstateDetail(estateId: estateId)
+            async let detail = estateRepository.fetchEstateDetail(estateId: estateId)
+            async let similar = estateRepository.fetchSimilarEstates()
+
+            state.estate = try await detail
+            state.similarEstates = (try? await similar) ?? []
         } catch let error as NetworkError {
             state.errorMessage = error.message
         } catch {

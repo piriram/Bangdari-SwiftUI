@@ -52,10 +52,12 @@ struct MainTabView: View {
                     Label("채팅", systemImage: "bubble.left")
                 }
 
-            Text("마이페이지")
-                .tabItem {
-                    Label("MY", systemImage: "person")
-                }
+            NavigationStack {
+                MyPageView()
+            }
+            .tabItem {
+                Label("MY", systemImage: "person")
+            }
         }
     }
 }

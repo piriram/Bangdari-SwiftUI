@@ -203,30 +203,51 @@ struct Banner: Decodable {
     let link: String?
 
     private enum CodingKeys: String, CodingKey {
-        case banner_id
-        case id
-        case title
-        case image
-        case link
+        case banner_id, id, _id
+        case title, name
+        case image, imageUrl, img
+        case link, url
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // ID
         if let bannerId = try container.decodeIfPresent(String.self, forKey: .banner_id) {
             banner_id = bannerId
         } else if let id = try container.decodeIfPresent(String.self, forKey: .id) {
             banner_id = id
+        } else if let mongoId = try container.decodeIfPresent(String.self, forKey: ._id) {
+            banner_id = mongoId
         } else {
-            throw DecodingError.keyNotFound(
-                CodingKeys.banner_id,
-                DecodingError.Context(
-                    codingPath: decoder.codingPath,
-                    debugDescription: "Missing banner_id or id"
-                )
-            )
+            banner_id = UUID().uuidString
         }
-        title = try container.decode(String.self, forKey: .title)
-        image = try container.decode(String.self, forKey: .image)
-        link = try container.decodeIfPresent(String.self, forKey: .link)
+
+        // Title
+        if let t = try container.decodeIfPresent(String.self, forKey: .title) {
+            title = t
+        } else if let n = try container.decodeIfPresent(String.self, forKey: .name) {
+            title = n
+        } else {
+            title = ""
+        }
+
+        // Image
+        if let img = try container.decodeIfPresent(String.self, forKey: .image) {
+            image = img
+        } else if let imgUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl) {
+            image = imgUrl
+        } else if let i = try container.decodeIfPresent(String.self, forKey: .img) {
+            image = i
+        } else {
+            image = ""
+        }
+
+        // Link
+        if let l = try container.decodeIfPresent(String.self, forKey: .link) {
+            link = l
+        } else {
+            link = try container.decodeIfPresent(String.self, forKey: .url)
+        }
     }
 }

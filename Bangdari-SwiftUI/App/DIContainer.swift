@@ -2,6 +2,7 @@ import Foundation
 
 // MARK: - Dependency Injection Container
 
+@MainActor
 final class DIContainer: @unchecked Sendable {
     static let shared = DIContainer()
 
@@ -9,7 +10,7 @@ final class DIContainer: @unchecked Sendable {
 
     // MARK: - Repositories
 
-    nonisolated func makeAuthRepository() -> AuthRepository {
+    func makeAuthRepository() -> AuthRepository {
         switch AppEnvironment.current {
         case .live:
             return RemoteAuthRepository()
@@ -18,7 +19,7 @@ final class DIContainer: @unchecked Sendable {
         }
     }
 
-    nonisolated func makeEstateRepository() -> EstateRepository {
+    func makeEstateRepository() -> EstateRepository {
         switch AppEnvironment.current {
         case .live:
             return RemoteEstateRepository()

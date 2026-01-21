@@ -67,4 +67,9 @@ final class RemoteEstateRepository: EstateRepository {
         let response = try await network.request(endpoint, body: body, type: EstateLikeResponse.self)
         return response.like_status
     }
+
+    func fetchSimilarEstates() async throws -> [EstateSummaryResponse] {
+        let response = try await network.request(.similarEstates, type: EstateListResponse.self)
+        return response.data
+    }
 }

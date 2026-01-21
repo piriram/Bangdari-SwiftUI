@@ -21,8 +21,8 @@ final class HomeIntent: ObservableObject {
 
     private let estateRepository: EstateRepository
 
-    init(estateRepository: EstateRepository = DIContainer.shared.makeEstateRepository()) {
-        self.estateRepository = estateRepository
+    init(estateRepository: EstateRepository? = nil) {
+        self.estateRepository = estateRepository ?? DIContainer.shared.makeEstateRepository()
     }
 
     // MARK: - Actions

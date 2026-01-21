@@ -54,16 +54,13 @@ struct EstateMapView: View {
 
     private var mapContent: some View {
         Map(position: $position) {
-            // 매물 마커
-            ForEach(intent.state.estates, id: \.estate_id) { estate in
+            // 클러스터 마커
+            ForEach(intent.state.clusters) { cluster in
                 Annotation(
-                    estate.title,
-                    coordinate: CLLocationCoordinate2D(
-                        latitude: estate.geolocation.latitude,
-                        longitude: estate.geolocation.longitude
-                    )
+                    cluster.isSingle ? (cluster.firstEstate?.title ?? "") : "\(cluster.count)개 매물",
+                    coordinate: cluster.coordinate
                 ) {
-                    estateMarker(estate)
+                    clusterMarker(cluster)
                 }
             }
 
@@ -76,32 +73,65 @@ struct EstateMapView: View {
         }
         .onMapCameraChange { context in
             intent.updateRegion(context.region)
+            intent.updateClusters()
         }
     }
 
-    // MARK: - Estate Marker
+    // MARK: - Cluster Marker
 
-    private func estateMarker(_ estate: EstateSummaryResponse) -> some View {
+    private func clusterMarker(_ cluster: MapCluster) -> some View {
         Button {
-            intent.selectEstate(estate)
+            if cluster.isSingle, let estate = cluster.firstEstate {
+                intent.selectEstate(estate)
+            } else {
+                // 클러스터 탭 시 줌인
+                zoomToCluster(cluster)
+            }
         } label: {
-            VStack(spacing: 0) {
-                Text(priceText(estate))
-                    .font(.caption2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 4)
-                    .background(Color.brown)
-                    .cornerRadius(4)
+            if cluster.isSingle, let estate = cluster.firstEstate {
+                // 단일 매물 마커
+                VStack(spacing: 0) {
+                    Text(priceText(estate))
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 4)
+                        .background(Color.brown)
+                        .cornerRadius(4)
 
-                Image(systemName: "triangle.fill")
-                    .font(.system(size: 8))
-                    .foregroundColor(.brown)
-                    .rotationEffect(.degrees(180))
-                    .offset(y: -2)
+                    Image(systemName: "triangle.fill")
+                        .font(.system(size: 8))
+                        .foregroundColor(.brown)
+                        .rotationEffect(.degrees(180))
+                        .offset(y: -2)
+                }
+            } else {
+                // 클러스터 마커
+                ZStack {
+                    Circle()
+                        .fill(Color.brown)
+                        .frame(width: 40, height: 40)
+
+                    Circle()
+                        .fill(Color.brown.opacity(0.3))
+                        .frame(width: 50, height: 50)
+
+                    Text("\(cluster.count)")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                }
             }
         }
+    }
+
+    private func zoomToCluster(_ cluster: MapCluster) {
+        let newSpan = MKCoordinateSpan(
+            latitudeDelta: intent.state.region.span.latitudeDelta / 2,
+            longitudeDelta: intent.state.region.span.longitudeDelta / 2
+        )
+        position = .region(MKCoordinateRegion(center: cluster.coordinate, span: newSpan))
     }
 
     // MARK: - Current Location Button

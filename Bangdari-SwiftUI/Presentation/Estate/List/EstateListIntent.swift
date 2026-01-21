@@ -31,8 +31,8 @@ final class EstateListIntent: ObservableObject {
     private let estateRepository: EstateRepository
     private let locationManager = CLLocationManager()
 
-    init(estateRepository: EstateRepository = DIContainer.shared.makeEstateRepository()) {
-        self.estateRepository = estateRepository
+    init(estateRepository: EstateRepository? = nil) {
+        self.estateRepository = estateRepository ?? DIContainer.shared.makeEstateRepository()
     }
 
     // MARK: - Actions

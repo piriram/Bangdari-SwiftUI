@@ -45,8 +45,8 @@ final class SignUpIntent: ObservableObject {
 
     private let authRepository: AuthRepository
 
-    init(authRepository: AuthRepository = DIContainer.shared.makeAuthRepository()) {
-        self.authRepository = authRepository
+    init(authRepository: AuthRepository? = nil) {
+        self.authRepository = authRepository ?? DIContainer.shared.makeAuthRepository()
     }
 
     // MARK: - Actions

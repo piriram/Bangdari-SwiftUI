@@ -4,8 +4,8 @@ import Combine
 // MARK: - Login State
 
 struct LoginState {
-    var email: String = ""
-    var password: String = ""
+    var email: String = "judy@ma.com"
+    var password: String = "wbel@1234"
     var isLoading: Bool = false
     var errorMessage: String?
     var isLoginSuccess: Bool = false
@@ -23,8 +23,8 @@ final class LoginIntent: ObservableObject {
 
     private let authRepository: AuthRepository
 
-    init(authRepository: AuthRepository = DIContainer.shared.makeAuthRepository()) {
-        self.authRepository = authRepository
+    init(authRepository: AuthRepository? = nil) {
+        self.authRepository = authRepository ?? DIContainer.shared.makeAuthRepository()
     }
 
     // MARK: - Actions
