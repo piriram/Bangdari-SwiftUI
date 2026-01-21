@@ -3,7 +3,7 @@ import Security
 
 // MARK: - Keychain Manager
 
-final class KeychainManager {
+final class KeychainManager: @unchecked Sendable {
     static let shared = KeychainManager()
 
     private let service = "com.bangdari.swiftui"

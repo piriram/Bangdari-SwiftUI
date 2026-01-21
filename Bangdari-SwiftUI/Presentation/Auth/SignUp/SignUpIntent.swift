@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - SignUp State
 
@@ -45,7 +45,7 @@ final class SignUpIntent: ObservableObject {
 
     private let authRepository: AuthRepository
 
-    init(authRepository: AuthRepository = DIContainer.shared.authRepository) {
+    init(authRepository: AuthRepository = DIContainer.shared.makeAuthRepository()) {
         self.authRepository = authRepository
     }
 

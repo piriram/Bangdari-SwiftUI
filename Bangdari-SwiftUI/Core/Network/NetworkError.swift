@@ -56,7 +56,8 @@ enum NetworkError: Error {
 
     // 토큰 갱신 필요 여부
     var requiresTokenRefresh: Bool {
-        self == .tokenExpired
+        if case .tokenExpired = self { return true }
+        return false
     }
 
     static func from(statusCode: Int) -> NetworkError {

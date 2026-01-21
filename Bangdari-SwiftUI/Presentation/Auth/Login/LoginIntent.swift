@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 // MARK: - Login State
 
@@ -22,7 +23,7 @@ final class LoginIntent: ObservableObject {
 
     private let authRepository: AuthRepository
 
-    init(authRepository: AuthRepository = DIContainer.shared.authRepository) {
+    init(authRepository: AuthRepository = DIContainer.shared.makeAuthRepository()) {
         self.authRepository = authRepository
     }
 

@@ -2,11 +2,12 @@ import Foundation
 
 // MARK: - Network Service
 
-actor NetworkService {
+final class NetworkService: @unchecked Sendable {
     static let shared = NetworkService()
 
     private let session: URLSession
     private let keychain = KeychainManager.shared
+    private let lock = NSLock()
     private var isRefreshing = false
     private var pendingRequests: [CheckedContinuation<Void, Never>] = []
 
@@ -110,19 +111,29 @@ actor NetworkService {
 
     private func refreshTokenAndRetry() async throws {
         // 이미 갱신 중이면 대기
-        if isRefreshing {
+        let shouldWait: Bool = lock.withLock {
+            if isRefreshing {
+                return true
+            }
+            isRefreshing = true
+            return false
+        }
+
+        if shouldWait {
             await withCheckedContinuation { continuation in
-                pendingRequests.append(continuation)
+                lock.withLock {
+                    pendingRequests.append(continuation)
+                }
             }
             return
         }
 
-        isRefreshing = true
         defer {
-            isRefreshing = false
-            // 대기 중인 요청들 해제
-            pendingRequests.forEach { $0.resume() }
-            pendingRequests.removeAll()
+            lock.withLock {
+                isRefreshing = false
+                pendingRequests.forEach { $0.resume() }
+                pendingRequests.removeAll()
+            }
         }
 
         guard let refreshToken = keychain.refreshToken else {
