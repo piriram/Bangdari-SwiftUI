@@ -22,6 +22,7 @@ struct EstateSummaryResponse: Decodable, Equatable {
         case area
         case geolocation
         case files
+        case thumbnails
         case distance
     }
 
@@ -30,12 +31,52 @@ struct EstateSummaryResponse: Decodable, Equatable {
         estate_id = try container.decode(String.self, forKey: .estate_id)
         category = try container.decode(String.self, forKey: .category)
         title = try container.decode(String.self, forKey: .title)
-        deposit = try container.decode(Int.self, forKey: .deposit)
-        monthly_rent = try container.decode(Int.self, forKey: .monthly_rent)
-        area = try container.decode(Double.self, forKey: .area)
+        deposit = try Self.decodeFlexibleInt(from: container, forKey: .deposit, defaultValue: 0)
+        monthly_rent = try Self.decodeFlexibleInt(from: container, forKey: .monthly_rent, defaultValue: 0)
+        area = try Self.decodeFlexibleDouble(from: container, forKey: .area, defaultValue: 0)
         geolocation = try container.decode(Geolocation.self, forKey: .geolocation)
-        files = try container.decodeIfPresent([String].self, forKey: .files) ?? []
+        if let decodedFiles = try container.decodeIfPresent([String].self, forKey: .files) {
+            files = decodedFiles
+        } else {
+            files = try container.decodeIfPresent([String].self, forKey: .thumbnails) ?? []
+        }
         distance = try container.decodeIfPresent(Double.self, forKey: .distance)
+    }
+
+    private static func decodeFlexibleInt(
+        from container: KeyedDecodingContainer<CodingKeys>,
+        forKey key: CodingKeys,
+        defaultValue: Int
+    ) throws -> Int {
+        if let value = try? container.decode(Int.self, forKey: key) {
+            return value
+        }
+        if let value = try? container.decode(Double.self, forKey: key) {
+            return Int(value)
+        }
+        if let value = try? container.decode(String.self, forKey: key),
+           let intValue = Int(value.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            return intValue
+        }
+        return defaultValue
+    }
+
+    private static func decodeFlexibleDouble(
+        from container: KeyedDecodingContainer<CodingKeys>,
+        forKey key: CodingKeys,
+        defaultValue: Double
+    ) throws -> Double {
+        if let value = try? container.decode(Double.self, forKey: key) {
+            return value
+        }
+        if let value = try? container.decode(Int.self, forKey: key) {
+            return Double(value)
+        }
+        if let value = try? container.decode(String.self, forKey: key),
+           let doubleValue = Double(value.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            return doubleValue
+        }
+        return defaultValue
     }
 }
 
@@ -88,9 +129,9 @@ struct EstateDetailResponse: Decodable {
 
     private enum CodingKeys: String, CodingKey {
         case estate_id, category, title, deposit, monthly_rent, reservation_price
-        case area, floors, options, geolocation, files, creator
+        case area, floors, options, geolocation, files, thumbnails, creator
         case is_liked, is_reserved, is_safe_estate, is_recommended
-        case comments, createdAt, updatedAt
+        case comments, createdAt, updatedAt, created_at, updated_at
     }
 
     init(from decoder: Decoder) throws {
@@ -112,15 +153,27 @@ struct EstateDetailResponse: Decodable {
         }
         options = try container.decode(EstateOptions.self, forKey: .options)
         geolocation = try container.decode(Geolocation.self, forKey: .geolocation)
-        files = try container.decodeIfPresent([String].self, forKey: .files) ?? []
+        if let decodedFiles = try container.decodeIfPresent([String].self, forKey: .files) {
+            files = decodedFiles
+        } else {
+            files = try container.decodeIfPresent([String].self, forKey: .thumbnails) ?? []
+        }
         creator = try container.decode(UserInfo.self, forKey: .creator)
         is_liked = try container.decode(Bool.self, forKey: .is_liked)
         is_reserved = try container.decode(Bool.self, forKey: .is_reserved)
         is_safe_estate = try container.decode(Bool.self, forKey: .is_safe_estate)
         is_recommended = try container.decode(Bool.self, forKey: .is_recommended)
         comments = try container.decodeIfPresent([EstateComment].self, forKey: .comments) ?? []
-        createdAt = try container.decode(String.self, forKey: .createdAt)
-        updatedAt = try container.decode(String.self, forKey: .updatedAt)
+        if let createdAtValue = try container.decodeIfPresent(String.self, forKey: .createdAt) {
+            createdAt = createdAtValue
+        } else {
+            createdAt = try container.decode(String.self, forKey: .created_at)
+        }
+        if let updatedAtValue = try container.decodeIfPresent(String.self, forKey: .updatedAt) {
+            updatedAt = updatedAtValue
+        } else {
+            updatedAt = try container.decode(String.self, forKey: .updated_at)
+        }
     }
 }
 
@@ -137,6 +190,7 @@ struct EstateOptions: Decodable {
     let option8: Bool
     let option9: Bool
     let option10: Bool
+    private let serverOptionNames: [String]
 
     private enum CodingKeys: String, CodingKey {
         case option1, option2, option3, option4, option5
@@ -145,27 +199,34 @@ struct EstateOptions: Decodable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        option1 = try Self.decodeFlexibleBool(from: container, forKey: .option1)
-        option2 = try Self.decodeFlexibleBool(from: container, forKey: .option2)
-        option3 = try Self.decodeFlexibleBool(from: container, forKey: .option3)
-        option4 = try Self.decodeFlexibleBool(from: container, forKey: .option4)
-        option5 = try Self.decodeFlexibleBool(from: container, forKey: .option5)
-        option6 = try Self.decodeFlexibleBool(from: container, forKey: .option6)
-        option7 = try Self.decodeFlexibleBool(from: container, forKey: .option7)
-        option8 = try Self.decodeFlexibleBool(from: container, forKey: .option8)
-        option9 = try Self.decodeFlexibleBool(from: container, forKey: .option9)
-        option10 = try Self.decodeFlexibleBool(from: container, forKey: .option10)
+        var collectedNames: [String] = []
+        option1 = try Self.decodeFlexibleOption(from: container, forKey: .option1, names: &collectedNames)
+        option2 = try Self.decodeFlexibleOption(from: container, forKey: .option2, names: &collectedNames)
+        option3 = try Self.decodeFlexibleOption(from: container, forKey: .option3, names: &collectedNames)
+        option4 = try Self.decodeFlexibleOption(from: container, forKey: .option4, names: &collectedNames)
+        option5 = try Self.decodeFlexibleOption(from: container, forKey: .option5, names: &collectedNames)
+        option6 = try Self.decodeFlexibleOption(from: container, forKey: .option6, names: &collectedNames)
+        option7 = try Self.decodeFlexibleOption(from: container, forKey: .option7, names: &collectedNames)
+        option8 = try Self.decodeFlexibleOption(from: container, forKey: .option8, names: &collectedNames)
+        option9 = try Self.decodeFlexibleOption(from: container, forKey: .option9, names: &collectedNames)
+        option10 = try Self.decodeFlexibleOption(from: container, forKey: .option10, names: &collectedNames)
+        serverOptionNames = collectedNames
     }
 
-    private static func decodeFlexibleBool(from container: KeyedDecodingContainer<CodingKeys>, forKey key: CodingKeys) throws -> Bool {
-        if let value = try? container.decode(Bool.self, forKey: key) {
+    private static func decodeFlexibleOption(
+        from container: KeyedDecodingContainer<CodingKeys>,
+        forKey key: CodingKeys,
+        names: inout [String]
+    ) throws -> Bool {
+        if let value = try? container.decodeIfPresent(Bool.self, forKey: key) {
             return value
         }
-        if let value = try? container.decode(Int.self, forKey: key) {
+        if let value = try? container.decodeIfPresent(Int.self, forKey: key) {
             return value != 0
         }
-        if let value = try? container.decode(String.self, forKey: key) {
-            switch value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+        if let value = try? container.decodeIfPresent(String.self, forKey: key) {
+            let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            switch trimmed.lowercased() {
             case "true", "1", "y", "yes":
                 return true
             case "false", "0", "n", "no":
@@ -173,14 +234,12 @@ struct EstateOptions: Decodable {
             default:
                 break
             }
+            if !trimmed.isEmpty {
+                names.append(trimmed)
+                return true
+            }
         }
-        throw DecodingError.typeMismatch(
-            Bool.self,
-            DecodingError.Context(
-                codingPath: container.codingPath + [key],
-                debugDescription: "Expected Bool/Int/String for \(key.stringValue)"
-            )
-        )
+        return false
     }
 
     // 옵션 이름 매핑
@@ -190,6 +249,9 @@ struct EstateOptions: Decodable {
     ]
 
     var enabledOptions: [String] {
+        if !serverOptionNames.isEmpty {
+            return serverOptionNames
+        }
         var result: [String] = []
         let values = [option1, option2, option3, option4, option5,
                       option6, option7, option8, option9, option10]

@@ -26,6 +26,13 @@ final class NetworkService: @unchecked Sendable {
     ) async throws -> T {
         let data = try await requestData(endpoint, body: body)
 
+        // 🔍 DEBUG: Raw JSON 출력
+        if let jsonString = String(data: data, encoding: .utf8) {
+            print("📦 [RAW] \(endpoint.path)")
+            print(jsonString)
+            print("📦 [RAW END]")
+        }
+
         do {
             let decoded = try JSONDecoder().decode(T.self, from: data)
             return decoded
