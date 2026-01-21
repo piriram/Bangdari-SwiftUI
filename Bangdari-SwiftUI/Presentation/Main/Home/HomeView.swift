@@ -110,7 +110,14 @@ struct HomeView: View {
 
             VStack(spacing: 8) {
                 ForEach(intent.state.topics, id: \.title) { topic in
-                    TopicRow(topic: topic)
+                    if let url = URL(string: topic.link) {
+                        Link(destination: url) {
+                            TopicRow(topic: topic)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        TopicRow(topic: topic)
+                    }
                 }
             }
             .padding(.horizontal, 16)

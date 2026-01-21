@@ -162,6 +162,9 @@ final class NetworkService: @unchecked Sendable {
         // 418: RefreshToken도 만료 → 재로그인 필요
         if httpResponse.statusCode == 418 {
             keychain.clearTokens()
+            await MainActor.run {
+                NotificationCenter.default.post(name: .didLogout, object: nil)
+            }
             throw NetworkError.refreshTokenExpired
         }
 

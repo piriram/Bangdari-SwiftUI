@@ -64,6 +64,8 @@ final class CommunityListIntent: ObservableObject {
                     category: nil
                 )
                 state.posts = posts
+                state.nextCursor = nil
+                state.hasMore = false
             } catch let error as NetworkError {
                 state.errorMessage = error.message
             } catch {
