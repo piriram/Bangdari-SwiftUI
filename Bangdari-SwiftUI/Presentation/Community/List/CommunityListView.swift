@@ -1,3 +1,4 @@
+import Kingfisher
 import SwiftUI
 
 // MARK: - Community List View
@@ -107,17 +108,13 @@ struct CommunityListView: View {
             HStack {
                 // 썸네일
                 if let firstFile = post.files.first {
-                    AsyncImage(url: URL(string: Secrets.baseURL + "/" + firstFile)) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                    }
-                    .frame(width: 40, height: 40)
-                    .clipped()
-                    .cornerRadius(4)
+                    KFImage.auth(url: URL(string: Secrets.baseURL + "/" + firstFile))
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 40, height: 40)
+                        .background(Color.gray.opacity(0.2))
+                        .clipped()
+                        .cornerRadius(4)
                 }
 
                 Spacer()

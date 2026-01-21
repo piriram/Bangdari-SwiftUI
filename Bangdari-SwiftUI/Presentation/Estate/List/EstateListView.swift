@@ -1,4 +1,5 @@
 import CoreLocation
+import Kingfisher
 import SwiftUI
 
 // MARK: - Estate List View
@@ -119,17 +120,13 @@ struct EstateRowView: View {
     var body: some View {
         HStack(spacing: 12) {
             // 썸네일
-            AsyncImage(url: imageURL) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.2))
-            }
-            .frame(width: 100, height: 80)
-            .clipped()
-            .cornerRadius(8)
+            KFImage.auth(url: imageURL)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 100, height: 80)
+                .background(Color.gray.opacity(0.2))
+                .clipped()
+                .cornerRadius(8)
 
             // 정보
             VStack(alignment: .leading, spacing: 4) {

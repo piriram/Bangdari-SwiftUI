@@ -35,6 +35,7 @@ final class EstateDetailIntent: ObservableObject {
     // MARK: - Actions
 
     func loadDetail() async {
+        print("🔍 [DEBUG] loadDetail 시작 - estateId: \(estateId)")
         state.isLoading = true
         state.errorMessage = nil
 
@@ -42,15 +43,22 @@ final class EstateDetailIntent: ObservableObject {
             async let detail = estateRepository.fetchEstateDetail(estateId: estateId)
             async let similar = estateRepository.fetchSimilarEstates()
 
-            state.estate = try await detail
+            let detailResult = try await detail
+            print("✅ [DEBUG] 상세 데이터 수신: \(detailResult.title)")
+            print("✅ [DEBUG] files 개수: \(detailResult.files.count)")
+            state.estate = detailResult
             state.similarEstates = (try? await similar) ?? []
+            print("✅ [DEBUG] 유사매물 개수: \(state.similarEstates.count)")
         } catch let error as NetworkError {
+            print("❌ [DEBUG] NetworkError: \(error.message)")
             state.errorMessage = error.message
         } catch {
+            print("❌ [DEBUG] Unknown Error: \(error)")
             state.errorMessage = "매물 정보를 불러오는 중 오류가 발생했습니다."
         }
 
         state.isLoading = false
+        print("🔍 [DEBUG] loadDetail 종료 - estate: \(state.estate != nil ? "있음" : "없음"), error: \(state.errorMessage ?? "없음")")
     }
 
     func toggleLike() async {

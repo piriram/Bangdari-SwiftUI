@@ -1,3 +1,4 @@
+import Kingfisher
 import SwiftUI
 
 // MARK: - Estate Detail View
@@ -12,12 +13,13 @@ struct EstateDetailView: View {
 
     var body: some View {
         Group {
-            if intent.state.isLoading && intent.state.estate == nil {
-                ProgressView()
-            } else if let estate = intent.state.estate {
+            if let estate = intent.state.estate {
                 detailContent(estate)
             } else if let error = intent.state.errorMessage {
                 errorView(error)
+            } else {
+                // 로딩 중이거나 초기 상태
+                ProgressView()
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -97,17 +99,13 @@ struct EstateDetailView: View {
 
     private func similarEstateCard(_ estate: EstateSummaryResponse) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            AsyncImage(url: similarEstateImageURL(estate)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.2))
-            }
-            .frame(width: 140, height: 100)
-            .clipped()
-            .cornerRadius(8)
+            KFImage.auth(url: similarEstateImageURL(estate))
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 140, height: 100)
+                .background(Color.gray.opacity(0.2))
+                .clipped()
+                .cornerRadius(8)
 
             Text(estate.category)
                 .font(.caption2)
@@ -143,14 +141,10 @@ struct EstateDetailView: View {
     private func imageGallery(_ files: [String]) -> some View {
         TabView {
             ForEach(files, id: \.self) { file in
-                AsyncImage(url: URL(string: Secrets.baseURL + "/" + file)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                }
+                KFImage.auth(url: URL(string: Secrets.baseURL + "/" + file))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .background(Color.gray.opacity(0.2))
             }
         }
         .frame(height: 250)
@@ -273,16 +267,12 @@ struct EstateDetailView: View {
                 .font(.headline)
 
             HStack(spacing: 12) {
-                AsyncImage(url: profileImageURL(creator.profileImage)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Circle()
-                        .fill(Color.gray.opacity(0.2))
-                }
-                .frame(width: 48, height: 48)
-                .clipShape(Circle())
+                KFImage.auth(url: profileImageURL(creator.profileImage))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 48, height: 48)
+                    .background(Color.gray.opacity(0.2))
+                    .clipShape(Circle())
 
                 Text(creator.nick)
                     .font(.subheadline)

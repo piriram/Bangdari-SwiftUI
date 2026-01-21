@@ -1,3 +1,4 @@
+import Kingfisher
 import SwiftUI
 
 // MARK: - Post Detail View
@@ -60,16 +61,12 @@ struct PostDetailView: View {
 
                         // 작성자 정보
                         HStack {
-                            AsyncImage(url: profileImageURL(post.creator.profileImage)) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            } placeholder: {
-                                Circle()
-                                    .fill(Color.gray.opacity(0.2))
-                            }
-                            .frame(width: 32, height: 32)
-                            .clipShape(Circle())
+                            KFImage.auth(url: profileImageURL(post.creator.profileImage))
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 32, height: 32)
+                                .background(Color.gray.opacity(0.2))
+                                .clipShape(Circle())
 
                             Text(post.creator.nick)
                                 .font(.subheadline)
@@ -115,14 +112,10 @@ struct PostDetailView: View {
     private func imageGallery(_ files: [String]) -> some View {
         TabView {
             ForEach(files, id: \.self) { file in
-                AsyncImage(url: URL(string: Secrets.baseURL + "/" + file)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                }
+                KFImage.auth(url: URL(string: Secrets.baseURL + "/" + file))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .background(Color.gray.opacity(0.2))
             }
         }
         .frame(height: 250)

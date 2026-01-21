@@ -73,7 +73,7 @@ struct EstateDetailResponse: Decodable {
     let monthly_rent: Int
     let reservation_price: Int
     let area: Double
-    let floors: String
+    let floors: String  // API가 Int로 올 수 있어서 커스텀 디코딩
     let options: EstateOptions
     let geolocation: Geolocation
     let files: [String]
@@ -102,7 +102,14 @@ struct EstateDetailResponse: Decodable {
         monthly_rent = try container.decode(Int.self, forKey: .monthly_rent)
         reservation_price = try container.decode(Int.self, forKey: .reservation_price)
         area = try container.decode(Double.self, forKey: .area)
-        floors = try container.decode(String.self, forKey: .floors)
+        // floors: String 또는 Int로 올 수 있음
+        if let floorsString = try? container.decode(String.self, forKey: .floors) {
+            floors = floorsString
+        } else if let floorsInt = try? container.decode(Int.self, forKey: .floors) {
+            floors = "\(floorsInt)층"
+        } else {
+            floors = "-"
+        }
         options = try container.decode(EstateOptions.self, forKey: .options)
         geolocation = try container.decode(Geolocation.self, forKey: .geolocation)
         files = try container.decodeIfPresent([String].self, forKey: .files) ?? []
@@ -130,6 +137,51 @@ struct EstateOptions: Decodable {
     let option8: Bool
     let option9: Bool
     let option10: Bool
+
+    private enum CodingKeys: String, CodingKey {
+        case option1, option2, option3, option4, option5
+        case option6, option7, option8, option9, option10
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        option1 = try Self.decodeFlexibleBool(from: container, forKey: .option1)
+        option2 = try Self.decodeFlexibleBool(from: container, forKey: .option2)
+        option3 = try Self.decodeFlexibleBool(from: container, forKey: .option3)
+        option4 = try Self.decodeFlexibleBool(from: container, forKey: .option4)
+        option5 = try Self.decodeFlexibleBool(from: container, forKey: .option5)
+        option6 = try Self.decodeFlexibleBool(from: container, forKey: .option6)
+        option7 = try Self.decodeFlexibleBool(from: container, forKey: .option7)
+        option8 = try Self.decodeFlexibleBool(from: container, forKey: .option8)
+        option9 = try Self.decodeFlexibleBool(from: container, forKey: .option9)
+        option10 = try Self.decodeFlexibleBool(from: container, forKey: .option10)
+    }
+
+    private static func decodeFlexibleBool(from container: KeyedDecodingContainer<CodingKeys>, forKey key: CodingKeys) throws -> Bool {
+        if let value = try? container.decode(Bool.self, forKey: key) {
+            return value
+        }
+        if let value = try? container.decode(Int.self, forKey: key) {
+            return value != 0
+        }
+        if let value = try? container.decode(String.self, forKey: key) {
+            switch value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+            case "true", "1", "y", "yes":
+                return true
+            case "false", "0", "n", "no":
+                return false
+            default:
+                break
+            }
+        }
+        throw DecodingError.typeMismatch(
+            Bool.self,
+            DecodingError.Context(
+                codingPath: container.codingPath + [key],
+                debugDescription: "Expected Bool/Int/String for \(key.stringValue)"
+            )
+        )
+    }
 
     // 옵션 이름 매핑
     static let optionNames = [

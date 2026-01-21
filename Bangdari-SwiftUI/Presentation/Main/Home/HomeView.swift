@@ -1,3 +1,4 @@
+import Kingfisher
 import SwiftUI
 
 // MARK: - Home View
@@ -51,14 +52,10 @@ struct HomeView: View {
     private var bannerSection: some View {
         TabView {
             ForEach(intent.state.banners, id: \.banner_id) { banner in
-                AsyncImage(url: URL(string: APIConfig.baseURL + "/" + banner.image)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                }
+                KFImage.auth(url: URL(string: APIConfig.baseURL + "/" + banner.image))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .background(Color.gray.opacity(0.2))
             }
         }
         .frame(height: 200)
@@ -74,7 +71,10 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(intent.state.todayEstates, id: \.estate_id) { estate in
-                        EstateCard(estate: estate)
+                        NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
+                            EstateCard(estate: estate)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -91,7 +91,10 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(intent.state.hotEstates, id: \.estate_id) { estate in
-                        EstateCard(estate: estate)
+                        NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
+                            EstateCard(estate: estate)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -134,17 +137,13 @@ struct EstateCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // 썸네일
-            AsyncImage(url: imageURL) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.2))
-            }
-            .frame(width: 150, height: 100)
-            .clipped()
-            .cornerRadius(8)
+            KFImage.auth(url: imageURL)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 150, height: 100)
+                .background(Color.gray.opacity(0.2))
+                .clipped()
+                .cornerRadius(8)
 
             // 정보
             VStack(alignment: .leading, spacing: 4) {
