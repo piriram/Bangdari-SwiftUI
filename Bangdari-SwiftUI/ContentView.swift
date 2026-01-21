@@ -25,15 +25,26 @@ struct ContentView: View {
 struct MainTabView: View {
     var body: some View {
         TabView {
-            HomeView()
-                .tabItem {
-                    Label("홈", systemImage: "house")
-                }
+            NavigationStack {
+                HomeView()
+            }
+            .tabItem {
+                Label("홈", systemImage: "house")
+            }
 
-            EstateListView(mode: .liked)
-                .tabItem {
-                    Label("좋아요", systemImage: "heart")
-                }
+            NavigationStack {
+                EstateMapView()
+            }
+            .tabItem {
+                Label("지도", systemImage: "map")
+            }
+
+            NavigationStack {
+                EstateListView(mode: .liked)
+            }
+            .tabItem {
+                Label("좋아요", systemImage: "heart")
+            }
 
             // TODO: 채팅, 마이페이지 탭 추가 예정
             Text("채팅")

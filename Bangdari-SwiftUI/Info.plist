@@ -15,5 +15,7 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>주변 매물을 검색하기 위해 위치 정보가 필요합니다.</string>
 </dict>
 </plist>

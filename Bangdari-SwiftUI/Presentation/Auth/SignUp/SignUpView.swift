@@ -41,7 +41,7 @@ struct SignUpView: View {
                 ProgressView()
             }
         }
-        .onChange(of: intent.state.isSignUpSuccess) { success in
+        .onChange(of: intent.state.isSignUpSuccess) { _, success in
             if success {
                 dismiss()
             }

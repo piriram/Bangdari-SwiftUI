@@ -9,7 +9,7 @@ final class DIContainer: @unchecked Sendable {
 
     // MARK: - Repositories
 
-    func makeAuthRepository() -> AuthRepository {
+    nonisolated func makeAuthRepository() -> AuthRepository {
         switch AppEnvironment.current {
         case .live:
             return RemoteAuthRepository()
@@ -18,7 +18,7 @@ final class DIContainer: @unchecked Sendable {
         }
     }
 
-    func makeEstateRepository() -> EstateRepository {
+    nonisolated func makeEstateRepository() -> EstateRepository {
         switch AppEnvironment.current {
         case .live:
             return RemoteEstateRepository()

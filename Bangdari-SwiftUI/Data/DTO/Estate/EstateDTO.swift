@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Estate Summary (리스트용)
 
-struct EstateSummaryResponse: Decodable {
+struct EstateSummaryResponse: Decodable, Equatable {
     let estate_id: String
     let category: String
     let title: String
@@ -41,7 +41,7 @@ struct EstateSummaryResponse: Decodable {
 
 // MARK: - Geolocation
 
-struct Geolocation: Decodable {
+struct Geolocation: Decodable, Equatable {
     let longitude: Double
     let latitude: Double
 }

@@ -54,7 +54,7 @@ final class EstateDetailIntent: ObservableObject {
         state.isLikeLoading = true
 
         do {
-            let newStatus = try await estateRepository.toggleLike(
+            _ = try await estateRepository.toggleLike(
                 estateId: estateId,
                 like: !estate.is_liked
             )
