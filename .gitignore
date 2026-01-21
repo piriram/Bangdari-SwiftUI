@@ -1,3 +1,23 @@
 # Project specific
 bangdari.md
 Secret/
+
+# API Keys
+*.xcconfig
+Config.xcconfig
+Secrets.swift
+**/Secrets.swift
+
+# Xcode
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.xcworkspace/xcuserdata/
+
+# CocoaPods / SPM
+Pods/
+.build/
+
+# macOS
+.DS_Store
+*.swp
