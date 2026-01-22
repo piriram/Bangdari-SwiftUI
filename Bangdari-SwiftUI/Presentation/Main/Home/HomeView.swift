@@ -5,17 +5,34 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var intent = HomeIntent()
+    @State private var selectedCategory: EstateCategory?
+    @State private var searchText = ""
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    // 배너
+                    // 검색바
+                    SearchBarButton(placeholder: "지역, 단지명으로 검색") {
+                        // TODO: 검색 화면 이동
+                    }
+                    .padding(.horizontal, 16)
+
+                    // 히어로 배너
                     if !intent.state.banners.isEmpty {
-                        bannerSection
+                        HeroBannerView(banners: intent.state.banners) { banner in
+                            if let link = banner.link, let url = URL(string: link) {
+                                UIApplication.shared.open(url)
+                            }
+                        }
                     }
 
-                    // 오늘의 매물
+                    // 카테고리 선택
+                    CategorySelector(selectedCategory: $selectedCategory) { category in
+                        // TODO: 카테고리 필터링
+                    }
+
+                    // 최근 검색 / 오늘의 매물
                     if !intent.state.todayEstates.isEmpty {
                         todayEstatesSection
                     }
@@ -32,6 +49,7 @@ struct HomeView: View {
                 }
                 .padding(.vertical, 16)
             }
+            .background(Color.gray0)
             .navigationTitle("방다리")
             .refreshable {
                 await intent.refresh()
@@ -47,32 +65,22 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Banner Section
-
-    private var bannerSection: some View {
-        TabView {
-            ForEach(intent.state.banners, id: \.banner_id) { banner in
-                KFImage.auth(url: URL(string: APIConfig.baseURL + "/" + banner.image))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .background(Color.gray.opacity(0.2))
-            }
-        }
-        .frame(height: 200)
-        .tabViewStyle(.page)
-    }
-
     // MARK: - Today Estates Section
 
     private var todayEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader(title: "오늘의 매물")
+            SectionHeader(title: "최근검색 매물", actionTitle: "View All") {
+                // TODO: 전체보기
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(intent.state.todayEstates, id: \.estate_id) { estate in
                         NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
-                            EstateCard(estate: estate)
+                            EstateCardSmall(
+                                estate: estate,
+                                isRecommended: intent.state.todayEstates.first?.estate_id == estate.estate_id
+                            )
                         }
                         .buttonStyle(.plain)
                     }
@@ -86,13 +94,19 @@ struct HomeView: View {
 
     private var hotEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader(title: "HOT 매물 🔥")
+            SectionHeader(title: "HOT 매물 🔥", actionTitle: "더보기") {
+                // TODO: 전체보기
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 12) {
+                LazyHStack(spacing: 16) {
                     ForEach(intent.state.hotEstates, id: \.estate_id) { estate in
                         NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
-                            EstateCard(estate: estate)
+                            EstateCardLarge(
+                                estate: estate,
+                                viewerCount: Int.random(in: 10...50)  // TODO: 실제 데이터
+                            )
+                            .frame(width: UIScreen.main.bounds.width * 0.85)
                         }
                         .buttonStyle(.plain)
                     }
@@ -106,7 +120,7 @@ struct HomeView: View {
 
     private var topicSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader(title: "오늘의 부동산 토픽")
+            SectionHeader(title: "오늘의 부동산 토픽")
 
             VStack(spacing: 8) {
                 ForEach(intent.state.topics, id: \.title) { topic in
@@ -123,62 +137,6 @@ struct HomeView: View {
             .padding(.horizontal, 16)
         }
     }
-
-    // MARK: - Section Header
-
-    private func sectionHeader(title: String) -> some View {
-        HStack {
-            Text(title)
-                .font(.headline)
-            Spacer()
-        }
-        .padding(.horizontal, 16)
-    }
-}
-
-// MARK: - Estate Card
-
-struct EstateCard: View {
-    let estate: EstateSummaryResponse
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // 썸네일
-            KFImage.auth(url: imageURL)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 150, height: 100)
-                .background(Color.gray.opacity(0.2))
-                .clipped()
-                .cornerRadius(8)
-
-            // 정보
-            VStack(alignment: .leading, spacing: 4) {
-                Text(estate.title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(1)
-
-                Text(priceText)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .frame(width: 150)
-    }
-
-    private var imageURL: URL? {
-        guard let first = estate.files.first else { return nil }
-        return URL(string: APIConfig.baseURL + "/" + first)
-    }
-
-    private var priceText: String {
-        if estate.monthly_rent > 0 {
-            return "월세 \(estate.deposit)/\(estate.monthly_rent)"
-        } else {
-            return "전세 \(estate.deposit)"
-        }
-    }
 }
 
 // MARK: - Topic Row
@@ -187,23 +145,23 @@ struct TopicRow: View {
     let topic: EstateTopic
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(topic.title)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.pretendardBody2Bold)
+                .foregroundColor(.gray90)
 
             Text(topic.content)
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(.pretendardCaption1)
+                .foregroundColor(.gray75)
                 .lineLimit(2)
 
             Text(topic.date)
-                .font(.caption2)
-                .foregroundColor(.gray)
+                .font(.pretendardCaption2)
+                .foregroundColor(.gray60)
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.systemGray6))
+        .background(Color.gray15)
         .cornerRadius(8)
     }
 }
