@@ -11,13 +11,13 @@ enum EstateCategory: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var icon: String {
+    var iconName: String {
         switch self {
-        case .oneRoom: return "door.left.hand.closed"
-        case .officetel: return "building"
-        case .apartment: return "building.2"
-        case .villa: return "house"
-        case .commercial: return "storefront"
+        case .oneRoom: return "CategoryOneRoom"
+        case .officetel: return "CategoryOfficetel"
+        case .apartment: return "CategoryApartment"
+        case .villa: return "CategoryVilla"
+        case .commercial: return "CategoryCommercial"
         }
     }
 }
@@ -37,9 +37,11 @@ struct CategoryItem: View {
                         .fill(isSelected ? Color.deepCoast.opacity(0.15) : Color.gray15)
                         .frame(width: 48, height: 48)
 
-                    Image(systemName: category.icon)
-                        .font(.system(size: 20))
-                        .foregroundColor(isSelected ? .deepCoast : .gray75)
+                    Image(category.iconName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .opacity(isSelected ? 1.0 : 0.7)
                 }
 
                 Text(category.rawValue)

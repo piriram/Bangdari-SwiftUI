@@ -23,14 +23,21 @@ struct ContentView: View {
 // MARK: - Main Tab View
 
 struct MainTabView: View {
+    @State private var selectedTab: MainTab = .home
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             NavigationStack {
                 HomeView()
             }
             .tabItem {
-                Label("홈", systemImage: "house")
+                VStack {
+                    Image(selectedTab == .home ? "TabHomeFill" : "TabHomeEmpty")
+                        .renderingMode(.original)
+                    Text("홈")
+                }
             }
+            .tag(MainTab.home)
 
             NavigationStack {
                 EstateMapView()
@@ -38,13 +45,19 @@ struct MainTabView: View {
             .tabItem {
                 Label("지도", systemImage: "map")
             }
+            .tag(MainTab.map)
 
             NavigationStack {
                 EstateListView(mode: .liked)
             }
             .tabItem {
-                Label("좋아요", systemImage: "heart")
+                VStack {
+                    Image(selectedTab == .like ? "TabLikeFill" : "TabLikeEmpty")
+                        .renderingMode(.original)
+                    Text("좋아요")
+                }
             }
+            .tag(MainTab.like)
 
             NavigationStack {
                 CommunityListView()
@@ -52,15 +65,29 @@ struct MainTabView: View {
             .tabItem {
                 Label("커뮤니티", systemImage: "bubble.left.and.bubble.right")
             }
+            .tag(MainTab.community)
 
             NavigationStack {
                 MyPageView()
             }
             .tabItem {
-                Label("MY", systemImage: "person")
+                VStack {
+                    Image(selectedTab == .my ? "TabMyFill" : "TabMyEmpty")
+                        .renderingMode(.original)
+                    Text("MY")
+                }
             }
+            .tag(MainTab.my)
         }
     }
+}
+
+private enum MainTab {
+    case home
+    case map
+    case like
+    case community
+    case my
 }
 
 // MARK: - Notifications

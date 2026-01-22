@@ -247,12 +247,21 @@ struct EstateDetailView: View {
                     GridItem(.flexible())
                 ], spacing: 8) {
                     ForEach(enabled, id: \.self) { option in
-                        Text(option)
-                            .font(.caption)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
+                        HStack(spacing: 6) {
+                            if let iconName = optionIconName(option) {
+                                Image(iconName)
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 16, height: 16)
+                            }
+                            Text(option)
+                                .font(.caption)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
                     }
                 }
             }
@@ -285,6 +294,31 @@ struct EstateDetailView: View {
                 }
                 .buttonStyle(.bordered)
             }
+        }
+    }
+
+    private func optionIconName(_ option: String) -> String? {
+        switch option {
+        case "에어컨":
+            return "OptionAirConditioner"
+        case "냉장고":
+            return "OptionRefrigerator"
+        case "세탁기":
+            return "OptionWashingMachine"
+        case "전자레인지":
+            return "OptionMicrowave"
+        case "TV", "티비", "텔레비전":
+            return "OptionTelevision"
+        case "옷장":
+            return "OptionCloset"
+        case "신발장":
+            return "OptionShoeCabinet"
+        case "주차", "주차장":
+            return "OptionParking"
+        case "싱크대":
+            return "OptionSink"
+        default:
+            return nil
         }
     }
 

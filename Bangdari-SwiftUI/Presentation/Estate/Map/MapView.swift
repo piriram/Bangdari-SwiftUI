@@ -5,13 +5,33 @@ import SwiftUI
 // MARK: - Map View
 
 struct EstateMapView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var intent = MapIntent()
     @State private var position: MapCameraPosition = .region(.defaultRegion)
     @State private var selectedEstate: EstateSummaryResponse?
+    @State private var isDepositFilterActive: Bool = true
+    @State private var depositLowerBound: Double = 2_000_000
+    @State private var depositUpperBound: Double = 90_000_000
+    @State private var selectedEstateId: String?
 
     var body: some View {
         ZStack {
             mapContent
+                .ignoresSafeArea()
+
+            VStack(spacing: 12) {
+                navigationHeader
+                SearchBarButton(placeholder: "지역 또는 매물을 검색하세요") {
+                    // TODO: 검색 화면으로 이동
+                }
+                filterChipRow
+                if isDepositFilterActive {
+                    depositRangeCard
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
 
             // 현재 위치 버튼
             VStack {
@@ -30,14 +50,14 @@ struct EstateMapView: View {
                     .background(.ultraThinMaterial)
                     .cornerRadius(8)
             }
+
+            if isDepositFilterActive {
+                bottomEstateCarousel
+            }
         }
         .onChange(of: intent.state.selectedEstate) { _, newValue in
             selectedEstate = newValue
-        }
-        .sheet(item: $selectedEstate) { estate in
-            estatePreview(estate)
-                .presentationDetents([.height(200)])
-                .presentationDragIndicator(.visible)
+            selectedEstateId = newValue?.estate_id
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -53,13 +73,21 @@ struct EstateMapView: View {
 
     private var mapContent: some View {
         Map(position: $position) {
-            // 클러스터 마커
-            ForEach(intent.state.clusters) { cluster in
-                Annotation(
-                    cluster.isSingle ? (cluster.firstEstate?.title ?? "") : "\(cluster.count)개 매물",
-                    coordinate: cluster.coordinate
-                ) {
-                    clusterMarker(cluster)
+            if isDepositFilterActive {
+                ForEach(intent.state.estates) { estate in
+                    Annotation(estate.title, coordinate: estate.geolocation.coordinate) {
+                        estatePin(estate)
+                    }
+                }
+            } else {
+                // 클러스터 마커
+                ForEach(intent.state.clusters) { cluster in
+                    Annotation(
+                        cluster.isSingle ? (cluster.firstEstate?.title ?? "") : "\(cluster.count)개 매물",
+                        coordinate: cluster.coordinate
+                    ) {
+                        clusterMarker(cluster)
+                    }
                 }
             }
 
@@ -125,6 +153,43 @@ struct EstateMapView: View {
         }
     }
 
+    private func estatePin(_ estate: EstateSummaryResponse) -> some View {
+        Button {
+            selectedEstateId = estate.estate_id
+            scrollToEstate(estate)
+        } label: {
+            VStack(spacing: 6) {
+                Text(priceText(estate))
+                    .font(.pretendardCaption2)
+                    .foregroundColor(.gray0)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.deepWood)
+                    .cornerRadius(6)
+
+                HStack(spacing: 8) {
+                    KFImage.auth(url: imageURL(estate))
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 36, height: 36)
+                        .background(Color.gray15)
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+
+                    Text(estate.title)
+                        .font(.pretendardCaption1)
+                        .foregroundColor(.gray90)
+                        .lineLimit(1)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.gray0)
+                .cornerRadius(10)
+                .shadow(color: Color.black.opacity(0.12), radius: 6, x: 0, y: 2)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
     private func zoomToCluster(_ cluster: MapCluster) {
         let newSpan = MKCoordinateSpan(
             latitudeDelta: intent.state.region.span.latitudeDelta / 2,
@@ -145,9 +210,9 @@ struct EstateMapView: View {
                 ))
             }
         } label: {
-            Image(systemName: "location.fill")
+            Image(dsIcon: .location)
                 .font(.title3)
-                .foregroundColor(.brown)
+                .foregroundColor(.deepWood)
                 .padding(12)
                 .background(.ultraThickMaterial)
                 .clipShape(Circle())
@@ -164,50 +229,172 @@ struct EstateMapView: View {
             }
         } label: {
             Text("현 지도에서 검색")
-                .font(.caption)
+                .font(.pretendardCaption1)
         }
     }
 
-    // MARK: - Estate Preview Sheet
+    // MARK: - Header / Filters
 
-    private func estatePreview(_ estate: EstateSummaryResponse) -> some View {
-        NavigationStack {
-            HStack(spacing: 12) {
-                // 썸네일
-                KFImage.auth(url: imageURL(estate))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 100, height: 80)
-                    .background(Color.gray.opacity(0.2))
-                    .clipped()
+    private var navigationHeader: some View {
+        HStack {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(.gray90)
+                    .padding(8)
+                    .background(Color.gray0.opacity(0.9))
+                    .clipShape(Circle())
+            }
+
+            Text("서울 영등포구")
+                .font(.pretendardBody1Bold)
+                .foregroundColor(.gray90)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color.gray0.opacity(0.9))
+                .cornerRadius(12)
+
+            Spacer()
+
+            Button {
+                // TODO: 옵션
+            } label: {
+                Image(systemName: "slider.horizontal.3")
+                    .foregroundColor(.gray90)
+                    .padding(8)
+                    .background(Color.gray0.opacity(0.9))
+                    .clipShape(Circle())
+            }
+        }
+    }
+
+    private var filterChipRow: some View {
+        HStack(spacing: 8) {
+            filterChip(title: "평수 선택", isActive: false)
+            filterChip(title: "월세 선택", isActive: false)
+            filterChip(title: "보증금 선택", isActive: isDepositFilterActive)
+        }
+    }
+
+    private func filterChip(title: String, isActive: Bool) -> some View {
+        Button {
+            if title == "보증금 선택" {
+                isDepositFilterActive.toggle()
+            }
+        } label: {
+            Text(title)
+                .font(.pretendardCaption1)
+                .foregroundColor(isActive ? .deepWood : .gray75)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(isActive ? Color.brightCream : Color.gray0)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(isActive ? Color.deepWood : Color.gray30, lineWidth: 1)
+                )
+                .cornerRadius(16)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var depositRangeCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("\(formatDeposit(depositLowerBound)) ~ \(formatDeposit(depositUpperBound))")
+                .font(.pretendardBody2)
+                .foregroundColor(.gray90)
+
+            RangeSlider(
+                lowerValue: $depositLowerBound,
+                upperValue: $depositUpperBound,
+                bounds: 0...100_000_000
+            )
+
+            HStack {
+                Text("최소")
+                Spacer()
+                Text("최대")
+            }
+            .font(.pretendardCaption2)
+            .foregroundColor(.gray60)
+        }
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
+    }
+
+    private var bottomEstateCarousel: some View {
+        VStack {
+            Spacer()
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(spacing: 12) {
+                        ForEach(intent.state.estates) { estate in
+                            bottomEstateCard(estate)
+                                .frame(width: UIScreen.main.bounds.width * 0.85)
+                                .id(estate.estate_id)
+                                .onTapGesture {
+                                    selectedEstateId = estate.estate_id
+                                    position = .region(MKCoordinateRegion(
+                                        center: estate.geolocation.coordinate,
+                                        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+                                    ))
+                                }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                }
+                .frame(height: 150)
+                .onChange(of: selectedEstateId) { _, newValue in
+                    guard let newValue else { return }
+                    withAnimation(.easeInOut) {
+                        proxy.scrollTo(newValue, anchor: .center)
+                    }
+                }
+                .padding(.bottom, 12)
+            }
+        }
+    }
+
+    private func bottomEstateCard(_ estate: EstateSummaryResponse) -> some View {
+        HStack(spacing: 12) {
+            KFImage.auth(url: imageURL(estate))
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 96, height: 96)
+                .background(Color.gray15)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(estate.category)
+                    .font(.pretendardCaption1)
+                    .foregroundColor(.deepWood)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.brightCream)
                     .cornerRadius(8)
 
-                // 정보
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(estate.category)
-                        .font(.caption)
-                        .foregroundColor(.brown)
+                Text(estate.title)
+                    .font(.pretendardBody2)
+                    .foregroundColor(.gray90)
+                    .lineLimit(1)
 
-                    Text(estate.title)
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .lineLimit(2)
+                Text(priceText(estate))
+                    .font(.pretendardTitle1)
+                    .foregroundColor(.gray90)
 
-                    Text(priceText(estate))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-
-                Spacer()
-
-                // 상세 보기 버튼
-                NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
-                }
+                Text("\(String(format: "%.1f", estate.area))m²")
+                    .font(.pretendardCaption1)
+                    .foregroundColor(.gray75)
             }
-            .padding()
+
+            Spacer()
         }
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
     }
 
     // MARK: - Helpers
@@ -224,12 +411,97 @@ struct EstateMapView: View {
         guard let first = estate.files.first else { return nil }
         return URL(string: Secrets.baseURL + "/" + first)
     }
+
+    private func formatDeposit(_ value: Double) -> String {
+        let intValue = Int(value)
+        if intValue >= 100_000_000 {
+            let eok = intValue / 100_000_000
+            let cheonman = (intValue % 100_000_000) / 10_000_000
+            return cheonman > 0 ? "\(eok)억 \(cheonman)천만" : "\(eok)억"
+        }
+        if intValue >= 10_000_000 {
+            let cheonman = intValue / 10_000_000
+            return "\(cheonman)천만"
+        }
+        if intValue >= 1_000_000 {
+            let baekman = intValue / 1_000_000
+            return "\(baekman)백만"
+        }
+        return "\(intValue)"
+    }
+
+    private func scrollToEstate(_ estate: EstateSummaryResponse) {
+        selectedEstateId = estate.estate_id
+    }
+}
+
+// MARK: - Range Slider
+
+private struct RangeSlider: View {
+    @Binding var lowerValue: Double
+    @Binding var upperValue: Double
+    let bounds: ClosedRange<Double>
+
+    var body: some View {
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            let range = bounds.upperBound - bounds.lowerBound
+            let lowerX = CGFloat((lowerValue - bounds.lowerBound) / range) * width
+            let upperX = CGFloat((upperValue - bounds.lowerBound) / range) * width
+
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(Color.gray30)
+                    .frame(height: 4)
+
+                Capsule()
+                    .fill(Color.deepWood)
+                    .frame(width: max(upperX - lowerX, 0), height: 4)
+                    .offset(x: lowerX)
+
+                sliderThumb
+                    .position(x: lowerX, y: 2)
+                    .gesture(
+                        DragGesture().onChanged { value in
+                            let clampedX = min(max(0, value.location.x), upperX)
+                            let newValue = bounds.lowerBound + (Double(clampedX / width) * range)
+                            lowerValue = min(max(bounds.lowerBound, newValue), upperValue)
+                        }
+                    )
+
+                sliderThumb
+                    .position(x: upperX, y: 2)
+                    .gesture(
+                        DragGesture().onChanged { value in
+                            let clampedX = max(min(width, value.location.x), lowerX)
+                            let newValue = bounds.lowerBound + (Double(clampedX / width) * range)
+                            upperValue = max(min(bounds.upperBound, newValue), lowerValue)
+                        }
+                    )
+            }
+            .frame(height: 20)
+        }
+        .frame(height: 20)
+    }
+
+    private var sliderThumb: some View {
+        Circle()
+            .stroke(Color.deepWood, lineWidth: 2)
+            .background(Circle().fill(Color.gray0))
+            .frame(width: 20, height: 20)
+    }
 }
 
 // MARK: - EstateSummaryResponse Identifiable
 
 extension EstateSummaryResponse: Identifiable {
     var id: String { estate_id }
+}
+
+private extension Geolocation {
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
 }
 
 #Preview {
