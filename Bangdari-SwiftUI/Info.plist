@@ -17,5 +17,18 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>주변 매물을 검색하기 위해 위치 정보가 필요합니다.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Pretendard-Black.otf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-ExtraBold.otf</string>
+		<string>Pretendard-ExtraLight.otf</string>
+		<string>Pretendard-Light.otf</string>
+		<string>Pretendard-Medium.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Pretendard-Thin.otf</string>
+		<string>Yeongdeok Haeparang.ttf</string>
+	</array>
 </dict>
 </plist>
