@@ -39,8 +39,6 @@ struct EstateMapView: View {
                 .presentationDetents([.height(200)])
                 .presentationDragIndicator(.visible)
         }
-        .navigationTitle("지도")
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 searchButton

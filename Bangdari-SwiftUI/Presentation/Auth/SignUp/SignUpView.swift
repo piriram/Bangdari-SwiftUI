@@ -33,8 +33,6 @@ struct SignUpView: View {
             }
             .padding(20)
         }
-        .navigationTitle("회원가입")
-        .navigationBarTitleDisplayMode(.inline)
         .disabled(intent.state.isLoading)
         .overlay {
             if intent.state.isLoading {

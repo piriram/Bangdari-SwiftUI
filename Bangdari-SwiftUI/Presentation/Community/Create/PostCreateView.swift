@@ -49,8 +49,6 @@ struct PostCreateView: View {
                 }
             }
         }
-        .navigationTitle("글쓰기")
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("취소") {

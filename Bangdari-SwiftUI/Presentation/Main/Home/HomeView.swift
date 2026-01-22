@@ -50,7 +50,6 @@ struct HomeView: View {
                 .padding(.vertical, 16)
             }
             .background(Color.gray0)
-            .navigationTitle("방다리")
             .refreshable {
                 await intent.refresh()
             }

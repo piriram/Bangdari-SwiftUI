@@ -17,7 +17,6 @@ struct CommunityListView: View {
                 postList
             }
         }
-        .navigationTitle("커뮤니티")
         .searchable(text: Binding(
             get: { intent.state.searchQuery },
             set: { intent.updateSearchQuery($0) }

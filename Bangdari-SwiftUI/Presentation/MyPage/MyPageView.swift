@@ -19,7 +19,6 @@ struct MyPageView: View {
                 }
             }
         }
-        .navigationTitle("마이페이지")
         .alert("로그아웃", isPresented: $showLogoutAlert) {
             Button("취소", role: .cancel) {}
             Button("로그아웃", role: .destructive) {

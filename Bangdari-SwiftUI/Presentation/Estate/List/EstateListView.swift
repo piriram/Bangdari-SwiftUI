@@ -23,7 +23,6 @@ struct EstateListView: View {
                 estateList
             }
         }
-        .navigationTitle(navigationTitle)
         .refreshable {
             await refresh()
         }
@@ -78,13 +77,6 @@ struct EstateListView: View {
     }
 
     // MARK: - Helpers
-
-    private var navigationTitle: String {
-        switch mode {
-        case .location: return "주변 매물"
-        case .liked: return "좋아요 매물"
-        }
-    }
 
     private var emptyMessage: String {
         switch mode {
