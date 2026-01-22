@@ -37,10 +37,18 @@ struct SearchBar: View {
     }
 }
 
+// MARK: - Search Bar Style
+
+enum SearchBarStyle {
+    case filled    // 채워진 배경 (gray15)
+    case bordered  // 테두리 스타일 (gray0 + border)
+}
+
 // MARK: - Display Only Search Bar (탭하면 검색 화면으로 이동)
 
 struct SearchBarButton: View {
     var placeholder: String = "검색어를 입력해주세요."
+    var style: SearchBarStyle = .filled
     var action: () -> Void
 
     var body: some View {
@@ -58,8 +66,15 @@ struct SearchBarButton: View {
             }
             .padding(.horizontal, 16)
             .frame(height: 44)
-            .background(Color.gray15)
+            .background(style == .filled ? Color.gray15 : Color.gray0)
+            .overlay {
+                if style == .bordered {
+                    Capsule()
+                        .stroke(Color.gray30, lineWidth: 1)
+                }
+            }
             .clipShape(Capsule())
+            .shadow(color: style == .bordered ? .black.opacity(0.08) : .clear, radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
     }

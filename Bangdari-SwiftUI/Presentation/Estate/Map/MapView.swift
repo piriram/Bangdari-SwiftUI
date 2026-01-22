@@ -21,7 +21,7 @@ struct EstateMapView: View {
 
             VStack(spacing: 12) {
                 navigationHeader
-                SearchBarButton(placeholder: "지역 또는 매물을 검색하세요") {
+                SearchBarButton(placeholder: "지역 또는 매물을 검색하세요", style: .bordered) {
                     // TODO: 검색 화면으로 이동
                 }
                 filterChipRow
@@ -119,17 +119,17 @@ struct EstateMapView: View {
                 // 단일 매물 마커
                 VStack(spacing: 0) {
                     Text(priceText(estate))
-                        .font(.caption2)
+                        .font(.pretendardCaption2)
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 6)
+                        .foregroundColor(.gray0)
+                        .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.brown)
-                        .cornerRadius(4)
+                        .background(Color.deepCream)
+                        .cornerRadius(6)
 
                     Image(systemName: "triangle.fill")
                         .font(.system(size: 8))
-                        .foregroundColor(.brown)
+                        .foregroundColor(.deepCream)
                         .rotationEffect(.degrees(180))
                         .offset(y: -2)
                 }
@@ -137,20 +137,26 @@ struct EstateMapView: View {
                 // 클러스터 마커
                 ZStack {
                     Circle()
-                        .fill(Color.brown)
-                        .frame(width: 40, height: 40)
+                        .fill(Color.brightCream.opacity(0.4))
+                        .frame(width: clusterSize(cluster.count) + 12, height: clusterSize(cluster.count) + 12)
 
                     Circle()
-                        .fill(Color.brown.opacity(0.3))
-                        .frame(width: 50, height: 50)
+                        .fill(Color.deepCream)
+                        .frame(width: clusterSize(cluster.count), height: clusterSize(cluster.count))
 
                     Text("\(cluster.count)")
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                        .font(.pretendardBody2Bold)
+                        .foregroundColor(.gray0)
                 }
             }
         }
+    }
+
+    private func clusterSize(_ count: Int) -> CGFloat {
+        let base: CGFloat = 44
+        if count >= 100 { return base + 16 }
+        if count >= 50 { return base + 8 }
+        return base
     }
 
     private func estatePin(_ estate: EstateSummaryResponse) -> some View {
@@ -210,13 +216,15 @@ struct EstateMapView: View {
                 ))
             }
         } label: {
-            Image(dsIcon: .location)
-                .font(.title3)
-                .foregroundColor(.deepWood)
-                .padding(12)
-                .background(.ultraThickMaterial)
+            Image(dsIcon: .focus)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .foregroundColor(.gray75)
+                .frame(width: 44, height: 44)
+                .background(Color.gray0)
                 .clipShape(Circle())
-                .shadow(radius: 2)
+                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
         }
     }
 
@@ -236,35 +244,55 @@ struct EstateMapView: View {
     // MARK: - Header / Filters
 
     private var navigationHeader: some View {
-        HStack {
+        HStack(spacing: 12) {
+            // 뒤로가기 버튼
             Button {
                 dismiss()
             } label: {
-                Image(systemName: "chevron.left")
+                Image(dsIcon: .chevron)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
                     .foregroundColor(.gray90)
-                    .padding(8)
-                    .background(Color.gray0.opacity(0.9))
+                    .padding(10)
+                    .background(Color.gray0)
                     .clipShape(Circle())
+                    .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
             }
 
-            Text("서울 영등포구")
-                .font(.pretendardBody1Bold)
-                .foregroundColor(.gray90)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.gray0.opacity(0.9))
-                .cornerRadius(12)
+            // 위치 표시
+            HStack(spacing: 6) {
+                Image(dsIcon: .location)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(.deepCoast)
+
+                Text("문래역, 영등포구")
+                    .font(.pretendardBody1Bold)
+                    .foregroundColor(.gray90)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color.gray0)
+            .cornerRadius(20)
+            .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
 
             Spacer()
 
+            // 필터/옵션 버튼
             Button {
                 // TODO: 옵션
             } label: {
-                Image(systemName: "slider.horizontal.3")
+                Image(dsIcon: .sort)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
                     .foregroundColor(.gray90)
-                    .padding(8)
-                    .background(Color.gray0.opacity(0.9))
+                    .padding(10)
+                    .background(Color.gray0)
                     .clipShape(Circle())
+                    .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
             }
         }
     }
