@@ -2,18 +2,42 @@ import SwiftUI
 
 // MARK: - Design System Typography
 
+enum PretendardSize: CGFloat {
+    case title1 = 20
+    case body1 = 16
+    case body2 = 14
+    case body3 = 13
+    case caption1 = 12
+    case caption2 = 10
+    case caption3 = 8
+}
+
+enum PretendardWeight: String {
+    case regular = "Pretendard-Regular"
+    case medium = "Pretendard-Medium"
+    case semiBold = "Pretendard-SemiBold"
+    case bold = "Pretendard-Bold"
+}
+
 extension Font {
     // MARK: - Pretendard
 
-    static let pretendardTitle1 = Font.custom("Pretendard-Bold", size: 20)
-    static let pretendardBody1 = Font.custom("Pretendard-Regular", size: 16)
-    static let pretendardBody1Bold = Font.custom("Pretendard-Bold", size: 16)
-    static let pretendardBody2 = Font.custom("Pretendard-Regular", size: 14)
-    static let pretendardBody2Bold = Font.custom("Pretendard-SemiBold", size: 14)
-    static let pretendardBody3 = Font.custom("Pretendard-Regular", size: 13)
-    static let pretendardCaption1 = Font.custom("Pretendard-Regular", size: 12)
-    static let pretendardCaption2 = Font.custom("Pretendard-Medium", size: 10)
-    static let pretendardCaption3 = Font.custom("Pretendard-Regular", size: 8)
+    /// 권장: .font(.pretendard(.body1, .semiBold))
+    static func pretendard(_ size: PretendardSize, _ weight: PretendardWeight = .regular) -> Font {
+        .custom(weight.rawValue, size: size.rawValue)
+    }
+
+    // MARK: - Legacy (기존 코드 호환용)
+
+    static let pretendardTitle1 = Font.pretendard(.title1, .bold)
+    static let pretendardBody1 = Font.pretendard(.body1)
+    static let pretendardBody1Bold = Font.pretendard(.body1, .bold)
+    static let pretendardBody2 = Font.pretendard(.body2)
+    static let pretendardBody2Bold = Font.pretendard(.body2, .semiBold)
+    static let pretendardBody3 = Font.pretendard(.body3)
+    static let pretendardCaption1 = Font.pretendard(.caption1)
+    static let pretendardCaption2 = Font.pretendard(.caption2, .medium)
+    static let pretendardCaption3 = Font.pretendard(.caption3)
 
     // MARK: - Yeongdeok Haeparang (커스텀 폰트 등록 시)
 
