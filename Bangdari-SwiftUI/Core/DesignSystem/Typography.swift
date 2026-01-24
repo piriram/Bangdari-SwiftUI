@@ -5,24 +5,24 @@ import SwiftUI
 extension Font {
     // MARK: - Pretendard
 
-    static let pretendardTitle1 = Font.system(size: 20, weight: .bold)
-    static let pretendardBody1 = Font.system(size: 16, weight: .regular)
-    static let pretendardBody1Bold = Font.system(size: 16, weight: .semibold)
-    static let pretendardBody2 = Font.system(size: 14, weight: .regular)
-    static let pretendardBody2Bold = Font.system(size: 14, weight: .semibold)
-    static let pretendardBody3 = Font.system(size: 13, weight: .regular)
-    static let pretendardCaption1 = Font.system(size: 12, weight: .regular)
-    static let pretendardCaption2 = Font.system(size: 10, weight: .regular)
-    static let pretendardCaption3 = Font.system(size: 8, weight: .regular)
+    static let pretendardTitle1 = Font.custom("Pretendard-Bold", size: 20)
+    static let pretendardBody1 = Font.custom("Pretendard-Regular", size: 16)
+    static let pretendardBody1Bold = Font.custom("Pretendard-Bold", size: 16)
+    static let pretendardBody2 = Font.custom("Pretendard-Regular", size: 14)
+    static let pretendardBody2Bold = Font.custom("Pretendard-SemiBold", size: 14)
+    static let pretendardBody3 = Font.custom("Pretendard-Regular", size: 13)
+    static let pretendardCaption1 = Font.custom("Pretendard-Regular", size: 12)
+    static let pretendardCaption2 = Font.custom("Pretendard-Medium", size: 10)
+    static let pretendardCaption3 = Font.custom("Pretendard-Regular", size: 8)
 
     // MARK: - Yeongdeok Haeparang (커스텀 폰트 등록 시)
 
     static func yeongdeokTitle1() -> Font {
-        .custom("YeongdeokHaeparang", size: 20)
+        .custom("Yeongdeok-Haeparang", size: 20)
     }
 
     static func yeongdeokCaption1() -> Font {
-        .custom("YeongdeokHaeparang", size: 12)
+        .custom("Yeongdeok-Haeparang", size: 12)
     }
 }
 

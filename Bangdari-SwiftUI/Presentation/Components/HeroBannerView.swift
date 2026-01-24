@@ -17,7 +17,7 @@ struct HeroBannerView: View {
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .automatic))
-        .aspectRatio(16 / 9, contentMode: .fit)
+        .frame(height: 335)
     }
 }
 

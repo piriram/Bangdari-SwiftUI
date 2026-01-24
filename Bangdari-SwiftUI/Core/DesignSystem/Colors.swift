@@ -18,7 +18,7 @@ extension Color {
     static let gray15 = Color(hex: "F5F5F5")
     static let gray30 = Color(hex: "E8E8E8")
     static let gray45 = Color(hex: "D1D1D1")
-    static let gray60 = Color(hex: "9E9E9E")
+    static let gray60 = Color(hex: "ABABAE")
     static let gray75 = Color(hex: "757575")
     static let gray90 = Color(hex: "424242")
     static let gray100 = Color(hex: "000000")

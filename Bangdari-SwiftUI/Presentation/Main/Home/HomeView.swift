@@ -93,7 +93,7 @@ struct HomeView: View {
 
     private var hotEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "HOT 매물 🔥", actionTitle: "더보기") {
+            SectionHeader(title: "HOT 매물", actionTitle: "더보기") {
                 // TODO: 전체보기
             }
 
