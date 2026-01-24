@@ -6,25 +6,24 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var intent = HomeIntent()
     @State private var selectedCategory: EstateCategory?
-    @State private var searchText = ""
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    // 검색바
-                    SearchBarButton(placeholder: "지역, 단지명으로 검색") {
-                        // TODO: 검색 화면 이동
-                    }
-                    .padding(.horizontal, 16)
-
-                    // 히어로 배너
+                    // 히어로 배너 (검색바 포함)
                     if !intent.state.banners.isEmpty {
-                        HeroBannerView(banners: intent.state.banners) { banner in
-                            if let link = banner.link, let url = URL(string: link) {
-                                UIApplication.shared.open(url)
+                        HeroBannerView(
+                            banners: intent.state.banners,
+                            onTap: { banner in
+                                if let link = banner.link, let url = URL(string: link) {
+                                    UIApplication.shared.open(url)
+                                }
+                            },
+                            onSearchTap: {
+                                // TODO: 검색 화면 이동
                             }
-                        }
+                        )
                     }
 
                     // 카테고리 선택
@@ -47,8 +46,10 @@ struct HomeView: View {
                         topicSection
                     }
                 }
-                .padding(.vertical, 16)
+                .padding(.bottom, 16)
             }
+            .scrollContentBackground(.hidden)
+            .ignoresSafeArea(edges: .top)
             .background(Color.gray0)
             .refreshable {
                 await intent.refresh()
@@ -58,6 +59,7 @@ struct HomeView: View {
                     ProgressView()
                 }
             }
+            .toolbar(.hidden, for: .navigationBar)
         }
         .task {
             await intent.loadHomeData()
@@ -68,7 +70,7 @@ struct HomeView: View {
 
     private var todayEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "최근검색 매물", actionTitle: "View All") {
+            SectionHeader(title: "최근검색 매물", actionTitle: "더보기") {
                 // TODO: 전체보기
             }
 
