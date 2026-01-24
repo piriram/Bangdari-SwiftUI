@@ -8,6 +8,8 @@ struct EstateDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var currentImageIndex = 0
 
+    private let imageHeight: CGFloat = 280
+
     init(estateId: String) {
         _intent = StateObject(wrappedValue: EstateDetailIntent(estateId: estateId))
     }
@@ -22,40 +24,8 @@ struct EstateDetailView: View {
                 ProgressView()
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(dsIcon: .chevron)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.gray90)
-                }
-            }
-
-            ToolbarItem(placement: .principal) {
-                Text(intent.state.estate?.title ?? "")
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
-                    .lineLimit(1)
-            }
-
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    Task { await intent.toggleLike() }
-                } label: {
-                    Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(intent.state.isLiked ? .red : .gray75)
-                }
-                .disabled(intent.state.isLikeLoading)
-            }
-        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .task {
             await intent.loadDetail()
         }
@@ -64,184 +34,205 @@ struct EstateDetailView: View {
     // MARK: - Detail Content
 
     private func detailContent(_ estate: EstateDetailResponse) -> some View {
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .top) {
+            // 배경
+            Color.gray15.ignoresSafeArea()
+
+            // 1️⃣ 상단 히어로 이미지
+            imageCarousel(estate.files)
+                .ignoresSafeArea(edges: .top)
+
+            // 2️⃣ 스크롤 콘텐츠
             ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    // 이미지 갤러리
-                    imageCarousel(estate.files)
+                VStack(alignment: .leading, spacing: 24) {
+                    // 이미지 영역만큼 상단 여백
+                    Spacer()
+                        .frame(height: imageHeight)
 
-                    VStack(alignment: .leading, spacing: 20) {
-                        // 상태 뱃지 + 업데이트 시간
-                        statusBadgeSection(estate)
+                    // 실시간 상태 정보
+                    statusSection(estate)
 
-                        // 주소 정보
-                        addressInfo(estate)
+                    // 매물 핵심 정보
+                    priceInfoSection(estate)
 
-                        // 가격 정보 (강조)
-                        priceSection(estate)
+                    // 옵션 정보 카드
+                    optionGridSection(estate.options)
 
-                        // 옵션 그리드
-                        optionGrid(estate.options)
+                    // 상세 설명
+                    descriptionSection(estate)
 
-                        // 중개인 정보
-                        creatorInfo(estate.creator)
-
-                        // 유사 매물
-                        if !intent.state.similarEstates.isEmpty {
-                            similarEstatesSection
-                        }
-
-                        // 댓글
-                        if !estate.comments.isEmpty {
-                            commentsSection(estate.comments)
-                        }
-
-                        // 하단 여백 (CTA 버튼 영역)
-                        Spacer()
-                            .frame(height: 100)
+                    // 유사한 매물
+                    if !intent.state.similarEstates.isEmpty {
+                        similarEstatesSection
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 20)
+
+                    // 중개사 정보
+                    agentInfoSection(estate.creator)
+
+                    // 하단 여백 (CTA 영역)
+                    Spacer()
+                        .frame(height: 100)
                 }
+                .padding(.horizontal, 16)
             }
 
-            // 하단 고정 CTA
-            bottomActionBar(estate)
+            // 상단 네비게이션 오버레이
+            navigationOverlay
         }
-        .background(Color.gray0)
+        .safeAreaInset(edge: .bottom) {
+            // 3️⃣ 하단 고정 CTA
+            bottomCTABar(estate)
+        }
     }
 
-    // MARK: - Image Carousel
+    // MARK: - Navigation Overlay
+
+    private var navigationOverlay: some View {
+        HStack {
+            Button { dismiss() } label: {
+                Image(dsIcon: .chevron)
+                    .renderingMode(.template)
+                    .foregroundColor(.gray0)
+                    .frame(width: 36, height: 36)
+                    .background(Color.black.opacity(0.3))
+                    .clipShape(Circle())
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, topSafeAreaInset + 8)
+    }
+
+    // MARK: - 1. Image Carousel (히어로 영역)
 
     private func imageCarousel(_ files: [String]) -> some View {
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .bottomTrailing) {
             TabView(selection: $currentImageIndex) {
                 ForEach(Array(files.enumerated()), id: \.offset) { index, file in
                     KFImage.auth(url: URL(string: APIConfig.baseURL + "/" + file))
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .background(Color.gray15)
+                        .scaledToFill()
+                        .frame(height: imageHeight)
                         .clipped()
                         .tag(index)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .aspectRatio(4/3, contentMode: .fit)
+            .frame(height: imageHeight)
 
-            // 오버레이 요소들
-            HStack {
-                // 실시간 정보
-                HStack(spacing: 4) {
-                    Image(systemName: "eye.fill")
-                        .font(.system(size: 10))
-                    Text("34명이 함께 보는 중")
-                        .font(.pretendardCaption2)
-                }
+            // 하단 그라데이션
+            LinearGradient(
+                colors: [.black.opacity(0.3), .clear],
+                startPoint: .bottom,
+                endPoint: .center
+            )
+            .frame(height: imageHeight)
+            .allowsHitTesting(false)
+
+            // 이미지 인덱스 (우측 하단)
+            Text("\(currentImageIndex + 1)/\(max(files.count, 1))")
+                .font(.pretendard(.caption2, .medium))
                 .foregroundColor(.gray0)
                 .padding(.horizontal, 10)
-                .padding(.vertical, 6)
+                .padding(.vertical, 4)
                 .background(Color.black.opacity(0.5))
-                .cornerRadius(12)
+                .cornerRadius(10)
+                .padding(16)
+        }
+    }
 
-                Spacer()
+    // MARK: - 2-1. 실시간 상태 정보
 
-                // 이미지 카운트
-                Text("\(currentImageIndex + 1) / \(files.count)")
-                    .font(.pretendardCaption2)
-                    .foregroundColor(.gray0)
+    private func statusSection(_ estate: EstateDetailResponse) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // n명이 함께 보는 중
+            Text("34명이 함께 보는 중")
+                .font(.pretendard(.caption1))
+                .foregroundColor(.gray75)
+
+            // 태그
+            HStack(spacing: 8) {
+                if estate.is_safe_estate {
+                    HStack(spacing: 4) {
+                        Image(dsIcon: .safety)
+                            .renderingMode(.template)
+                            .frame(width: 14, height: 14)
+                        Text("구매자 안심매물")
+                            .font(.pretendard(.caption2, .medium))
+                    }
+                    .foregroundColor(.deepCoast)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
-                    .background(Color.black.opacity(0.5))
-                    .cornerRadius(12)
-            }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
-        }
-    }
-
-    // MARK: - Status Badge Section
-
-    private func statusBadgeSection(_ estate: EstateDetailResponse) -> some View {
-        HStack {
-            if estate.is_safe_estate {
-                HStack(spacing: 6) {
-                    Image(dsIcon: .safety)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 16, height: 16)
-                    Text("구매자 안심매물")
-                        .font(.pretendardCaption1)
-                }
-                .foregroundColor(.deepCoast)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.brightCoast.opacity(0.2))
-                .clipShape(Capsule())
-            }
-
-            if estate.is_reserved {
-                Text("예약중")
-                    .font(.pretendardCaption1)
-                    .foregroundColor(.deepWood)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color.brightCream)
+                    .background(Color.brightCoast.opacity(0.15))
                     .clipShape(Capsule())
+                }
+
+                if estate.is_reserved {
+                    Text("예약중")
+                        .font(.pretendard(.caption2, .medium))
+                        .foregroundColor(.deepWood)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.brightCream)
+                        .clipShape(Capsule())
+                }
             }
-
-            Spacer()
-
-            // 업데이트 시점
-            Text(formatDate(estate.updatedAt))
-                .font(.pretendardCaption1)
-                .foregroundColor(.gray60)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
     }
 
-    // MARK: - Address Info
+    // MARK: - 2-2. 매물 핵심 정보
 
-    private func addressInfo(_ estate: EstateDetailResponse) -> some View {
-        Text("서울 영등포구 선유로9길 30") // TODO: 실제 주소 데이터 연동
-            .font(.pretendardBody3)
-            .foregroundColor(.gray75)
-    }
-
-    // MARK: - Price Section
-
-    private func priceSection(_ estate: EstateDetailResponse) -> some View {
+    private func priceInfoSection(_ estate: EstateDetailResponse) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            // 메인 가격
+            // 주소
+            Text("서울 영등포구 선유로9길 30") // TODO: 실제 주소
+                .font(.pretendard(.caption1))
+                .foregroundColor(.gray75)
+
+            // 가격 (가장 강조)
             if estate.monthly_rent > 0 {
                 Text("월세 \(formatPrice(estate.deposit)) / \(estate.monthly_rent)")
-                    .font(.pretendardTitle1)
+                    .font(.pretendard(.title1, .bold))
                     .foregroundColor(.gray90)
             } else {
                 Text("전세 \(formatPrice(estate.deposit))")
-                    .font(.pretendardTitle1)
+                    .font(.pretendard(.title1, .bold))
                     .foregroundColor(.gray90)
             }
 
-            // 보조 정보
+            // 관리비 / 면적
             Text("관리비 별도 · \(String(format: "%.1f", estate.area))m² · \(estate.floors)")
-                .font(.pretendardBody3)
+                .font(.pretendard(.caption1))
                 .foregroundColor(.gray75)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
     }
 
-    // MARK: - Option Grid
+    // MARK: - 2-3. 옵션 정보 카드
 
-    private func optionGrid(_ options: EstateOptions) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            let allOptions = [
-                ("냉장고", "OptionRefrigerator", options.option1),
-                ("세탁기", "OptionWashingMachine", options.option2),
-                ("에어컨", "OptionAirConditioner", options.option3),
-                ("옷장", "OptionCloset", options.option4),
-                ("신발장", "OptionShoeCabinet", options.option5),
-                ("전자레인지", "OptionMicrowave", options.option6),
-                ("싱크대", "OptionSink", options.option7),
-                ("TV", "OptionTelevision", options.option8)
-            ]
+    private func optionGridSection(_ options: EstateOptions) -> some View {
+        let allOptions = [
+            ("냉장고", "OptionRefrigerator", options.option1),
+            ("세탁기", "OptionWashingMachine", options.option2),
+            ("에어컨", "OptionAirConditioner", options.option3),
+            ("옷장", "OptionCloset", options.option4),
+            ("신발장", "OptionShoeCabinet", options.option5),
+            ("전자레인지", "OptionMicrowave", options.option6),
+            ("싱크대", "OptionSink", options.option7),
+            ("TV", "OptionTelevision", options.option8)
+        ]
+
+        return VStack(alignment: .leading, spacing: 12) {
+            Text("옵션 정보")
+                .font(.pretendard(.body2, .semiBold))
+                .foregroundColor(.gray90)
 
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -250,62 +241,50 @@ struct EstateDetailView: View {
                 GridItem(.flexible())
             ], spacing: 16) {
                 ForEach(allOptions, id: \.0) { name, icon, enabled in
-                    optionItem(name: name, icon: icon, enabled: enabled)
+                    VStack(spacing: 6) {
+                        Image(icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 28, height: 28)
+                            .opacity(enabled ? 1.0 : 0.25)
+
+                        Text(name)
+                            .font(.pretendard(.caption2))
+                            .foregroundColor(enabled ? .gray90 : .gray45)
+                    }
                 }
             }
-            .padding(16)
-            .background(Color.gray15)
-            .cornerRadius(12)
         }
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
     }
 
-    private func optionItem(name: String, icon: String, enabled: Bool) -> some View {
-        VStack(spacing: 8) {
-            Image(icon)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 28, height: 28)
-                .opacity(enabled ? 1.0 : 0.3)
+    // MARK: - 2-4. 상세 설명
 
-            Text(name)
-                .font(.pretendardCaption2)
-                .foregroundColor(enabled ? .gray90 : .gray45)
-        }
-    }
-
-    // MARK: - Creator Info
-
-    private func creatorInfo(_ creator: UserInfo) -> some View {
+    private func descriptionSection(_ estate: EstateDetailResponse) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("중개인")
-                .font(.pretendardBody1Bold)
+            Text("상세 설명")
+                .font(.pretendard(.body2, .semiBold))
                 .foregroundColor(.gray90)
 
-            HStack(spacing: 12) {
-                KFImage.auth(url: profileImageURL(creator.profileImage))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 48, height: 48)
-                    .background(Color.gray15)
-                    .clipShape(Circle())
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(creator.nick)
-                        .font(.pretendardBody2Bold)
-                        .foregroundColor(.gray90)
-                }
-
-                Spacer()
-            }
+            Text(estate.title) // TODO: 실제 description 필드
+                .font(.pretendard(.body3))
+                .foregroundColor(.gray75)
+                .lineLimit(nil)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
     }
 
-    // MARK: - Similar Estates Section
+    // MARK: - 2-5. 유사한 매물
 
     private var similarEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("유사한 매물")
-                .font(.pretendardBody1Bold)
+                .font(.pretendard(.body2, .semiBold))
                 .foregroundColor(.gray90)
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -319,95 +298,132 @@ struct EstateDetailView: View {
                 }
             }
         }
+        .padding(.vertical, 16)
+        .padding(.leading, 16)
+        .background(Color.gray0)
+        .cornerRadius(12)
     }
 
     private func similarEstateCard(_ estate: EstateSummaryResponse) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             KFImage.auth(url: similarEstateImageURL(estate))
                 .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 140, height: 100)
+                .scaledToFill()
+                .frame(width: UIScreen.main.bounds.width * 0.55, height: 120)
                 .background(Color.gray15)
                 .clipped()
                 .cornerRadius(8)
 
             Text(estate.category)
-                .font(.pretendardCaption2)
-                .foregroundColor(.deepWood)
+                .font(.pretendard(.caption2))
+                .foregroundColor(.gray75)
 
             Text(estate.title)
-                .font(.pretendardCaption1)
+                .font(.pretendard(.body3))
                 .foregroundColor(.gray90)
                 .lineLimit(1)
 
             Text(similarPriceText(estate))
-                .font(.pretendardCaption1)
-                .foregroundColor(.gray75)
+                .font(.pretendard(.body2, .semiBold))
+                .foregroundColor(.gray90)
         }
-        .frame(width: 140)
+        .frame(width: UIScreen.main.bounds.width * 0.55)
     }
 
-    // MARK: - Comments Section
+    // MARK: - 2-6. 중개사 정보
 
-    private func commentsSection(_ comments: [EstateComment]) -> some View {
+    private func agentInfoSection(_ creator: UserInfo) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("댓글 \(comments.count)")
-                .font(.pretendardBody1Bold)
+            Text("중개사 정보")
+                .font(.pretendard(.body2, .semiBold))
                 .foregroundColor(.gray90)
 
-            ForEach(comments, id: \.comment_id) { comment in
-                commentRow(comment)
-            }
-        }
-    }
+            HStack(spacing: 12) {
+                // 프로필 이미지
+                KFImage.auth(url: profileImageURL(creator.profileImage))
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 48, height: 48)
+                    .background(Color.gray30)
+                    .clipShape(Circle())
 
-    private func commentRow(_ comment: EstateComment) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(comment.creator.nick)
-                    .font(.pretendardBody3)
-                    .foregroundColor(.gray90)
+                // 이름
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(creator.nick)
+                        .font(.pretendard(.body2, .semiBold))
+                        .foregroundColor(.gray90)
+
+                    Text("공인중개사")
+                        .font(.pretendard(.caption1))
+                        .foregroundColor(.gray75)
+                }
+
                 Spacer()
-                Text(String(comment.createdAt.prefix(10)))
-                    .font(.pretendardCaption2)
-                    .foregroundColor(.gray60)
             }
 
-            Text(comment.content)
-                .font(.pretendardBody3)
-                .foregroundColor(.gray75)
+            // 전화 / 채팅 버튼
+            HStack(spacing: 12) {
+                Button {} label: {
+                    HStack(spacing: 6) {
+                        Image(contactIcon: .call)
+                            .renderingMode(.template)
+                            .frame(width: 16, height: 16)
+                        Text("전화")
+                            .font(.pretendard(.body3))
+                    }
+                    .foregroundColor(.gray90)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 40)
+                    .background(Color.gray15)
+                    .cornerRadius(8)
+                }
+
+                Button {} label: {
+                    HStack(spacing: 6) {
+                        Image(contactIcon: .chat)
+                            .renderingMode(.template)
+                            .frame(width: 16, height: 16)
+                        Text("채팅")
+                            .font(.pretendard(.body3))
+                    }
+                    .foregroundColor(.gray90)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 40)
+                    .background(Color.gray15)
+                    .cornerRadius(8)
+                }
+            }
         }
-        .padding(12)
-        .background(Color.gray15)
-        .cornerRadius(8)
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
     }
 
-    // MARK: - Bottom Action Bar
+    // MARK: - 3. 하단 고정 CTA
 
-    private func bottomActionBar(_ estate: EstateDetailResponse) -> some View {
+    private func bottomCTABar(_ estate: EstateDetailResponse) -> some View {
         HStack(spacing: 12) {
-            // 관심 버튼
+            // 찜 버튼
             Button {
                 Task { await intent.toggleLike() }
             } label: {
                 Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
-                    .resizable()
-                    .scaledToFit()
+                    .renderingMode(.template)
                     .frame(width: 24, height: 24)
                     .foregroundColor(intent.state.isLiked ? .red : .gray75)
                     .frame(width: 52, height: 52)
                     .background(Color.gray15)
-                    .clipShape(Circle())
+                    .cornerRadius(12)
             }
             .disabled(intent.state.isLikeLoading)
 
-            // 예약하기 버튼
+            // CTA 버튼
             Button {
                 // TODO: 예약 플로우
             } label: {
-                Text("예약하기")
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray0)
+                Text(estate.is_reserved ? "예약완료" : "예약하기")
+                    .font(.pretendard(.body1, .bold))
+                    .foregroundColor(estate.is_reserved ? .gray60 : .gray0)
                     .frame(maxWidth: .infinity)
                     .frame(height: 52)
                     .background(estate.is_reserved ? Color.gray30 : Color.deepCream)
@@ -416,10 +432,12 @@ struct EstateDetailView: View {
             .disabled(estate.is_reserved)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
         .background(
             Color.gray0
-                .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: -2)
+                .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: -2)
+                .ignoresSafeArea(edges: .bottom)
         )
     }
 
@@ -432,35 +450,32 @@ struct EstateDetailView: View {
                 .foregroundColor(.orange)
 
             Text(message)
-                .font(.pretendardBody2)
+                .font(.pretendard(.body2))
                 .foregroundColor(.gray60)
 
             Button("다시 시도") {
                 Task { await intent.loadDetail() }
             }
-            .font(.pretendardBody2Bold)
+            .font(.pretendard(.body2, .semiBold))
             .foregroundColor(.deepCoast)
         }
     }
 
     // MARK: - Helpers
 
+    private var topSafeAreaInset: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.windows.first?.safeAreaInsets.top ?? 0
+    }
+
     private func formatPrice(_ price: Int) -> String {
         if price >= 10000 {
             let billion = price / 10000
             let remainder = price % 10000
-            if remainder == 0 {
-                return "\(billion)억"
-            } else {
-                return "\(billion)억 \(remainder)"
-            }
+            return remainder == 0 ? "\(billion)억" : "\(billion)억 \(remainder)"
         }
         return "\(price)"
-    }
-
-    private func formatDate(_ dateString: String) -> String {
-        // 간단한 날짜 포맷 (예: "2일 전")
-        return "2일 전" // TODO: 실제 날짜 계산
     }
 
     private func profileImageURL(_ path: String?) -> URL? {
@@ -475,10 +490,9 @@ struct EstateDetailView: View {
 
     private func similarPriceText(_ estate: EstateSummaryResponse) -> String {
         if estate.monthly_rent > 0 {
-            return "\(estate.deposit)/\(estate.monthly_rent)"
-        } else {
-            return "전세 \(estate.deposit)"
+            return "월세 \(estate.deposit)/\(estate.monthly_rent)"
         }
+        return "전세 \(estate.deposit)"
     }
 }
 

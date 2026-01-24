@@ -8,51 +8,53 @@ struct EstateCardSmall: View {
     var isRecommended: Bool = false
 
     var body: some View {
-        HStack(spacing: 12) {
-            // 이미지
+        HStack(alignment: .top, spacing: 12) {
+            // 썸네일
             KFImage.auth(url: imageURL)
                 .resizable()
-                .aspectRatio(1, contentMode: .fill)
-                .frame(width: 100, height: 100)
+                .scaledToFill()
+                .frame(width: 88, height: 88)
                 .background(Color.gray15)
-                .cornerRadius(8)
-                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: 8))
 
-            // 정보
-            VStack(alignment: .leading, spacing: 6) {
-                // 태그
+            // 텍스트 정보
+            VStack(alignment: .leading, spacing: 4) {
+                // 태그 + 카테고리
                 HStack(spacing: 4) {
                     if isRecommended {
-                        Badge(text: "추천", style: .primary)
+                        Text("추천")
+                            .font(.pretendard(.caption2))
+                            .foregroundColor(.deepWood)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.brightCream)
+                            .cornerRadius(6)
                     }
-                    Badge(text: estate.category, style: .secondary)
+
+                    Text(estate.category)
+                        .font(.pretendard(.caption1))
+                        .foregroundColor(.gray75)
                 }
 
                 // 가격
                 Text(priceText)
-                    .font(.pretendardBody1Bold)
+                    .font(.pretendard(.body2, .semiBold))
                     .foregroundColor(.gray90)
-                    .lineLimit(1)
-
-                // 제목
-                Text(estate.title)
-                    .font(.pretendardBody3)
-                    .foregroundColor(.gray75)
                     .lineLimit(1)
 
                 // 면적
                 Text(areaText)
-                    .font(.pretendardCaption1)
-                    .foregroundColor(.gray60)
+                    .font(.pretendard(.caption1))
+                    .foregroundColor(.gray75)
+                    .lineLimit(1)
             }
 
             Spacer(minLength: 0)
         }
         .padding(12)
-        .frame(width: 240, height: 124)
+        .frame(height: 112)
         .background(Color.gray0)
         .cornerRadius(12)
-        .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
     }
 
     private var imageURL: URL? {
@@ -69,8 +71,7 @@ struct EstateCardSmall: View {
     }
 
     private var areaText: String {
-        let pyeong = estate.area / 3.3
-        return String(format: "%.1f㎡ (%.0f평)", estate.area, pyeong)
+        String(format: "%.1fm²", estate.area)
     }
 
     private func formatPrice(_ price: Int) -> String {
