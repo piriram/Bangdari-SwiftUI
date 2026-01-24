@@ -73,9 +73,8 @@ struct HeroBannerView: View {
         GeometryReader { geo in
             KFImage.auth(url: imageURL(for: banner))
                 .resizable()
-                .scaledToFill()
+                .scaledToFit()
                 .frame(width: geo.size.width, height: geo.size.height)
-                .clipped()
         }
     }
 
