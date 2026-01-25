@@ -7,8 +7,19 @@ struct EstateDetailView: View {
     @StateObject private var intent: EstateDetailIntent
     @Environment(\.dismiss) private var dismiss
     @State private var currentImageIndex = 0
+    @State private var scrollOffset: CGFloat = 0
 
     private let imageHeight: CGFloat = 280
+
+    /// 네비게이션 바 전환 임계점 (이미지 높이 - 네비바 높이)
+    private var navBarThreshold: CGFloat {
+        imageHeight - topSafeAreaInset - 52
+    }
+
+    /// 스크롤 진행률 (0: 투명, 1: 불투명)
+    private var navBarProgress: CGFloat {
+        min(max(scrollOffset / navBarThreshold, 0), 1)
+    }
 
     init(estateId: String) {
         _intent = StateObject(wrappedValue: EstateDetailIntent(estateId: estateId))
@@ -38,16 +49,20 @@ struct EstateDetailView: View {
             // 배경
             Color.gray15.ignoresSafeArea()
 
-            // 1️⃣ 상단 히어로 이미지
-            imageCarousel(estate.files)
-                .ignoresSafeArea(edges: .top)
-
-            // 2️⃣ 스크롤 콘텐츠
+            // 스크롤 콘텐츠 (이미지 포함)
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    // 이미지 영역만큼 상단 여백
-                    Spacer()
-                        .frame(height: imageHeight)
+                    // 1️⃣ 히어로 이미지 (스크롤과 함께 사라짐)
+                    imageCarousel(estate.files)
+                        .padding(.horizontal, -16) // 좌우 패딩 무시
+                        .background(
+                            GeometryReader { geo in
+                                Color.clear.preference(
+                                    key: ScrollOffsetKey.self,
+                                    value: -geo.frame(in: .named("detailScroll")).minY
+                                )
+                            }
+                        )
 
                     // 실시간 상태 정보
                     statusSection(estate)
@@ -75,9 +90,14 @@ struct EstateDetailView: View {
                 }
                 .padding(.horizontal, 16)
             }
+            .ignoresSafeArea(edges: .top)
+            .coordinateSpace(name: "detailScroll")
+            .onPreferenceChange(ScrollOffsetKey.self) { value in
+                scrollOffset = value
+            }
 
-            // 상단 네비게이션 오버레이
-            navigationOverlay
+            // 상단 커스텀 네비게이션 바 (고정 오버레이)
+            detailNavigationBar(estate)
         }
         .safeAreaInset(edge: .bottom) {
             // 3️⃣ 하단 고정 CTA
@@ -85,22 +105,49 @@ struct EstateDetailView: View {
         }
     }
 
-    // MARK: - Navigation Overlay
+    // MARK: - Custom Navigation Bar
 
-    private var navigationOverlay: some View {
-        HStack {
+    private func detailNavigationBar(_ estate: EstateDetailResponse) -> some View {
+        let isScrolled = navBarProgress > 0.5
+
+        return HStack(spacing: 0) {
+            // 좌측: 뒤로가기
             Button { dismiss() } label: {
                 Image(dsIcon: .chevron)
                     .renderingMode(.template)
-                    .foregroundColor(.gray0)
-                    .frame(width: 36, height: 36)
-                    .background(Color.black.opacity(0.3))
-                    .clipShape(Circle())
+                    .foregroundColor(isScrolled ? .gray75 : .gray0)
+                    .frame(width: 44, height: 44)
             }
+
             Spacer()
+
+            // 중앙: 제목 (존재감 약하게)
+            Text(estate.title)
+                .font(.pretendard(.body2))
+                .foregroundColor(isScrolled ? .gray75 : .gray0)
+                .lineLimit(1)
+                .opacity(navBarProgress)
+
+            Spacer()
+
+            // 우측: 찜 버튼
+            Button {
+                Task { await intent.toggleLike() }
+            } label: {
+                Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
+                    .renderingMode(.template)
+                    .foregroundColor(intent.state.isLiked ? .red : (isScrolled ? .gray60 : .gray0))
+                    .frame(width: 44, height: 44)
+            }
+            .disabled(intent.state.isLikeLoading)
         }
+        .frame(height: 44)
         .padding(.horizontal, 16)
-        .padding(.top, topSafeAreaInset + 8)
+        .background(
+            Color.gray0.opacity(navBarProgress)
+                .ignoresSafeArea(edges: .top)
+        )
+        .animation(.easeInOut(duration: 0.2), value: navBarProgress > 0.5)
     }
 
     // MARK: - 1. Image Carousel (히어로 영역)
@@ -179,9 +226,6 @@ struct EstateDetailView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(Color.gray0)
-        .cornerRadius(12)
     }
 
     // MARK: - 2-2. 매물 핵심 정보
@@ -210,12 +254,9 @@ struct EstateDetailView: View {
                 .foregroundColor(.gray75)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(Color.gray0)
-        .cornerRadius(12)
     }
 
-    // MARK: - 2-3. 옵션 정보 카드
+    // MARK: - 2-3. 옵션 정보
 
     private func optionGridSection(_ options: EstateOptions) -> some View {
         let allOptions = [
@@ -255,9 +296,6 @@ struct EstateDetailView: View {
                 }
             }
         }
-        .padding(16)
-        .background(Color.gray0)
-        .cornerRadius(12)
     }
 
     // MARK: - 2-4. 상세 설명
@@ -274,9 +312,6 @@ struct EstateDetailView: View {
                 .lineLimit(nil)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(Color.gray0)
-        .cornerRadius(12)
     }
 
     // MARK: - 2-5. 유사한 매물
@@ -298,10 +333,6 @@ struct EstateDetailView: View {
                 }
             }
         }
-        .padding(.vertical, 16)
-        .padding(.leading, 16)
-        .background(Color.gray0)
-        .cornerRadius(12)
     }
 
     private func similarEstateCard(_ estate: EstateSummaryResponse) -> some View {
@@ -374,7 +405,7 @@ struct EstateDetailView: View {
                     .foregroundColor(.gray90)
                     .frame(maxWidth: .infinity)
                     .frame(height: 40)
-                    .background(Color.gray15)
+                    .background(Color.gray30)
                     .cornerRadius(8)
                 }
 
@@ -389,14 +420,11 @@ struct EstateDetailView: View {
                     .foregroundColor(.gray90)
                     .frame(maxWidth: .infinity)
                     .frame(height: 40)
-                    .background(Color.gray15)
+                    .background(Color.gray30)
                     .cornerRadius(8)
                 }
             }
         }
-        .padding(16)
-        .background(Color.gray0)
-        .cornerRadius(12)
     }
 
     // MARK: - 3. 하단 고정 CTA
@@ -493,6 +521,15 @@ struct EstateDetailView: View {
             return "월세 \(estate.deposit)/\(estate.monthly_rent)"
         }
         return "전세 \(estate.deposit)"
+    }
+}
+
+// MARK: - Scroll Offset PreferenceKey
+
+private struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
