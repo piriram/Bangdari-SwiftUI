@@ -43,6 +43,20 @@ extension MKCoordinateRegion {
     )
 }
 
+// MARK: - Map Constants
+
+enum MapConstants {
+    /// 이 값 이하로 확대하면 클러스터링 없이 개별 마커 표시
+    /// 값이 작을수록 더 확대해야 개별 마커가 보임
+    static let clusteringDisableThreshold: Double = 0.008
+
+    /// 자동 재조회 트리거 거리 (미터)
+    static let reloadDistanceThreshold: Double = 500
+
+    /// debounce 시간 (밀리초)
+    static let debounceMilliseconds: Int = 500
+}
+
 // MARK: - Map Intent
 
 @MainActor
@@ -73,7 +87,7 @@ final class MapIntent: ObservableObject {
 
     private func setupRegionDebounce() {
         regionSubject
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(MapConstants.debounceMilliseconds), scheduler: DispatchQueue.main)
             .sink { [weak self] region in
                 guard let self else { return }
                 Task {
@@ -109,10 +123,10 @@ final class MapIntent: ObservableObject {
     func updateRegion(_ region: MKCoordinateRegion) {
         state.region = region
 
-        // 500m 이상 이동했으면 즉시 로딩 표시 (debounce 전에)
+        // 일정 거리 이상 이동했으면 즉시 로딩 표시 (debounce 전에)
         if let lastCenter = lastLoadedCenter {
             let distance = distanceBetween(lastCenter, region.center)
-            if distance > 500 {
+            if distance > MapConstants.reloadDistanceThreshold {
                 state.isLoading = true
             }
         }
@@ -129,8 +143,7 @@ final class MapIntent: ObservableObject {
         // 마지막 로드 위치와 비교
         if let lastCenter = lastLoadedCenter {
             let distance = distanceBetween(lastCenter, center)
-            // 500m 이상 이동했을 때만 재조회
-            guard distance > 500 else {
+            guard distance > MapConstants.reloadDistanceThreshold else {
                 updateClusters()
                 return
             }
@@ -189,6 +202,20 @@ final class MapIntent: ObservableObject {
         in region: MKCoordinateRegion
     ) -> [MapCluster] {
         guard !estates.isEmpty else { return [] }
+
+        // 충분히 확대되면 클러스터링 없이 개별 마커 표시
+        let isDetailedZoom = region.span.latitudeDelta < MapConstants.clusteringDisableThreshold
+
+        if isDetailedZoom {
+            // 개별 마커로 표시 (각 매물이 하나의 클러스터)
+            return estates.map { estate in
+                MapCluster(
+                    id: estate.estate_id,
+                    coordinate: estate.geolocation.coordinate,
+                    estates: [estate]
+                )
+            }
+        }
 
         // 줌 레벨에 따라 클러스터 셀 크기 결정
         let cellSize = region.span.latitudeDelta / 10
