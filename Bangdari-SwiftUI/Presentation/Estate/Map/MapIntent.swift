@@ -108,6 +108,15 @@ final class MapIntent: ObservableObject {
     /// 지도 영역 업데이트 + debounce로 자동 재조회
     func updateRegion(_ region: MKCoordinateRegion) {
         state.region = region
+
+        // 500m 이상 이동했으면 즉시 로딩 표시 (debounce 전에)
+        if let lastCenter = lastLoadedCenter {
+            let distance = distanceBetween(lastCenter, region.center)
+            if distance > 500 {
+                state.isLoading = true
+            }
+        }
+
         regionSubject.send(region)
     }
 
