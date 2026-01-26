@@ -77,6 +77,16 @@ struct EstateMapView: View {
 
             // Z4: Navigation Bar
             navigationBar
+
+            // Z5: 로딩 인디케이터 (화면 중앙)
+            if intent.state.isLoading {
+                ProgressView()
+                    .scaleEffect(1.2)
+                    .frame(width: 60, height: 60)
+                    .background(Color.gray0.opacity(0.9))
+                    .cornerRadius(12)
+                    .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+            }
         }
         .navigationBarHidden(true)
         .onAppear {
@@ -165,18 +175,10 @@ struct EstateMapView: View {
 
             Spacer()
 
-            // 우측 하단: 로딩 + 줌 버튼 + 현위치 버튼
+            // 우측 하단: 줌 버튼 + 현위치 버튼
             HStack {
                 Spacer()
                 VStack(spacing: 8) {
-                    if intent.state.isLoading {
-                        ProgressView()
-                            .frame(width: 44, height: 44)
-                            .background(Color.gray0)
-                            .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
-                    }
-
                     // 줌 컨트롤
                     zoomControls
 
@@ -651,9 +653,14 @@ struct EstateMapView: View {
         let centerLat = (minLat + maxLat) / 2
         let centerLng = (minLng + maxLng) / 2
 
-        // span 계산 (여유 공간 20% 추가)
-        let latDelta = max((maxLat - minLat) * 1.4, 0.005)
-        let lngDelta = max((maxLng - minLng) * 1.4, 0.005)
+        // span 계산 (여유 공간 40% 추가)
+        var latDelta = max((maxLat - minLat) * 1.4, 0.005)
+        var lngDelta = max((maxLng - minLng) * 1.4, 0.005)
+
+        // 현재보다 최소 2배 이상 확대 보장
+        let currentSpan = intent.state.region.span
+        latDelta = min(latDelta, currentSpan.latitudeDelta / 2)
+        lngDelta = min(lngDelta, currentSpan.longitudeDelta / 2)
 
         return MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: centerLat, longitude: centerLng),
