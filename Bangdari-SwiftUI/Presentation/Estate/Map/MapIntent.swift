@@ -27,7 +27,7 @@ struct MapState {
 
     // 필터
     var selectedCategory: String? = nil
-    var maxDistance: Int = 3000  // 3km
+    var maxDistance: Int = 5000  // 5km (확장)
 }
 
 // MARK: - Default Region (서울 중심)
@@ -48,15 +48,35 @@ final class MapIntent: ObservableObject {
     private let estateRepository: EstateRepository
     private let locationManager = CLLocationManager()
 
+    // Debounce를 위한 Combine
+    private let regionSubject = PassthroughSubject<MKCoordinateRegion, Never>()
+    private var cancellables = Set<AnyCancellable>()
+
+    // 마지막 로드 위치 (중복 요청 방지)
+    private var lastLoadedCenter: CLLocationCoordinate2D?
+
     init(estateRepository: EstateRepository? = nil) {
         self.estateRepository = estateRepository ?? DIContainer.shared.makeEstateRepository()
         setupLocationManager()
+        setupRegionDebounce()
     }
 
     // MARK: - Setup
 
     private func setupLocationManager() {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+
+    private func setupRegionDebounce() {
+        regionSubject
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .sink { [weak self] region in
+                guard let self else { return }
+                Task {
+                    await self.loadEstatesIfNeeded(at: region.center)
+                }
+            }
+            .store(in: &cancellables)
     }
 
     // MARK: - Actions
@@ -81,12 +101,29 @@ final class MapIntent: ObservableObject {
         }
     }
 
+    /// 지도 영역 업데이트 + debounce로 자동 재조회
     func updateRegion(_ region: MKCoordinateRegion) {
         state.region = region
+        regionSubject.send(region)
     }
 
     func loadEstatesInCurrentRegion() async {
         await loadEstates(at: state.region.center)
+    }
+
+    /// 일정 거리 이상 이동했을 때만 재조회
+    private func loadEstatesIfNeeded(at center: CLLocationCoordinate2D) async {
+        // 마지막 로드 위치와 비교
+        if let lastCenter = lastLoadedCenter {
+            let distance = distanceBetween(lastCenter, center)
+            // 500m 이상 이동했을 때만 재조회
+            guard distance > 500 else {
+                updateClusters()
+                return
+            }
+        }
+
+        await loadEstates(at: center)
     }
 
     func loadEstates(at center: CLLocationCoordinate2D) async {
@@ -94,21 +131,24 @@ final class MapIntent: ObservableObject {
         state.errorMessage = nil
 
         do {
-            let estates = try await estateRepository.fetchEstatesByLocation(
+            let newEstates = try await estateRepository.fetchEstatesByLocation(
                 latitude: center.latitude,
                 longitude: center.longitude,
                 maxDistance: state.maxDistance,
                 category: state.selectedCategory
             )
-            state.estates = estates
+            // 로딩 완료 후 한 번에 업데이트 (깜빡임 방지)
+            state.isLoading = false
+            state.estates = newEstates
+            lastLoadedCenter = center
             updateClusters()
         } catch let error as NetworkError {
+            state.isLoading = false
             state.errorMessage = error.message
         } catch {
+            state.isLoading = false
             state.errorMessage = "매물을 불러오는 중 오류가 발생했습니다."
         }
-
-        state.isLoading = false
     }
 
     func selectEstate(_ estate: EstateSummaryResponse?) {
@@ -126,6 +166,8 @@ final class MapIntent: ObservableObject {
     // MARK: - Clustering
 
     func updateClusters() {
+        // 로딩 중이면 이전 클러스터 유지 (깜빡임 방지)
+        guard !state.isLoading else { return }
         state.clusters = clusterEstates(state.estates, in: state.region)
     }
 
@@ -164,5 +206,14 @@ final class MapIntent: ObservableObject {
                 estates: groupedEstates
             )
         }
+    }
+
+    // MARK: - Helpers
+
+    /// 두 좌표 간 거리 계산 (미터)
+    private func distanceBetween(_ c1: CLLocationCoordinate2D, _ c2: CLLocationCoordinate2D) -> Double {
+        let loc1 = CLLocation(latitude: c1.latitude, longitude: c1.longitude)
+        let loc2 = CLLocation(latitude: c2.latitude, longitude: c2.longitude)
+        return loc1.distance(from: loc2)
     }
 }

@@ -614,20 +614,51 @@ struct EstateMapView: View {
                     selectedEstateIndex = index
                     viewState = .estateSelected(index)
                 }
-                position = .region(MKCoordinateRegion(
-                    center: cluster.coordinate,
-                    span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                ))
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    position = .region(MKCoordinateRegion(
+                        center: cluster.coordinate,
+                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                    ))
+                }
             }
         } else {
-            // 클러스터 → S2 → 줌인
+            // 클러스터 → S2 → 클러스터 범위에 맞춰 줌인
             viewState = .clusterFocused(cluster)
-            let newSpan = MKCoordinateSpan(
-                latitudeDelta: intent.state.region.span.latitudeDelta / 2,
-                longitudeDelta: intent.state.region.span.longitudeDelta / 2
-            )
-            position = .region(MKCoordinateRegion(center: cluster.coordinate, span: newSpan))
+            let fitRegion = regionToFitCluster(cluster)
+            withAnimation(.easeInOut(duration: 0.3)) {
+                position = .region(fitRegion)
+            }
         }
+    }
+
+    /// 클러스터 내 모든 매물이 보이는 영역 계산
+    private func regionToFitCluster(_ cluster: MapCluster) -> MKCoordinateRegion {
+        let estates = cluster.estates
+        guard !estates.isEmpty else {
+            return MKCoordinateRegion(center: cluster.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        }
+
+        // 매물들의 좌표 범위 계산
+        let lats = estates.map(\.geolocation.latitude)
+        let lngs = estates.map(\.geolocation.longitude)
+
+        let minLat = lats.min() ?? cluster.coordinate.latitude
+        let maxLat = lats.max() ?? cluster.coordinate.latitude
+        let minLng = lngs.min() ?? cluster.coordinate.longitude
+        let maxLng = lngs.max() ?? cluster.coordinate.longitude
+
+        // 중심점
+        let centerLat = (minLat + maxLat) / 2
+        let centerLng = (minLng + maxLng) / 2
+
+        // span 계산 (여유 공간 20% 추가)
+        let latDelta = max((maxLat - minLat) * 1.4, 0.005)
+        let lngDelta = max((maxLng - minLng) * 1.4, 0.005)
+
+        return MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: centerLat, longitude: centerLng),
+            span: MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lngDelta)
+        )
     }
 
     private func toggleFilter(_ type: MapViewState.FilterType) {
