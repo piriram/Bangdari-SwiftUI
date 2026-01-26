@@ -5,14 +5,18 @@ import MapKit
 
 // MARK: - Map Cluster
 
-struct MapCluster: Identifiable {
-    let id = UUID()
+struct MapCluster: Identifiable, Equatable {
+    let id: String  // 그리드 키 기반 (깜빡임 방지)
     let coordinate: CLLocationCoordinate2D
     let estates: [EstateSummaryResponse]
 
     var count: Int { estates.count }
     var isSingle: Bool { estates.count == 1 }
     var firstEstate: EstateSummaryResponse? { estates.first }
+
+    static func == (lhs: MapCluster, rhs: MapCluster) -> Bool {
+        lhs.id == rhs.id && lhs.count == rhs.count
+    }
 }
 
 // MARK: - Map State
@@ -166,8 +170,7 @@ final class MapIntent: ObservableObject {
     // MARK: - Clustering
 
     func updateClusters() {
-        // 로딩 중이면 이전 클러스터 유지 (깜빡임 방지)
-        guard !state.isLoading else { return }
+        // 현재 estates 기준으로 클러스터 재계산 (줌 변경 시 즉시 반영)
         state.clusters = clusterEstates(state.estates, in: state.region)
     }
 
@@ -195,13 +198,14 @@ final class MapIntent: ObservableObject {
             grid[key, default: []].append(estate)
         }
 
-        // 클러스터 생성
-        return grid.map { _, groupedEstates in
+        // 클러스터 생성 (key를 id로 사용하여 깜빡임 방지)
+        return grid.map { key, groupedEstates in
             // 클러스터 중심 계산
             let avgLat = groupedEstates.map(\.geolocation.latitude).reduce(0, +) / Double(groupedEstates.count)
             let avgLng = groupedEstates.map(\.geolocation.longitude).reduce(0, +) / Double(groupedEstates.count)
 
             return MapCluster(
+                id: key,
                 coordinate: CLLocationCoordinate2D(latitude: avgLat, longitude: avgLng),
                 estates: groupedEstates
             )
