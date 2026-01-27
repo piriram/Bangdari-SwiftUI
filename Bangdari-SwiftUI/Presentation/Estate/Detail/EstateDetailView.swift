@@ -7,23 +7,12 @@ struct EstateDetailView: View {
     @StateObject private var intent: EstateDetailIntent
     @Environment(\.dismiss) private var dismiss
     @State private var currentImageIndex = 0
-    @State private var scrollOffset: CGFloat = 0
 
     // MARK: - Constants
 
     private let imageAspectRatio: CGFloat = 4 / 3
     private var imageHeight: CGFloat {
         UIScreen.main.bounds.width / imageAspectRatio
-    }
-
-    /// 네비게이션 바 전환 임계점
-    private var navBarThreshold: CGFloat {
-        imageHeight - topSafeAreaInset - 44
-    }
-
-    /// 스크롤 진행률 (0: 투명, 1: 불투명)
-    private var navBarProgress: CGFloat {
-        min(max(scrollOffset / navBarThreshold, 0), 1)
     }
 
     init(estateId: String) {
@@ -34,39 +23,46 @@ struct EstateDetailView: View {
         Group {
             if let estate = intent.state.estate {
                 detailContent(estate)
+                    .navigationTitle(estate.title)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarBackground(Color.white, for: .navigationBar)
+                    .toolbarColorScheme(.light, for: .navigationBar)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                Task { await intent.toggleLike() }
+                            } label: {
+                                Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
+                                    .renderingMode(.template)
+                                    .foregroundColor(intent.state.isLiked ? .red : .gray60)
+                            }
+                            .disabled(intent.state.isLikeLoading)
+                        }
+                    }
             } else if let error = intent.state.errorMessage {
                 errorView(error)
             } else {
                 ProgressView()
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbar(.hidden, for: .navigationBar)
         .task {
             await intent.loadDetail()
         }
     }
 
-    // MARK: - Detail Content (Z-Layer Structure)
+    // MARK: - Detail Content
 
     private func detailContent(_ estate: EstateDetailResponse) -> some View {
-        ZStack(alignment: .top) {
+        ZStack {
             // 배경: gray15 단일 톤
             Color.gray15.ignoresSafeArea()
 
-            // Z2~Z5: 스크롤 콘텐츠
+            // 스크롤 콘텐츠
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     // Z2: Primary Media Layer
                     imageCarousel(estate.files)
-                        .background(
-                            GeometryReader { geo in
-                                Color.clear.preference(
-                                    key: ScrollOffsetKey.self,
-                                    value: -geo.frame(in: .named("detailScroll")).minY
-                                )
-                            }
-                        )
 
                     // Z3: Core Information Layer
                     statusRow(estate)
@@ -88,55 +84,11 @@ struct EstateDetailView: View {
                         .frame(height: 100)
                 }
             }
-            .ignoresSafeArea(edges: .top)
-            .coordinateSpace(name: "detailScroll")
-            .onPreferenceChange(ScrollOffsetKey.self) { value in
-                scrollOffset = value
-            }
-
-            // Z1: System Navigation Layer (항상 최상단)
-            navigationBar(estate)
         }
         .safeAreaInset(edge: .bottom) {
             // Z6: Persistent Action Layer
             bottomCTA(estate)
         }
-    }
-
-    // MARK: - Z1: Navigation Bar
-
-    private func navigationBar(_ estate: EstateDetailResponse) -> some View {
-        let isScrolled = navBarProgress > 0.5
-
-        return HStack(spacing: 0) {
-            // 뒤로가기
-            Button { dismiss() } label: {
-                Image(dsIcon: .chevron)
-                    .renderingMode(.template)
-                    .foregroundColor(isScrolled ? .gray75 : .gray0)
-                    .frame(width: 44, height: 44)
-            }
-
-            Spacer()
-
-            // 찜 버튼
-            Button {
-                Task { await intent.toggleLike() }
-            } label: {
-                Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
-                    .renderingMode(.template)
-                    .foregroundColor(intent.state.isLiked ? .red : (isScrolled ? .gray60 : .gray0))
-                    .frame(width: 44, height: 44)
-            }
-            .disabled(intent.state.isLikeLoading)
-        }
-        .frame(height: 44)
-        .padding(.horizontal, 16)
-        .background(
-            Color.gray0.opacity(navBarProgress)
-                .ignoresSafeArea(edges: .top)
-        )
-        .animation(.easeInOut(duration: 0.2), value: isScrolled)
     }
 
     // MARK: - Z2: Primary Media (Image Carousel)
@@ -523,12 +475,6 @@ struct EstateDetailView: View {
 
     // MARK: - Helpers
 
-    private var topSafeAreaInset: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?.windows.first?.safeAreaInsets.top ?? 0
-    }
-
     private func formatPrice(_ price: Int) -> String {
         if price >= 10000 {
             let billion = price / 10000
@@ -553,15 +499,6 @@ struct EstateDetailView: View {
             return "월세 \(estate.deposit)/\(estate.monthly_rent)"
         }
         return "전세 \(estate.deposit)"
-    }
-}
-
-// MARK: - Scroll Offset PreferenceKey
-
-private struct ScrollOffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
     }
 }
 
