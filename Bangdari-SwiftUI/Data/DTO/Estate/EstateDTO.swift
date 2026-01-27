@@ -6,24 +6,40 @@ struct EstateSummaryResponse: Decodable, Equatable {
     let estate_id: String
     let category: String
     let title: String
+    let introduction: String
     let deposit: Int
     let monthly_rent: Int
+    let built_year: String
     let area: Double
+    let floors: Int
     let geolocation: Geolocation
     let files: [String]
     let distance: Double?
+    let like_count: Int
+    let is_safe_estate: Bool
+    let is_recommended: Bool
+    let created_at: String
+    let updated_at: String
 
     private enum CodingKeys: String, CodingKey {
         case estate_id
         case category
         case title
+        case introduction
         case deposit
         case monthly_rent
+        case built_year
         case area
+        case floors
         case geolocation
         case files
         case thumbnails
         case distance
+        case like_count
+        case is_safe_estate
+        case is_recommended
+        case created_at, createdAt
+        case updated_at, updatedAt
     }
 
     init(from decoder: Decoder) throws {
@@ -31,9 +47,12 @@ struct EstateSummaryResponse: Decodable, Equatable {
         estate_id = try container.decode(String.self, forKey: .estate_id)
         category = try container.decode(String.self, forKey: .category)
         title = try container.decode(String.self, forKey: .title)
+        introduction = try container.decodeIfPresent(String.self, forKey: .introduction) ?? ""
         deposit = try Self.decodeFlexibleInt(from: container, forKey: .deposit, defaultValue: 0)
         monthly_rent = try Self.decodeFlexibleInt(from: container, forKey: .monthly_rent, defaultValue: 0)
+        built_year = try container.decodeIfPresent(String.self, forKey: .built_year) ?? ""
         area = try Self.decodeFlexibleDouble(from: container, forKey: .area, defaultValue: 0)
+        floors = try Self.decodeFlexibleInt(from: container, forKey: .floors, defaultValue: 0)
         geolocation = try container.decode(Geolocation.self, forKey: .geolocation)
         if let decodedFiles = try container.decodeIfPresent([String].self, forKey: .files) {
             files = decodedFiles
@@ -41,6 +60,19 @@ struct EstateSummaryResponse: Decodable, Equatable {
             files = try container.decodeIfPresent([String].self, forKey: .thumbnails) ?? []
         }
         distance = try container.decodeIfPresent(Double.self, forKey: .distance)
+        like_count = try Self.decodeFlexibleInt(from: container, forKey: .like_count, defaultValue: 0)
+        is_safe_estate = try container.decodeIfPresent(Bool.self, forKey: .is_safe_estate) ?? false
+        is_recommended = try container.decodeIfPresent(Bool.self, forKey: .is_recommended) ?? false
+        if let createdAtValue = try container.decodeIfPresent(String.self, forKey: .created_at) {
+            created_at = createdAtValue
+        } else {
+            created_at = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        }
+        if let updatedAtValue = try container.decodeIfPresent(String.self, forKey: .updated_at) {
+            updated_at = updatedAtValue
+        } else {
+            updated_at = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+        }
     }
 
     private static func decodeFlexibleInt(
@@ -110,9 +142,14 @@ struct EstateDetailResponse: Decodable {
     let estate_id: String
     let category: String
     let title: String
+    let introduction: String
+    let description: String
     let deposit: Int
     let monthly_rent: Int
     let reservation_price: Int
+    let built_year: String
+    let maintenance_fee: Int
+    let parking_count: Int
     let area: Double
     let floors: String  // API가 Int로 올 수 있어서 커스텀 디코딩
     let options: EstateOptions
@@ -121,6 +158,7 @@ struct EstateDetailResponse: Decodable {
     let creator: UserInfo
     let is_liked: Bool
     let is_reserved: Bool
+    let like_count: Int
     let is_safe_estate: Bool
     let is_recommended: Bool
     let comments: [EstateComment]
@@ -128,9 +166,11 @@ struct EstateDetailResponse: Decodable {
     let updatedAt: String
 
     private enum CodingKeys: String, CodingKey {
-        case estate_id, category, title, deposit, monthly_rent, reservation_price
+        case estate_id, category, title, introduction, description
+        case deposit, monthly_rent, reservation_price
+        case built_year, maintenance_fee, parking_count
         case area, floors, options, geolocation, files, thumbnails, creator
-        case is_liked, is_reserved, is_safe_estate, is_recommended
+        case is_liked, is_reserved, like_count, is_safe_estate, is_recommended
         case comments, createdAt, updatedAt, created_at, updated_at
     }
 
@@ -139,9 +179,14 @@ struct EstateDetailResponse: Decodable {
         estate_id = try container.decode(String.self, forKey: .estate_id)
         category = try container.decode(String.self, forKey: .category)
         title = try container.decode(String.self, forKey: .title)
+        introduction = try container.decodeIfPresent(String.self, forKey: .introduction) ?? ""
+        description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
         deposit = try container.decode(Int.self, forKey: .deposit)
         monthly_rent = try container.decode(Int.self, forKey: .monthly_rent)
         reservation_price = try container.decode(Int.self, forKey: .reservation_price)
+        built_year = try container.decodeIfPresent(String.self, forKey: .built_year) ?? ""
+        maintenance_fee = try container.decodeIfPresent(Int.self, forKey: .maintenance_fee) ?? 0
+        parking_count = try container.decodeIfPresent(Int.self, forKey: .parking_count) ?? 0
         area = try container.decode(Double.self, forKey: .area)
         // floors: String 또는 Int로 올 수 있음
         if let floorsString = try? container.decode(String.self, forKey: .floors) {
@@ -161,6 +206,7 @@ struct EstateDetailResponse: Decodable {
         creator = try container.decode(UserInfo.self, forKey: .creator)
         is_liked = try container.decode(Bool.self, forKey: .is_liked)
         is_reserved = try container.decode(Bool.self, forKey: .is_reserved)
+        like_count = try container.decodeIfPresent(Int.self, forKey: .like_count) ?? 0
         is_safe_estate = try container.decode(Bool.self, forKey: .is_safe_estate)
         is_recommended = try container.decode(Bool.self, forKey: .is_recommended)
         comments = try container.decodeIfPresent([EstateComment].self, forKey: .comments) ?? []
@@ -267,6 +313,7 @@ struct EstateOptions: Decodable {
 struct UserInfo: Decodable {
     let user_id: String
     let nick: String
+    let introduction: String?
     let profileImage: String?
 }
 
@@ -297,7 +344,7 @@ struct EstateTopic: Decodable {
     let title: String
     let content: String
     let date: String
-    let link: String
+    let link: String?
 }
 
 struct EstateTopicResponse: Decodable {

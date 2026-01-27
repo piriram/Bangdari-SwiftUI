@@ -125,7 +125,7 @@ struct HomeView: View {
 
             VStack(spacing: 8) {
                 ForEach(intent.state.topics, id: \.title) { topic in
-                    if let url = URL(string: topic.link) {
+                    if let link = topic.link, let url = URL(string: link) {
                         Link(destination: url) {
                             TopicRow(topic: topic)
                         }
