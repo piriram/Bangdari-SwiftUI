@@ -56,6 +56,7 @@ struct EstateMapView: View {
     @State private var viewState: MapViewState = .idle
     @State private var filterState = MapFilterState()
     @State private var selectedEstateIndex: Int = 0
+    @State private var selectedEstateIdForDetail: String?
 
     private var selectedEstate: EstateSummaryResponse? {
         guard !intent.state.estates.isEmpty,
@@ -78,8 +79,8 @@ struct EstateMapView: View {
             // Z4: Navigation Bar
             navigationBar
 
-            // Z5: 로딩 인디케이터 (화면 중앙)
-            if intent.state.isLoading {
+            // Z5: 로딩 인디케이터 (화면 중앙) - 스켈레톤이 없을 때만 표시
+            if intent.state.isLoading && intent.state.skeletonClusters.isEmpty {
                 ProgressView()
                     .scaleEffect(1.2)
                     .frame(width: 60, height: 60)
@@ -92,6 +93,9 @@ struct EstateMapView: View {
         .onAppear {
             intent.requestLocationPermission()
             Task { await intent.loadEstatesInCurrentRegion() }
+        }
+        .navigationDestination(item: $selectedEstateIdForDetail) { estateId in
+            EstateDetailView(estateId: estateId)
         }
     }
 
@@ -201,6 +205,7 @@ struct EstateMapView: View {
 
     private var mapContent: some View {
         Map(position: $position) {
+            // 실제 클러스터
             ForEach(intent.state.clusters) { cluster in
                 Annotation(
                     cluster.isSingle ? (cluster.firstEstate?.title ?? "") : "\(cluster.count)개",
@@ -209,6 +214,14 @@ struct EstateMapView: View {
                     clusterMarker(cluster)
                 }
             }
+
+            // 스켈레톤 클러스터 (로딩 중에만)
+            ForEach(intent.state.skeletonClusters) { skeleton in
+                Annotation("", coordinate: skeleton.coordinate) {
+                    skeletonMarker
+                }
+            }
+
             UserAnnotation()
         }
         .mapControls {
@@ -216,8 +229,9 @@ struct EstateMapView: View {
             MapScaleView()
         }
         .onMapCameraChange { context in
+            print("📷 [Camera Change] span: \(String(format: "%.6f", context.region.span.latitudeDelta))")
             intent.updateRegion(context.region)
-            intent.updateClusters()
+            // 대안 D: updateClusters 제거 → debounce 후에만 업데이트
 
             // 지도 이동 시 S1로 전환 (S3, S4 제외)
             if !isEstateSelected && !isFilterAdjusting {
@@ -288,6 +302,19 @@ struct EstateMapView: View {
         if count >= 100 { return 60 }
         if count >= 50 { return 52 }
         return 44
+    }
+
+    /// 스켈레톤 마커 (로딩 중 플레이스홀더)
+    private var skeletonMarker: some View {
+        ZStack {
+            Circle()
+                .fill(Color.gray30.opacity(0.5))
+                .frame(width: 44, height: 44)
+
+            ProgressView()
+                .tint(.gray60)
+                .scaleEffect(0.8)
+        }
     }
 
     // MARK: - Filter Button Group
@@ -432,7 +459,7 @@ struct EstateMapView: View {
                             .id(index)
                             .onTapGesture {
                                 // 카드 탭 → 상세 화면 이동
-                                // TODO: Navigate to EstateDetailView
+                                selectedEstateIdForDetail = estate.estate_id
                             }
                     }
                 }
@@ -559,6 +586,7 @@ struct EstateMapView: View {
     }
 
     private func zoomIn() {
+        print("🔍 [ZoomIn] 시작")
         let currentSpan = intent.state.region.span
         let newSpan = MKCoordinateSpan(
             latitudeDelta: max(currentSpan.latitudeDelta / 2, 0.001),
@@ -568,9 +596,16 @@ struct EstateMapView: View {
             center: intent.state.region.center,
             span: newSpan
         ))
+
+        // 줌 버튼도 즉시 클러스터 업데이트
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+            print("🔍 [ZoomIn] → 애니메이션 완료 후 updateClusters")
+            intent.updateClusters()
+        }
     }
 
     private func zoomOut() {
+        print("🔍 [ZoomOut] 시작")
         let currentSpan = intent.state.region.span
         let newSpan = MKCoordinateSpan(
             latitudeDelta: min(currentSpan.latitudeDelta * 2, 10),
@@ -580,6 +615,12 @@ struct EstateMapView: View {
             center: intent.state.region.center,
             span: newSpan
         ))
+
+        // 줌아웃도 즉시 클러스터 업데이트
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+            print("🔍 [ZoomOut] → 애니메이션 완료 후 updateClusters")
+            intent.updateClusters()
+        }
     }
 
     // MARK: - Current Location Button
@@ -609,8 +650,11 @@ struct EstateMapView: View {
     // MARK: - Actions
 
     private func handleClusterTap(_ cluster: MapCluster) {
+        print("🎯 [Cluster Tap] ID: \(cluster.id), 매물 수: \(cluster.count), isSingle: \(cluster.isSingle)")
+
         if cluster.isSingle, let estate = cluster.firstEstate {
             // 단일 매물 → S3
+            print("🎯 [Cluster Tap] → 단일 매물 선택")
             if let index = intent.state.estates.firstIndex(where: { $0.estate_id == estate.estate_id }) {
                 withAnimation {
                     selectedEstateIndex = index
@@ -625,10 +669,19 @@ struct EstateMapView: View {
             }
         } else {
             // 클러스터 → S2 → 클러스터 범위에 맞춰 줌인
+            print("🎯 [Cluster Tap] → 클러스터 확대 시작")
             viewState = .clusterFocused(cluster)
             let fitRegion = regionToFitCluster(cluster)
+            print("🎯 [Cluster Tap] → 지도 이동 실행")
             withAnimation(.easeInOut(duration: 0.3)) {
                 position = .region(fitRegion)
+            }
+
+            // 줌인 후 즉시 클러스터 업데이트 (debounce 기다리지 않음)
+            // 사용자 상호작용에는 즉각 반응
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                print("🎯 [Cluster Tap] → 애니메이션 완료 후 updateClusters")
+                intent.updateClusters()
             }
         }
     }
@@ -637,7 +690,26 @@ struct EstateMapView: View {
     private func regionToFitCluster(_ cluster: MapCluster) -> MKCoordinateRegion {
         let estates = cluster.estates
         guard !estates.isEmpty else {
+            print("🔍 [Cluster Zoom] 빈 클러스터")
             return MKCoordinateRegion(center: cluster.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        }
+
+        let currentSpan = intent.state.region.span
+        print("🔍 [Cluster Zoom] 시작 - 현재 span: \(String(format: "%.6f", currentSpan.latitudeDelta)), 매물 수: \(estates.count)")
+        print("🔍 [Cluster Zoom] threshold: \(MapConstants.clusteringDisableThreshold)")
+
+        // 이미 충분히 확대된 상태라면 개별 마커가 보이도록 강제 확대
+        // threshold의 80% 이하면 거의 개별 마커 수준
+        let nearThreshold = MapConstants.clusteringDisableThreshold * 1.2
+        if currentSpan.latitudeDelta <= nearThreshold {
+            // 개별 마커가 확실히 보이는 수준으로 확대
+            let targetSpan = MapConstants.clusteringDisableThreshold * 0.6
+            print("🔍 [Cluster Zoom] ✅ 분기1: 이미 충분히 확대됨 (\(String(format: "%.6f", currentSpan.latitudeDelta)) <= \(String(format: "%.6f", nearThreshold)))")
+            print("🔍 [Cluster Zoom] → 강제 확대: \(String(format: "%.6f", targetSpan))")
+            return MKCoordinateRegion(
+                center: cluster.coordinate,
+                span: MKCoordinateSpan(latitudeDelta: targetSpan, longitudeDelta: targetSpan)
+            )
         }
 
         // 매물들의 좌표 범위 계산
@@ -649,18 +721,36 @@ struct EstateMapView: View {
         let minLng = lngs.min() ?? cluster.coordinate.longitude
         let maxLng = lngs.max() ?? cluster.coordinate.longitude
 
+        let rawRangeLat = maxLat - minLat
+        let rawRangeLng = maxLng - minLng
+        print("🔍 [Cluster Zoom] 매물 범위 - lat: \(String(format: "%.6f", rawRangeLat)), lng: \(String(format: "%.6f", rawRangeLng))")
+
         // 중심점
         let centerLat = (minLat + maxLat) / 2
         let centerLng = (minLng + maxLng) / 2
 
         // span 계산 (여유 공간 40% 추가)
-        var latDelta = max((maxLat - minLat) * 1.4, 0.005)
-        var lngDelta = max((maxLng - minLng) * 1.4, 0.005)
+        let estateRangeLat = max((maxLat - minLat) * 1.4, 0.005)
+        let estateRangeLng = max((maxLng - minLng) * 1.4, 0.005)
+        print("🔍 [Cluster Zoom] 매물 범위 (여유 40%): \(String(format: "%.6f", estateRangeLat))")
 
-        // 현재보다 최소 2배 이상 확대 보장
-        let currentSpan = intent.state.region.span
-        latDelta = min(latDelta, currentSpan.latitudeDelta / 2)
-        lngDelta = min(lngDelta, currentSpan.longitudeDelta / 2)
+        // 무조건 2배 확대 vs 매물 범위에 맞춤 중 더 확대되는 것 선택
+        let zoomInLat = currentSpan.latitudeDelta / 2
+        let zoomInLng = currentSpan.longitudeDelta / 2
+        print("🔍 [Cluster Zoom] 2배 확대: \(String(format: "%.6f", zoomInLat))")
+
+        // 두 전략 중 더 확대되는 것 (더 작은 값) 선택
+        var latDelta = min(estateRangeLat, zoomInLat)
+        var lngDelta = min(estateRangeLng, zoomInLng)
+        print("🔍 [Cluster Zoom] min(매물범위, 2배확대): \(String(format: "%.6f", latDelta))")
+
+        // 개별 마커 threshold에 가까워지면 강제로 넘김
+        let targetThreshold = MapConstants.clusteringDisableThreshold * 0.8
+        latDelta = min(latDelta, targetThreshold)
+        lngDelta = min(lngDelta, targetThreshold)
+        print("🔍 [Cluster Zoom] ✅ 분기2: 일반 확대 로직")
+        print("🔍 [Cluster Zoom] → 최종 span: \(String(format: "%.6f", latDelta)) (threshold 강제: \(String(format: "%.6f", targetThreshold)))")
+        print("🔍 [Cluster Zoom] → 변화: \(String(format: "%.6f", currentSpan.latitudeDelta)) → \(String(format: "%.6f", latDelta)) (비율: \(String(format: "%.2f", latDelta / currentSpan.latitudeDelta))x)")
 
         return MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: centerLat, longitude: centerLng),
