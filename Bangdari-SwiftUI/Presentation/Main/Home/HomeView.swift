@@ -6,19 +6,18 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var intent = HomeIntent()
     @State private var selectedCategory: EstateCategory?
+    @State private var navigationPath = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 VStack(spacing: 24) {
                     // 히어로 배너 (검색바 포함)
-                    if !intent.state.banners.isEmpty {
+                    if !intent.state.todayEstates.isEmpty {
                         HeroBannerView(
-                            banners: intent.state.banners,
-                            onTap: { banner in
-                                if let link = banner.link, let url = URL(string: link) {
-                                    UIApplication.shared.open(url)
-                                }
+                            estates: intent.state.todayEstates,
+                            onTap: { estate in
+                                navigationPath.append(estate.estate_id)
                             },
                             onSearchTap: {
                                 // TODO: 검색 화면 이동
@@ -60,6 +59,9 @@ struct HomeView: View {
                 }
             }
             .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(for: String.self) { estateId in
+                EstateDetailView(estateId: estateId)
+            }
         }
         .task {
             await intent.loadHomeData()
