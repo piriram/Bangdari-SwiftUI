@@ -1,6 +1,7 @@
 # Project specific
 bangdari.md
 Secret/
+Secret
 CLAUDE.md
 
 # API Keys
@@ -22,3 +23,4 @@ Pods/
 # macOS
 .DS_Store
 *.swp
+Bangdari-SwiftUI.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved

@@ -32,6 +32,16 @@ struct MapState {
     // 필터
     var selectedCategory: String? = nil
     var maxDistance: Int = 5000  // 5km (확장)
+
+    // Skeleton UI
+    var skeletonClusters: [SkeletonCluster] = []
+}
+
+// MARK: - Skeleton Clusㅌㅌter
+
+struct SkeletonCluster: Identifiable {
+    let id: String
+    let coordinate: CLLocationCoordinate2D
 }
 
 // MARK: - Default Region (서울 중심)
@@ -57,6 +67,58 @@ enum MapConstants {
     static let debounceMilliseconds: Int = 500
 }
 
+// MARK: - Estate Cache
+
+final class EstateCache {
+    private var cache: [String: CachedData] = [:]
+    private let maxCacheCount = 50
+    private let cacheValiditySeconds: TimeInterval = 300  // 5분
+
+    struct CachedData {
+        let estates: [EstateSummaryResponse]
+        let timestamp: Date
+        let region: MKCoordinateRegion
+    }
+
+    func get(for region: MKCoordinateRegion) -> [EstateSummaryResponse]? {
+        let key = regionKey(region)
+
+        guard let cached = cache[key] else { return nil }
+
+        // 5분 이상 지나면 무효화
+        let age = Date().timeIntervalSince(cached.timestamp)
+        if age > cacheValiditySeconds {
+            cache.removeValue(forKey: key)
+            return nil
+        }
+
+        return cached.estates
+    }
+
+    func set(_ estates: [EstateSummaryResponse], for region: MKCoordinateRegion) {
+        let key = regionKey(region)
+        cache[key] = CachedData(estates: estates, timestamp: Date(), region: region)
+
+        // 메모리 제한 (LRU - 가장 오래된 것 제거)
+        if cache.count > maxCacheCount {
+            let oldest = cache.min { $0.value.timestamp < $1.value.timestamp }
+            if let key = oldest?.key {
+                cache.removeValue(forKey: key)
+            }
+        }
+    }
+
+    /// Region을 그리드 기반 키로 변환 (약간의 이동도 같은 캐시 사용)
+    private func regionKey(_ region: MKCoordinateRegion) -> String {
+        // 0.01 단위로 스냅 (약 1km 정도의 그리드)
+        let snapSize: Double = 0.01
+        let snappedLat = round(region.center.latitude / snapSize) * snapSize
+        let snappedLng = round(region.center.longitude / snapSize) * snapSize
+
+        return "\(snappedLat),\(snappedLng)"
+    }
+}
+
 // MARK: - Map Intent
 
 @MainActor
@@ -65,6 +127,7 @@ final class MapIntent: ObservableObject {
 
     private let estateRepository: EstateRepository
     private let locationManager = CLLocationManager()
+    private let estateCache = EstateCache()
 
     // Debounce를 위한 Combine
     private let regionSubject = PassthroughSubject<MKCoordinateRegion, Never>()
@@ -126,9 +189,13 @@ final class MapIntent: ObservableObject {
         // 일정 거리 이상 이동했으면 즉시 로딩 표시 (debounce 전에)
         if let lastCenter = lastLoadedCenter {
             let distance = distanceBetween(lastCenter, region.center)
+            print("🌍 [updateRegion] 이동 거리: \(String(format: "%.0f", distance))m (threshold: \(MapConstants.reloadDistanceThreshold)m)")
             if distance > MapConstants.reloadDistanceThreshold {
+                print("🌍 [updateRegion] → isLoading = true")
                 state.isLoading = true
             }
+        } else {
+            print("🌍 [updateRegion] 첫 로딩")
         }
 
         regionSubject.send(region)
@@ -140,21 +207,43 @@ final class MapIntent: ObservableObject {
 
     /// 일정 거리 이상 이동했을 때만 재조회
     private func loadEstatesIfNeeded(at center: CLLocationCoordinate2D) async {
+        print("⏱️ [loadEstatesIfNeeded] debounce 완료")
         // 마지막 로드 위치와 비교
         if let lastCenter = lastLoadedCenter {
             let distance = distanceBetween(lastCenter, center)
+            print("⏱️ [loadEstatesIfNeeded] 거리: \(String(format: "%.0f", distance))m (threshold: \(MapConstants.reloadDistanceThreshold)m)")
             guard distance > MapConstants.reloadDistanceThreshold else {
+                print("⏱️ [loadEstatesIfNeeded] → threshold 미만, updateClusters만 실행")
                 updateClusters()
                 return
             }
+            print("⏱️ [loadEstatesIfNeeded] → threshold 이상, API 호출")
+        } else {
+            print("⏱️ [loadEstatesIfNeeded] → 첫 로딩, API 호출")
         }
 
         await loadEstates(at: center)
     }
 
     func loadEstates(at center: CLLocationCoordinate2D) async {
+        print("💾 [loadEstates] 시작")
+        // 1. 캐시 확인
+        if let cached = estateCache.get(for: state.region) {
+            print("💾 [loadEstates] ✅ 캐시 히트! 매물 수: \(cached.count)")
+            state.estates = cached
+            state.clusters = clusterEstates(cached, in: state.region)
+            state.isLoading = false
+            state.skeletonClusters = []
+            lastLoadedCenter = center
+            return  // 즉시 표시! 🚀
+        }
+
+        // 2. 캐시 미스 → 스켈레톤 표시
+        print("💾 [loadEstates] ❌ 캐시 미스, API 호출 시작")
         state.isLoading = true
         state.errorMessage = nil
+        state.skeletonClusters = generateSkeletonGrid(for: state.region)
+        print("💾 [loadEstates] 스켈레톤 생성: \(state.skeletonClusters.count)개")
 
         do {
             let newEstates = try await estateRepository.fetchEstatesByLocation(
@@ -163,16 +252,28 @@ final class MapIntent: ObservableObject {
                 maxDistance: state.maxDistance,
                 category: state.selectedCategory
             )
-            // 로딩 완료 후 한 번에 업데이트 (깜빡임 방지)
+
+            print("💾 [loadEstates] ✅ API 성공! 매물 수: \(newEstates.count)")
+
+            // 3. 캐시 저장
+            estateCache.set(newEstates, for: state.region)
+            print("💾 [loadEstates] 캐시 저장 완료")
+
+            // 4. 로딩 완료 후 한 번에 업데이트 (깜빡임 방지)
             state.isLoading = false
             state.estates = newEstates
+            state.skeletonClusters = []
             lastLoadedCenter = center
             updateClusters()
         } catch let error as NetworkError {
+            print("💾 [loadEstates] ❌ API 실패 (NetworkError): \(error.message)")
             state.isLoading = false
+            state.skeletonClusters = []
             state.errorMessage = error.message
         } catch {
+            print("💾 [loadEstates] ❌ API 실패 (Unknown): \(error)")
             state.isLoading = false
+            state.skeletonClusters = []
             state.errorMessage = "매물을 불러오는 중 오류가 발생했습니다."
         }
     }
@@ -193,7 +294,9 @@ final class MapIntent: ObservableObject {
 
     func updateClusters() {
         // 현재 estates 기준으로 클러스터 재계산 (줌 변경 시 즉시 반영)
-        state.clusters = clusterEstates(state.estates, in: state.region)
+        let newClusters = clusterEstates(state.estates, in: state.region)
+        print("🔄 [updateClusters] span: \(String(format: "%.6f", state.region.span.latitudeDelta)), estates: \(state.estates.count), 클러스터: \(state.clusters.count) → \(newClusters.count)")
+        state.clusters = newClusters
     }
 
     /// 그리드 기반 클러스터링
@@ -208,6 +311,7 @@ final class MapIntent: ObservableObject {
 
         if isDetailedZoom {
             // 개별 마커로 표시 (각 매물이 하나의 클러스터)
+            print("📍 [Clustering] 개별 마커 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)) < threshold: \(MapConstants.clusteringDisableThreshold))")
             return estates.map { estate in
                 MapCluster(
                     id: estate.estate_id,
@@ -219,6 +323,7 @@ final class MapIntent: ObservableObject {
 
         // 줌 레벨에 따라 클러스터 셀 크기 결정
         let cellSize = region.span.latitudeDelta / 10
+        print("📍 [Clustering] 클러스터 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)), cellSize: \(String(format: "%.6f", cellSize)))")
 
         // 그리드 딕셔너리: (gridX, gridY) -> estates
         var grid: [String: [EstateSummaryResponse]] = [:]
@@ -234,6 +339,8 @@ final class MapIntent: ObservableObject {
             grid[key, default: []].append(estate)
         }
 
+        print("📍 [Clustering] 그리드 개수: \(grid.count)")
+
         // 클러스터 생성 (key를 id로 사용하여 깜빡임 방지)
         return grid.map { key, groupedEstates in
             // 클러스터 중심 계산
@@ -246,6 +353,31 @@ final class MapIntent: ObservableObject {
                 estates: groupedEstates
             )
         }
+    }
+
+    // MARK: - Skeleton UI
+
+    /// 그리드 패턴으로 스켈레톤 클러스터 생성
+    private func generateSkeletonGrid(for region: MKCoordinateRegion) -> [SkeletonCluster] {
+        let gridSize = 4  // 4x4 그리드
+        let stepLat = region.span.latitudeDelta / Double(gridSize + 1)
+        let stepLng = region.span.longitudeDelta / Double(gridSize + 1)
+
+        var skeletons: [SkeletonCluster] = []
+
+        for i in 1...gridSize {
+            for j in 1...gridSize {
+                let lat = region.center.latitude - (region.span.latitudeDelta / 2) + (stepLat * Double(i))
+                let lng = region.center.longitude - (region.span.longitudeDelta / 2) + (stepLng * Double(j))
+
+                skeletons.append(SkeletonCluster(
+                    id: "skeleton-\(i)-\(j)",
+                    coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                ))
+            }
+        }
+
+        return skeletons
     }
 
     // MARK: - Helpers
