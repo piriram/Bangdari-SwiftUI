@@ -35,6 +35,9 @@ struct MapState {
 
     // Skeleton UI
     var skeletonClusters: [SkeletonCluster] = []
+
+    // 위치 텍스트 (역지오코딩 결과)
+    var locationText: String = "위치 정보 로딩 중..."
 }
 
 // MARK: - Skeleton Clusㅌㅌter
@@ -155,6 +158,7 @@ final class MapIntent: ObservableObject {
                 guard let self else { return }
                 Task {
                     await self.loadEstatesIfNeeded(at: region.center)
+                    await self.updateLocationText(for: region.center)
                 }
             }
             .store(in: &cancellables)
@@ -387,5 +391,42 @@ final class MapIntent: ObservableObject {
         let loc1 = CLLocation(latitude: c1.latitude, longitude: c1.longitude)
         let loc2 = CLLocation(latitude: c2.latitude, longitude: c2.longitude)
         return loc1.distance(from: loc2)
+    }
+
+    /// 역지오코딩으로 위치 텍스트 업데이트
+    private func updateLocationText(for coordinate: CLLocationCoordinate2D) async {
+        let geocoder = CLGeocoder()
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+
+        do {
+            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+
+            guard let placemark = placemarks.first else {
+                state.locationText = formatCoordinate(coordinate)
+                return
+            }
+
+            // "OO동, OO구" 형식 (예: "문래동, 영등포구")
+            let subLocality = placemark.subLocality ?? "" // 동
+            let locality = placemark.locality ?? ""       // 구
+
+            if !subLocality.isEmpty && !locality.isEmpty {
+                state.locationText = "\(subLocality), \(locality)"
+            } else if !locality.isEmpty {
+                state.locationText = locality
+            } else {
+                state.locationText = formatCoordinate(coordinate)
+            }
+
+            print("📍 [Geocoding] 위치: \(state.locationText)")
+        } catch {
+            print("📍 [Geocoding] 실패: \(error.localizedDescription)")
+            state.locationText = formatCoordinate(coordinate)
+        }
+    }
+
+    /// 좌표를 텍스트로 포맷 (역지오코딩 실패 시 대체)
+    private func formatCoordinate(_ coordinate: CLLocationCoordinate2D) -> String {
+        return String(format: "%.4f°, %.4f°", coordinate.latitude, coordinate.longitude)
     }
 }

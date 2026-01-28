@@ -57,6 +57,7 @@ struct EstateMapView: View {
     @State private var filterState = MapFilterState()
     @State private var selectedEstateIndex: Int = 0
     @State private var selectedEstateIdForDetail: String?
+    @State private var navigateToList: Bool = false
 
     private var selectedEstate: EstateSummaryResponse? {
         guard !intent.state.estates.isEmpty,
@@ -97,6 +98,15 @@ struct EstateMapView: View {
         .navigationDestination(item: $selectedEstateIdForDetail) { estateId in
             EstateDetailView(estateId: estateId)
         }
+        .navigationDestination(isPresented: $navigateToList) {
+            EstateListView(
+                mode: .map(
+                    coordinate: intent.state.region.center,
+                    estates: intent.state.estates,
+                    locationText: intent.state.locationText
+                )
+            )
+        }
     }
 
     // MARK: - Z4: Navigation Bar
@@ -123,7 +133,7 @@ struct EstateMapView: View {
                             .frame(width: 16, height: 16)
                             .foregroundColor(.deepWood)
 
-                        Text("문래역, 영등포구")
+                        Text(intent.state.locationText)
                             .font(.pretendardBody1Bold)
                             .foregroundColor(.gray90)
                     }
@@ -132,7 +142,7 @@ struct EstateMapView: View {
 
                     // 리스트 전환 버튼
                     Button {
-                        // TODO: 리스트 뷰로 전환
+                        navigateToList = true
                     } label: {
                         Image(dsIcon: .list)
                             .resizable()
