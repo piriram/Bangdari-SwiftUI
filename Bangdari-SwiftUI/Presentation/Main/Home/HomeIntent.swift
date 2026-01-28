@@ -4,7 +4,7 @@ import Foundation
 // MARK: - Home State
 
 struct HomeState {
-    var banners: [Banner] = []
+    // var banners: [Banner] = []  // Legacy: 배너 광고 API (사용 안 함)
     var todayEstates: [EstateSummaryResponse] = []
     var hotEstates: [EstateSummaryResponse] = []
     var topics: [EstateTopic] = []
@@ -32,16 +32,18 @@ final class HomeIntent: ObservableObject {
         state.errorMessage = nil
 
         // 병렬로 모든 데이터 로드
-        async let bannersTask = loadBanners()
+        // async let bannersTask = loadBanners()  // Legacy: 배너 광고 API (사용 안 함)
         async let todayTask = loadTodayEstates()
         async let hotTask = loadHotEstates()
         async let topicsTask = loadTopics()
 
-        _ = await (bannersTask, todayTask, hotTask, topicsTask)
+        _ = await (todayTask, hotTask, topicsTask)
 
         state.isLoading = false
     }
 
+    /*
+    // Legacy: 배너 광고 API (사용 안 함)
     private func loadBanners() async {
         do {
             state.banners = try await estateRepository.fetchMainBanners()
@@ -49,6 +51,7 @@ final class HomeIntent: ObservableObject {
             // 배너 실패는 조용히 처리
         }
     }
+    */
 
     private func loadTodayEstates() async {
         do {

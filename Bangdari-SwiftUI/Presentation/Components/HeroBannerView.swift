@@ -1,9 +1,177 @@
 import Kingfisher
 import SwiftUI
 
-// MARK: - Hero Banner View
+// MARK: - Hero Banner View (Estate 기반)
 
 struct HeroBannerView: View {
+    let estates: [EstateSummaryResponse]
+    var onTap: ((EstateSummaryResponse) -> Void)?
+    var onSearchTap: (() -> Void)?
+
+    @State private var currentPage = 0
+
+    private var topSafeAreaInset: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.windows.first?.safeAreaInsets.top ?? 0
+    }
+
+    var body: some View {
+        ZStack {
+                // 1️⃣ 배경 이미지 캐러셀
+                TabView(selection: $currentPage) {
+                    ForEach(Array(estates.enumerated()), id: \.element.estate_id) { index, estate in
+                        estateImage(estate: estate)
+                            .tag(index)
+                            .onTapGesture {
+                                onTap?(estate)
+                            }
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+
+                // 2️⃣ 하단 그라데이션
+                LinearGradient(
+                    colors: [.black.opacity(0.45), .clear],
+                    startPoint: .bottom,
+                    endPoint: .center
+                )
+                .allowsHitTesting(false)
+
+                // 3️⃣ 검색바 (상단, Safe Area 아래)
+                VStack {
+                    heroSearchBar
+                        .padding(.horizontal, 16)
+                        .padding(.top, topSafeAreaInset + 8)
+                    Spacer()
+                        .allowsHitTesting(false)
+                }
+
+                // 4️⃣ 배너 텍스트 (좌측 하단)
+                VStack {
+                    Spacer()
+                    estateTextOverlay
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 32)
+                }
+                .allowsHitTesting(false)
+
+                // 5️⃣ 페이지 인디케이터 (하단 중앙)
+                VStack {
+                    Spacer()
+                    pageIndicator
+                        .padding(.bottom, 12)
+                }
+                .allowsHitTesting(false)
+        }
+        .frame(height: 335)
+    }
+
+    // MARK: - 배경 이미지
+
+    private func estateImage(estate: EstateSummaryResponse) -> some View {
+        GeometryReader { geo in
+            KFImage.auth(url: imageURL(for: estate))
+                .resizable()
+                .scaledToFit()
+                .frame(width: geo.size.width, height: geo.size.height)
+        }
+    }
+
+    // MARK: - 검색바
+
+    private var heroSearchBar: some View {
+        Button(action: { onSearchTap?() }) {
+            HStack(spacing: 8) {
+                Image(dsIcon: .search)
+                    .renderingMode(.template)
+                    .foregroundColor(.gray60)
+
+                Text("검색어를 입력해주세요.")
+                    .font(.pretendard(.body2))
+                    .foregroundColor(.gray60)
+
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .frame(height: 48)
+            .background(Color.gray0)
+            .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - 매물 텍스트
+
+    private var estateTextOverlay: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if currentPage < estates.count {
+                // 위치 정보
+                HStack(spacing: 4) {
+                    Image(dsIcon: .location)
+                        .renderingMode(.template)
+                        .foregroundColor(.gray0)
+                    Text(extractLocation(from: estates[currentPage]))
+                        .font(.pretendard(.caption1))
+                        .foregroundColor(.gray0)
+                }
+
+                // 메인 타이틀
+                Text(estates[currentPage].title)
+                    .font(.pretendard(.title1, .bold))
+                    .foregroundColor(.gray0)
+                    .lineLimit(2)
+
+                // 설명
+                Text(estates[currentPage].introduction)
+                    .font(.pretendard(.body3))
+                    .foregroundColor(.gray15)
+                    .lineLimit(1)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - 페이지 인디케이터
+
+    private var pageIndicator: some View {
+        HStack(spacing: 6) {
+            ForEach(0..<estates.count, id: \.self) { index in
+                Circle()
+                    .fill(index == currentPage ? Color.gray0 : Color.gray60.opacity(0.5))
+                    .frame(width: 6, height: 6)
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
+    /// 매물에서 위치 정보 추출 ("서울 XX동" 패턴)
+    private func extractLocation(from estate: EstateSummaryResponse) -> String {
+        let intro = estate.introduction
+        if intro.isEmpty {
+            return estate.category
+        }
+
+        // "서울 XX동", "경기 XX시" 패턴 추출
+        let components = intro.split(separator: " ")
+        if components.count >= 2 {
+            return "\(components[0]) \(components[1])"
+        }
+        return estate.category
+    }
+
+    private func imageURL(for estate: EstateSummaryResponse) -> URL? {
+        guard let first = estate.files.first, !first.isEmpty else { return nil }
+        return URL(string: APIConfig.baseURL + "/" + first)
+    }
+}
+
+// MARK: - Legacy (Deprecated)
+// 아래는 Banner 광고 API 기반 구버전 (참고용 보존)
+
+/*
+struct HeroBannerView_Legacy: View {
     let banners: [Banner]
     var onTap: ((Banner) -> Void)?
     var onSearchTap: (() -> Void)?
@@ -150,6 +318,7 @@ struct HeroBannerView: View {
         return URL(string: APIConfig.baseURL + "/" + banner.image)
     }
 }
+*/
 
 // MARK: - Featured Estate Banner (매물 기반 배너)
 
