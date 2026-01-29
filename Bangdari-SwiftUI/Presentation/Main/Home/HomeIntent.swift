@@ -2,13 +2,29 @@ import Combine
 import CoreLocation
 import Foundation
 
+// MARK: - Skeleton Data Models
+
+struct SkeletonEstate: Identifiable {
+    let id: String
+}
+
+struct SkeletonTopic: Identifiable {
+    let id: String
+}
+
 // MARK: - Home State
 
 struct HomeState {
-    // var banners: [Banner] = []  // Legacy: 배너 광고 API (사용 안 함)
+    // 실제 데이터
     var todayEstates: [EstateSummaryResponse] = []
     var hotEstates: [EstateSummaryResponse] = []
     var topics: [EstateTopic] = []
+
+    // 스켈레톤 데이터 (로딩 중일 때만 존재)
+    var todayEstateSkeletons: [SkeletonEstate] = []
+    var hotEstateSkeletons: [SkeletonEstate] = []
+    var topicSkeletons: [SkeletonTopic] = []
+    var heroBannerSkeleton: Bool = false
 
     var isLoading: Bool = false
     var errorMessage: String?
@@ -40,54 +56,69 @@ final class HomeIntent: ObservableObject {
         state.isLoading = true
         state.errorMessage = nil
 
+        // 스켈레톤 생성
+        state.heroBannerSkeleton = true
+        state.todayEstateSkeletons = generateEstateSkeletons(count: 3)
+        state.hotEstateSkeletons = generateEstateSkeletons(count: 2)
+        state.topicSkeletons = generateTopicSkeletons(count: 4)
+
         // 병렬로 모든 데이터 로드
-        // async let bannersTask = loadBanners()  // Legacy: 배너 광고 API (사용 안 함)
         async let todayTask = loadTodayEstates()
         async let hotTask = loadHotEstates()
         async let topicsTask = loadTopics()
 
         _ = await (todayTask, hotTask, topicsTask)
 
+        // 모든 로딩 완료
         state.isLoading = false
     }
 
-    /*
-    // Legacy: 배너 광고 API (사용 안 함)
-    private func loadBanners() async {
-        do {
-            state.banners = try await estateRepository.fetchMainBanners()
-        } catch {
-            // 배너 실패는 조용히 처리
-        }
-    }
-    */
-
     private func loadTodayEstates() async {
         do {
-            state.todayEstates = try await estateRepository.fetchTodayEstates()
+            let estates = try await estateRepository.fetchTodayEstates()
+            state.todayEstates = estates
+            // 개별 완료 시 해당 스켈레톤만 제거
+            state.todayEstateSkeletons = []
+            state.heroBannerSkeleton = false
         } catch {
-            // 개별 섹션 실패는 조용히 처리
+            // 실패해도 스켈레톤 제거 (빈 상태 표시)
+            state.todayEstateSkeletons = []
+            state.heroBannerSkeleton = false
         }
     }
 
     private func loadHotEstates() async {
         do {
-            state.hotEstates = try await estateRepository.fetchHotEstates()
+            let estates = try await estateRepository.fetchHotEstates()
+            state.hotEstates = estates
+            state.hotEstateSkeletons = []
         } catch {
-            // 개별 섹션 실패는 조용히 처리
+            state.hotEstateSkeletons = []
         }
     }
 
     private func loadTopics() async {
         do {
-            state.topics = try await estateRepository.fetchTodayTopic()
+            let topics = try await estateRepository.fetchTodayTopic()
+            state.topics = topics
+            state.topicSkeletons = []
         } catch {
-            // 개별 섹션 실패는 조용히 처리
+            state.topicSkeletons = []
         }
     }
 
     func refresh() async {
         await loadHomeData()
+    }
+
+    // MARK: - Skeleton Generators
+
+    private func generateEstateSkeletons(count: Int) -> [SkeletonEstate] {
+        (0..<count).map { SkeletonEstate(id: "skeleton-\($0)") }
+    }
+
+    private func generateTopicSkeletons(count: Int) -> [SkeletonTopic] {
+        (0..<count).map { SkeletonTopic(id: "skeleton-\($0)") }
     }
 
     // MARK: - Location
