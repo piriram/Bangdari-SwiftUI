@@ -1,4 +1,5 @@
 import Kingfisher
+import PhotosUI
 import SwiftUI
 
 // MARK: - Chat Room View
@@ -180,6 +181,10 @@ struct ChatRoomView: View {
 
     @ViewBuilder
     private func fileContent(_ files: [String]) -> some View {
+        // TODO: PDF 파일 지원
+        // - 파일 확장자 체크 (.pdf)
+        // - PDF는 썸네일 + 파일명 표시
+        // - 탭 시 PDF 뷰어 모달로 표시
         ForEach(files, id: \.self) { file in
             if let url = URL(string: Secrets.baseURL + "/" + file) {
                 KFImage.auth(url: url)
@@ -202,49 +207,92 @@ struct ChatRoomView: View {
     // MARK: - Input Bar
 
     private var messageInputBar: some View {
-        HStack(spacing: 12) {
-            // 파일 첨부 버튼 (TODO: 파일 업로드 구현)
-            Button {
-                // TODO: 파일 선택
-            } label: {
-                Image(systemName: "plus.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(.secondary)
+        VStack(spacing: 0) {
+            // 선택된 이미지 프리뷰
+            if !intent.state.selectedImages.isEmpty {
+                selectedImagesPreview
             }
 
-            // 텍스트 입력
-            TextField("메시지를 입력하세요", text: Binding(
-                get: { intent.state.messageText },
-                set: { intent.updateMessageText($0) }
-            ))
-            .textFieldStyle(.roundedBorder)
-            .focused($isInputFocused)
-            .submitLabel(.send)
-            .onSubmit {
-                Task { await intent.sendMessage() }
-            }
+            HStack(spacing: 12) {
+                // 파일 첨부 버튼
+                PhotosPicker(
+                    selection: Binding(
+                        get: { intent.state.selectedPhotos },
+                        set: { intent.updateSelectedPhotos($0) }
+                    ),
+                    maxSelectionCount: 5,
+                    matching: .images
+                ) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
 
-            // 전송 버튼
-            Button {
-                Task { await intent.sendMessage() }
-            } label: {
-                Image(systemName: "paperplane.fill")
-                    .font(.title3)
-                    .foregroundColor(canSend ? .accentColor : .secondary)
+                // 텍스트 입력
+                TextField("메시지를 입력하세요", text: Binding(
+                    get: { intent.state.messageText },
+                    set: { intent.updateMessageText($0) }
+                ))
+                .textFieldStyle(.roundedBorder)
+                .focused($isInputFocused)
+                .submitLabel(.send)
+                .onSubmit {
+                    Task { await intent.sendMessage() }
+                }
+
+                // 전송 버튼
+                Button {
+                    Task { await intent.sendMessage() }
+                } label: {
+                    Image(systemName: "paperplane.fill")
+                        .font(.title3)
+                        .foregroundColor(canSend ? .accentColor : .secondary)
+                }
+                .disabled(!canSend)
             }
-            .disabled(!canSend)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
         .background(Color(.systemBackground))
         .overlay(alignment: .top) {
             Divider()
         }
     }
 
+    private var selectedImagesPreview: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(Array(intent.state.selectedImages.enumerated()), id: \.offset) { index, image in
+                    ZStack(alignment: .topTrailing) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 80, height: 80)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                        // 삭제 버튼
+                        Button {
+                            intent.removeImage(at: index)
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.title3)
+                                .foregroundColor(.white)
+                                .background(Circle().fill(Color.black.opacity(0.5)))
+                        }
+                        .offset(x: 4, y: -4)
+                    }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+        }
+        .background(Color(.systemGray6))
+    }
+
     private var canSend: Bool {
-        !intent.state.messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            && !intent.state.isSending
+        let hasText = !intent.state.messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let hasImages = !intent.state.selectedImages.isEmpty
+        return (hasText || hasImages) && !intent.state.isSending
     }
 
     // MARK: - Helpers

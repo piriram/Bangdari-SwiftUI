@@ -34,8 +34,8 @@ final class RemoteChatRepository: ChatRepository {
     // MARK: - File Upload
 
     func uploadFiles(roomId: String, files: [Data]) async throws -> [String] {
-        // TODO: multipart/form-data 업로드 구현 필요
-        // NetworkService에 multipart 메서드 추가 후 구현
-        throw NetworkError.unknown
+        let endpoint = APIEndpoint.uploadChatFiles(roomId: roomId)
+        let response = try await network.uploadFiles(endpoint, files: files, type: ChatFileResponse.self)
+        return response.files
     }
 }

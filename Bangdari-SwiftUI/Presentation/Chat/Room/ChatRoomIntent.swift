@@ -1,5 +1,7 @@
 import Combine
 import Foundation
+import PhotosUI
+import SwiftUI
 
 // MARK: - Chat Room State
 
@@ -12,6 +14,11 @@ struct ChatRoomState {
 
     // 메시지 입력
     var messageText: String = ""
+
+    // 파일 업로드
+    var selectedPhotos: [PhotosPickerItem] = []
+    var selectedImages: [UIImage] = []
+    var isUploadingFiles: Bool = false
 
     // 페이지네이션 (시간 기반)
     var oldestMessageDate: String? = nil
@@ -119,22 +126,51 @@ final class ChatRoomIntent: ObservableObject {
 
     func sendMessage() async {
         let content = state.messageText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !content.isEmpty else { return }
+        let hasContent = !content.isEmpty
+        let hasImages = !state.selectedImages.isEmpty
+
+        guard hasContent || hasImages else { return }
+
+        // TODO: 파일 검증 로직 추가
+        // - 5MB 용량 제한 체크
+        // - 5개 개수 제한 체크
+        // - 허용 확장자 체크 (jpg, jpeg, png, gif, pdf)
+        // - 검증 실패 시 사용자에게 알림
 
         state.isSending = true
-        state.messageText = "" // 입력창 즉시 비우기
+        let savedContent = content
+        let savedImages = state.selectedImages
+
+        // 입력창 즉시 비우기
+        state.messageText = ""
+        state.selectedImages = []
+        state.selectedPhotos = []
 
         do {
+            // TODO: 업로드 진행률 표시
+            // - isUploadingFiles 상태 활용
+            // - 파일별 진행률 표시
+
+            // 1. 파일이 있으면 먼저 업로드
+            var fileUrls: [String]? = nil
+            if !savedImages.isEmpty {
+                let filesData = savedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+                fileUrls = try await chatRepository.uploadFiles(roomId: roomId, files: filesData)
+            }
+
+            // 2. 메시지 전송
             let message = try await chatRepository.sendMessage(
                 roomId: roomId,
                 content: content,
-                files: nil
+                files: fileUrls
             )
+
             // 메시지 추가 (중복 체크)
             appendMessageIfNeeded(message)
         } catch {
-            // 전송 실패 시 메시지 복원
-            state.messageText = content
+            // 전송 실패 시 복원
+            state.messageText = savedContent
+            state.selectedImages = savedImages
         }
 
         state.isSending = false
@@ -142,6 +178,35 @@ final class ChatRoomIntent: ObservableObject {
 
     func updateMessageText(_ text: String) {
         state.messageText = text
+    }
+
+    // MARK: - File Upload
+
+    func updateSelectedPhotos(_ items: [PhotosPickerItem]) {
+        state.selectedPhotos = items
+
+        Task {
+            await loadImages(from: items)
+        }
+    }
+
+    private func loadImages(from items: [PhotosPickerItem]) async {
+        var loadedImages: [UIImage] = []
+
+        for item in items {
+            if let data = try? await item.loadTransferable(type: Data.self),
+               let image = UIImage(data: data) {
+                loadedImages.append(image)
+            }
+        }
+
+        state.selectedImages = loadedImages
+    }
+
+    func removeImage(at index: Int) {
+        guard index < state.selectedImages.count else { return }
+        state.selectedImages.remove(at: index)
+        state.selectedPhotos.remove(at: index)
     }
 
     // MARK: - Socket Helpers
