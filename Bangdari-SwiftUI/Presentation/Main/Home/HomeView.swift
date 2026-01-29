@@ -14,7 +14,9 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     // 히어로 배너 (검색바 포함)
-                    if !intent.state.todayEstates.isEmpty {
+                    if intent.state.heroBannerSkeleton {
+                        HeroBannerSkeleton()
+                    } else if !intent.state.todayEstates.isEmpty {
                         HeroBannerView(
                             estates: intent.state.todayEstates,
                             onTap: { estate in
@@ -32,17 +34,17 @@ struct HomeView: View {
                     }
 
                     // 최근 검색 / 오늘의 매물
-                    if !intent.state.todayEstates.isEmpty {
+                    if !intent.state.todayEstateSkeletons.isEmpty || !intent.state.todayEstates.isEmpty {
                         todayEstatesSection
                     }
 
                     // HOT 매물
-                    if !intent.state.hotEstates.isEmpty {
+                    if !intent.state.hotEstateSkeletons.isEmpty || !intent.state.hotEstates.isEmpty {
                         hotEstatesSection
                     }
 
                     // 오늘의 토픽
-                    if !intent.state.topics.isEmpty {
+                    if !intent.state.topicSkeletons.isEmpty || !intent.state.topics.isEmpty {
                         topicSection
                     }
                 }
@@ -53,11 +55,6 @@ struct HomeView: View {
             .background(Color.gray0)
             .refreshable {
                 await intent.refresh()
-            }
-            .overlay {
-                if intent.state.isLoading && intent.state.todayEstates.isEmpty {
-                    ProgressView()
-                }
             }
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: String.self) { estateId in
@@ -113,14 +110,22 @@ struct HomeView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
-                    ForEach(intent.state.todayEstates, id: \.estate_id) { estate in
-                        NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
-                            EstateCardSmall(
-                                estate: estate,
-                                isRecommended: intent.state.todayEstates.first?.estate_id == estate.estate_id
-                            )
+                    // 스켈레톤 표시
+                    if !intent.state.todayEstateSkeletons.isEmpty {
+                        ForEach(intent.state.todayEstateSkeletons) { skeleton in
+                            EstateCardSmallSkeleton()
                         }
-                        .buttonStyle(.plain)
+                    } else {
+                        // 실제 데이터
+                        ForEach(intent.state.todayEstates, id: \.estate_id) { estate in
+                            NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
+                                EstateCardSmall(
+                                    estate: estate,
+                                    isRecommended: intent.state.todayEstates.first?.estate_id == estate.estate_id
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -138,15 +143,22 @@ struct HomeView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
-                    ForEach(intent.state.hotEstates, id: \.estate_id) { estate in
-                        NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
-                            EstateCardLarge(
-                                estate: estate,
-                                viewerCount: Int.random(in: 10...50)  // TODO: 실제 데이터
-                            )
-                            .frame(width: UIScreen.main.bounds.width * 0.85)
+                    if !intent.state.hotEstateSkeletons.isEmpty {
+                        ForEach(intent.state.hotEstateSkeletons) { skeleton in
+                            EstateCardLargeSkeleton()
+                                .frame(width: UIScreen.main.bounds.width * 0.85)
                         }
-                        .buttonStyle(.plain)
+                    } else {
+                        ForEach(intent.state.hotEstates, id: \.estate_id) { estate in
+                            NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
+                                EstateCardLarge(
+                                    estate: estate,
+                                    viewerCount: Int.random(in: 10...50)  // TODO: 실제 데이터
+                                )
+                                .frame(width: UIScreen.main.bounds.width * 0.85)
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -161,14 +173,20 @@ struct HomeView: View {
             SectionHeader(title: "오늘의 부동산 토픽")
 
             VStack(spacing: 8) {
-                ForEach(intent.state.topics, id: \.title) { topic in
-                    if let link = topic.link, let url = URL(string: link) {
-                        Link(destination: url) {
+                if !intent.state.topicSkeletons.isEmpty {
+                    ForEach(intent.state.topicSkeletons) { skeleton in
+                        TopicRowSkeleton()
+                    }
+                } else {
+                    ForEach(intent.state.topics, id: \.title) { topic in
+                        if let link = topic.link, let url = URL(string: link) {
+                            Link(destination: url) {
+                                TopicRow(topic: topic)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
                             TopicRow(topic: topic)
                         }
-                        .buttonStyle(.plain)
-                    } else {
-                        TopicRow(topic: topic)
                     }
                 }
             }
