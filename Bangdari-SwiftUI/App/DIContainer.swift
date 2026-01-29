@@ -45,4 +45,22 @@ final class DIContainer: @unchecked Sendable {
             return RemoteChatRepository() // TODO: MockChatRepository
         }
     }
+
+    func makeOrderRepository() -> OrderRepository {
+        switch AppEnvironment.current {
+        case .live:
+            return RemoteOrderRepository()
+        case .mock:
+            return RemoteOrderRepository()
+        }
+    }
+
+    func makePaymentRepository() -> PaymentRepository {
+        switch AppEnvironment.current {
+        case .live:
+            return RemotePaymentRepository()
+        case .mock:
+            return RemotePaymentRepository()
+        }
+    }
 }

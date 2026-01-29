@@ -108,6 +108,31 @@ struct EstateDetailView: View {
                 Text(error)
             }
         }
+        .sheet(isPresented: intent.showPaymentWebViewBinding) {
+            if let order = intent.state.createdOrder,
+               let estate = intent.state.estate {
+                PaymentWebView(
+                    order: order,
+                    estateName: estate.title,
+                    onSuccess: { impUid in
+                        Task { await intent.validatePayment(impUid: impUid) }
+                    },
+                    onCancel: { intent.cancelPayment() }
+                )
+            }
+        }
+        .sheet(isPresented: intent.showReservationSuccessBinding) {
+            ReservationSuccessView {
+                intent.closeReservationSuccess()
+            }
+        }
+        .alert("예약 실패", isPresented: .constant(intent.state.reservationError != nil)) {
+            Button("확인") { intent.clearReservationError() }
+        } message: {
+            if let error = intent.state.reservationError {
+                Text(error)
+            }
+        }
     }
 
     // MARK: - Z2: Primary Media (Image Carousel)
@@ -466,17 +491,22 @@ struct EstateDetailView: View {
 
             // CTA 버튼
             Button {
-                // TODO: 예약 플로우
+                Task { await intent.createOrder() }
             } label: {
-                Text(estate.is_reserved ? "예약완료" : "예약하기")
-                    .font(.pretendard(.body1, .bold))
-                    .foregroundColor(estate.is_reserved ? .gray60 : .gray0)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(estate.is_reserved ? Color.gray30 : Color.deepCream)
-                    .cornerRadius(14)
+                if intent.state.isReservationLoading {
+                    ProgressView()
+                        .tint(.gray0)
+                } else {
+                    Text(estate.is_reserved ? "예약완료" : "예약하기")
+                        .font(.pretendard(.body1, .bold))
+                        .foregroundColor(estate.is_reserved ? .gray60 : .gray0)
+                }
             }
-            .disabled(estate.is_reserved)
+            .frame(maxWidth: .infinity)
+            .frame(height: 56)
+            .background(estate.is_reserved ? Color.gray30 : Color.deepCream)
+            .cornerRadius(14)
+            .disabled(estate.is_reserved || intent.state.isReservationLoading)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
