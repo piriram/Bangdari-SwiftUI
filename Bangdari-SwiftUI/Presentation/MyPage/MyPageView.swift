@@ -7,6 +7,17 @@ struct MyPageView: View {
 
     var body: some View {
         List {
+            Section("개발") {
+                NavigationLink {
+                    ServerLogView()
+                } label: {
+                    HStack {
+                        Image(systemName: "list.bullet.rectangle")
+                        Text("서버 요청 로그")
+                    }
+                }
+            }
+
             // 로그아웃 버튼
             Section {
                 Button(role: .destructive) {

@@ -12,6 +12,9 @@ enum HTTPMethod: String {
 // MARK: - API Endpoint
 
 enum APIEndpoint {
+    // Log
+    case serverLogs
+
     // Auth
     case refresh
 
@@ -81,6 +84,9 @@ enum APIEndpoint {
 extension APIEndpoint {
     var path: String {
         switch self {
+        // Log
+        case .serverLogs: return "/v1/log"
+
         // Auth
         case .refresh: return "/v1/auth/refresh"
 
@@ -148,7 +154,7 @@ extension APIEndpoint {
 
     var method: HTTPMethod {
         switch self {
-        case .refresh, .myProfile, .userProfile, .searchUsers,
+        case .serverLogs, .refresh, .myProfile, .userProfile, .searchUsers,
              .estateDetail, .myLikedEstates, .estatesGeolocation,
              .todayEstates, .hotEstates, .similarEstates, .todayTopic,
              .chatRooms, .chatMessages, .orders, .paymentReceipt,
@@ -172,7 +178,7 @@ extension APIEndpoint {
 
     var requiresAuth: Bool {
         switch self {
-        case .validateEmail, .join, .login, .loginKakao, .loginApple:
+        case .serverLogs, .validateEmail, .join, .login, .loginKakao, .loginApple:
             return false
         default:
             return true
