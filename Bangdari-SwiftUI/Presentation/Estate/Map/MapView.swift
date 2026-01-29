@@ -249,8 +249,12 @@ struct EstateMapView: View {
             }
         }
         .onTapGesture {
-            // 지도 빈 영역 탭 시 선택 해제 → S1
-            if isEstateSelected {
+            // 필터 패널이 떠있으면 닫기 (우선순위 1)
+            if isFilterAdjusting {
+                withAnimation { viewState = .browsing }
+            }
+            // 매물이 선택되어 있으면 선택 해제 (우선순위 2)
+            else if isEstateSelected {
                 withAnimation { viewState = .browsing }
             }
         }
