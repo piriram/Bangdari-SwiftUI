@@ -1,3 +1,4 @@
+import CoreLocation
 import Kingfisher
 import SwiftUI
 
@@ -27,7 +28,7 @@ struct HomeView: View {
 
                     // 카테고리 선택
                     CategorySelector(selectedCategory: $selectedCategory) { category in
-                        // TODO: 카테고리 필터링
+                        handleCategorySelection(category)
                     }
 
                     // 최근 검색 / 오늘의 매물
@@ -62,10 +63,44 @@ struct HomeView: View {
             .navigationDestination(for: String.self) { estateId in
                 EstateDetailView(estateId: estateId)
             }
+            .navigationDestination(for: MapNavigationData.self) { navData in
+                EstateMapView(
+                    initialCategory: navData.category,
+                    initialCoordinate: navData.initialCoordinate
+                )
+            }
         }
         .task {
             await intent.loadHomeData()
         }
+    }
+
+    // MARK: - Private Methods
+
+    private func handleCategorySelection(_ category: EstateCategory) {
+        print("🏠 [HomeView] 카테고리 선택: \(category.rawValue)")
+
+        // 1. 현재 위치 가져오기
+        let coordinate = intent.getCurrentCoordinate()
+
+        // 2. 위치가 없으면 서울역 기본값 사용
+        let finalCoordinate = coordinate ?? CLLocationCoordinate2D(
+            latitude: 37.5547125,
+            longitude: 126.9707878
+        )
+
+        if coordinate == nil {
+            print("🏠 [HomeView] 위치 없음 → 서울역 기본값 사용")
+        }
+
+        // 3. 네비게이션 데이터 생성 및 이동
+        let navData = MapNavigationData(
+            category: category,
+            initialCoordinate: finalCoordinate
+        )
+        navigationPath.append(navData)
+
+        print("🏠 [HomeView] 지도 뷰로 이동")
     }
 
     // MARK: - Today Estates Section
