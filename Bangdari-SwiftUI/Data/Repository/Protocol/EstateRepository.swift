@@ -27,4 +27,9 @@ protocol EstateRepository {
     func fetchEstateDetail(estateId: String) async throws -> EstateDetailResponse
     func toggleLike(estateId: String, like: Bool) async throws -> Bool
     func fetchSimilarEstates() async throws -> [EstateSummaryResponse]
+
+    // Comment
+    func createComment(estateId: String, content: String, parentId: String?) async throws
+    func updateComment(estateId: String, commentId: String, content: String) async throws
+    func deleteComment(estateId: String, commentId: String) async throws
 }

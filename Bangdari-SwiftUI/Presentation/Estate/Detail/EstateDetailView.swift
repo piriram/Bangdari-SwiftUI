@@ -78,6 +78,10 @@ struct EstateDetailView: View {
                     if !intent.state.similarEstates.isEmpty {
                         similarEstatesSection
                     }
+
+                    // Z5b: Comments Section
+                    commentsSection(estate)
+
                     agentSection(estate.creator)
 
                     // 하단 여백 (CTA 영역)
@@ -405,6 +409,38 @@ struct EstateDetailView: View {
         .frame(width: 160)
         .background(Color.gray0)
         .cornerRadius(12)
+    }
+
+    // MARK: - Z5b: Comments Section
+
+    private func commentsSection(_ estate: EstateDetailResponse) -> some View {
+        NavigationLink(destination: EstateCommentView(estateId: estate.estate_id)) {
+            HStack(spacing: 12) {
+                // 댓글 아이콘
+                Image(systemName: "bubble.left")
+                    .font(.system(size: 20))
+                    .foregroundColor(.deepCoast)
+
+                // 댓글 개수
+                Text("댓글 \(estate.comments.count)개")
+                    .font(.pretendard(.body2, .medium))
+                    .foregroundColor(.gray90)
+
+                Spacer()
+
+                // 화살표
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14))
+                    .foregroundColor(.gray60)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+            .background(Color.gray30)
+            .cornerRadius(12)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.horizontal, 16)
+        .padding(.top, 20)
     }
 
     // MARK: - Z5: Agent Section

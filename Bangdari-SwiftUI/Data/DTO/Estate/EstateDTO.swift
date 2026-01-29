@@ -319,13 +319,27 @@ struct UserInfo: Decodable {
 
 // MARK: - Estate Comment
 
-struct EstateComment: Decodable {
+struct EstateComment: Decodable, Identifiable {
     let comment_id: String
     let content: String
     let creator: UserInfo
     let createdAt: String
     let updatedAt: String
     let replies: [EstateComment]?
+
+    var id: String { comment_id }
+}
+
+// MARK: - Estate Comment Request
+
+struct EstateCommentRequest: Encodable {
+    let content: String
+    let parent_comment_id: String?
+
+    init(content: String, parentId: String? = nil) {
+        self.content = content
+        self.parent_comment_id = parentId
+    }
 }
 
 // MARK: - Like Request/Response

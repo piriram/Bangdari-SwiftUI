@@ -63,6 +63,11 @@ enum APIEndpoint {
     case videoStream(videoId: String)
     case videoLike(videoId: String)
 
+    // Estate Comment
+    case createEstateComment(estateId: String)
+    case updateEstateComment(estateId: String, commentId: String)
+    case deleteEstateComment(estateId: String, commentId: String)
+
     // Post (Community)
     case uploadPostFiles
     case createPost
@@ -113,6 +118,11 @@ extension APIEndpoint {
         case .hotEstates: return "/v1/estates/hot-estates"
         case .similarEstates: return "/v1/estates/similar-estates"
         case .todayTopic: return "/v1/estates/today-topic"
+
+        // Estate Comment
+        case .createEstateComment(let estateId): return "/v1/estates/\(estateId)/comments"
+        case .updateEstateComment(let estateId, let commentId): return "/v1/estates/\(estateId)/comments/\(commentId)"
+        case .deleteEstateComment(let estateId, let commentId): return "/v1/estates/\(estateId)/comments/\(commentId)"
 
         // Chat
         case .createChatRoom: return "/v1/chats"
@@ -165,13 +175,15 @@ extension APIEndpoint {
         case .validateEmail, .join, .login, .loginKakao, .loginApple, .logout,
              .uploadProfileImage, .estateLike, .createChatRoom, .sendMessage,
              .uploadChatFiles, .createOrder, .validatePayment, .videoLike,
-             .uploadPostFiles, .createPost, .postLike, .createPostComment:
+             .uploadPostFiles, .createPost, .postLike,
+             .createEstateComment, .createPostComment:
             return .post
 
-        case .updateDeviceToken, .updateMyProfile, .updatePost, .updatePostComment:
+        case .updateDeviceToken, .updateMyProfile, .updatePost,
+             .updateEstateComment, .updatePostComment:
             return .put
 
-        case .deletePost, .deletePostComment:
+        case .deletePost, .deleteEstateComment, .deletePostComment:
             return .delete
         }
     }

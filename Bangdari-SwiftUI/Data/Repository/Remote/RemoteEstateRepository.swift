@@ -72,4 +72,23 @@ final class RemoteEstateRepository: EstateRepository {
         let response = try await network.request(.similarEstates, type: EstateListResponse.self)
         return response.data
     }
+
+    // MARK: - Comment
+
+    func createComment(estateId: String, content: String, parentId: String?) async throws {
+        let endpoint = APIEndpoint.createEstateComment(estateId: estateId)
+        let body = EstateCommentRequest(content: content, parentId: parentId)
+        _ = try await network.request(endpoint, body: body, type: EstateComment.self)
+    }
+
+    func updateComment(estateId: String, commentId: String, content: String) async throws {
+        let endpoint = APIEndpoint.updateEstateComment(estateId: estateId, commentId: commentId)
+        let body = ["content": content]
+        _ = try await network.request(endpoint, body: body, type: EstateComment.self)
+    }
+
+    func deleteComment(estateId: String, commentId: String) async throws {
+        let endpoint = APIEndpoint.deleteEstateComment(estateId: estateId, commentId: commentId)
+        try await network.requestWithoutResponse(endpoint)
+    }
 }
