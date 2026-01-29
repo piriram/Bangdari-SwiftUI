@@ -17,8 +17,7 @@ struct ServerLogView: View {
                 logList
             }
         }
-        .navigationTitle("서버 요청 로그")
-        .navigationBarTitleDisplayMode(.inline)
+        .standardNavigationBar(title: "서버 요청 로그")
         .task {
             await intent.loadLogs()
         }

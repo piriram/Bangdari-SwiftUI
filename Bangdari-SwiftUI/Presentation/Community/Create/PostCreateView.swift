@@ -49,6 +49,7 @@ struct PostCreateView: View {
                 }
             }
         }
+        .standardNavigationBar(title: "글 작성")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("취소") {

@@ -21,7 +21,7 @@ struct ChatRoomView: View {
             // 입력창
             messageInputBar
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .standardNavigationBar()
         .toolbar {
             ToolbarItem(placement: .principal) {
                 HStack(spacing: 8) {

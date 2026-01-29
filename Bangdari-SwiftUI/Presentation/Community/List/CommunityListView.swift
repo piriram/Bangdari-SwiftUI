@@ -24,6 +24,7 @@ struct CommunityListView: View {
         .onSubmit(of: .search) {
             Task { await intent.searchPosts() }
         }
+        .standardNavigationBar(title: "커뮤니티")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

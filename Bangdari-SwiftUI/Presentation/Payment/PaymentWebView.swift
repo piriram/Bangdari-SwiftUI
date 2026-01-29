@@ -43,8 +43,7 @@ struct PaymentWebView: View {
                     }
                 }
             }
-            .navigationTitle("결제")
-            .navigationBarTitleDisplayMode(.inline)
+            .standardNavigationBar(title: "결제")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("취소") {

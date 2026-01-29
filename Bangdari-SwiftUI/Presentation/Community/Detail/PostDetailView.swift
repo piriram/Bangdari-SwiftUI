@@ -22,7 +22,7 @@ struct PostDetailView: View {
                 errorView(error)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .standardNavigationBar()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 likeButton

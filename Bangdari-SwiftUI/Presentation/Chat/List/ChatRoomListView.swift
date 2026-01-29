@@ -18,7 +18,7 @@ struct ChatRoomListView: View {
                 chatRoomList
             }
         }
-        .navigationTitle("채팅")
+        .standardNavigationBar(title: "채팅")
         .task {
             await intent.loadChatRooms()
         }

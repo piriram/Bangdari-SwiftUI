@@ -24,11 +24,7 @@ struct EstateDetailView: View {
         Group {
             if let estate = intent.state.estate {
                 detailContent(estate)
-                    .navigationTitle(estate.title)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarBackground(Color.white, for: .navigationBar)
-                    .toolbarColorScheme(.light, for: .navigationBar)
+                    .standardNavigationBar(title: estate.title)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button {

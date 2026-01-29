@@ -29,8 +29,7 @@ struct EstateCommentView: View {
             commentInputBar
                 .background(Color.gray0)
         }
-        .navigationTitle("댓글 \(intent.state.comments.count)")
-        .navigationBarTitleDisplayMode(.inline)
+        .standardNavigationBar(title: "댓글 \(intent.state.comments.count)")
         .task {
             await intent.loadComments()
         }
