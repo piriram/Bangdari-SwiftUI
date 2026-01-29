@@ -6,6 +6,7 @@ import WebKit
 struct PaymentWebView: View {
     @StateObject private var viewModel: PaymentWebViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var isLoading = true
 
     let onSuccess: (String) -> Void
     let onCancel: () -> Void
@@ -26,10 +27,22 @@ struct PaymentWebView: View {
 
     var body: some View {
         NavigationView {
-            WebViewRepresentable(
-                htmlContent: viewModel.htmlContent,
-                onResult: handlePaymentResult
-            )
+            ZStack {
+                WebViewRepresentable(
+                    htmlContent: viewModel.htmlContent,
+                    onResult: handlePaymentResult,
+                    onLoadingChange: { isLoading = $0 }
+                )
+
+                if isLoading {
+                    VStack(spacing: 16) {
+                        ProgressView()
+                        Text("결제 페이지를 불러오는 중...")
+                            .font(.pretendard(.body2))
+                            .foregroundColor(.gray60)
+                    }
+                }
+            }
             .navigationTitle("결제")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -61,9 +74,10 @@ struct PaymentWebView: View {
 struct WebViewRepresentable: UIViewRepresentable {
     let htmlContent: String
     let onResult: ([String: Any]) -> Void
+    let onLoadingChange: (Bool) -> Void
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(onResult: onResult)
+        Coordinator(onResult: onResult, onLoadingChange: onLoadingChange)
     }
 
     func makeUIView(context: Context) -> WKWebView {
@@ -73,8 +87,12 @@ struct WebViewRepresentable: UIViewRepresentable {
             name: "paymentResult"
         )
 
+        // 팝업 허용 설정
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
+
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
+        webView.backgroundColor = .white
         return webView
     }
 
@@ -86,15 +104,28 @@ struct WebViewRepresentable: UIViewRepresentable {
 
     final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         let onResult: ([String: Any]) -> Void
+        let onLoadingChange: (Bool) -> Void
 
-        init(onResult: @escaping ([String: Any]) -> Void) {
+        init(onResult: @escaping ([String: Any]) -> Void, onLoadingChange: @escaping (Bool) -> Void) {
             self.onResult = onResult
+            self.onLoadingChange = onLoadingChange
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            print("✅ WebView 로딩 완료")
+            onLoadingChange(false)
+        }
+
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            print("❌ WebView 로딩 실패: \(error.localizedDescription)")
+            onLoadingChange(false)
         }
 
         func userContentController(
             _ userContentController: WKUserContentController,
             didReceive message: WKScriptMessage
         ) {
+            print("📩 JavaScript 메시지 수신: \(message.body)")
             guard message.name == "paymentResult",
                   let dict = message.body as? [String: Any] else { return }
             onResult(dict)
