@@ -7,6 +7,7 @@ struct EstateDetailView: View {
     @StateObject private var intent: EstateDetailIntent
     @Environment(\.dismiss) private var dismiss
     @State private var currentImageIndex = 0
+    @State private var navigateToChatRoom = false
 
     // MARK: - Constants
 
@@ -88,6 +89,24 @@ struct EstateDetailView: View {
         .safeAreaInset(edge: .bottom) {
             // Z6: Persistent Action Layer
             bottomCTA(estate)
+        }
+        .background(
+            NavigationLink(
+                destination: chatRoomDestination(),
+                isActive: $navigateToChatRoom
+            ) {
+                EmptyView()
+            }
+            .opacity(0)
+        )
+        .alert("채팅방 생성 실패", isPresented: .constant(intent.state.chatRoomError != nil)) {
+            Button("확인") {
+                intent.clearChatRoomError()
+            }
+        } message: {
+            if let error = intent.state.chatRoomError {
+                Text(error)
+            }
         }
     }
 
@@ -405,13 +424,26 @@ struct EstateDetailView: View {
     }
 
     private func contactButton(icon: ContactIcon) -> some View {
-        Button {} label: {
+        Button {
+            if icon == .chat {
+                Task {
+                    await intent.createChatRoomWithAgent()
+                    if intent.state.createdChatRoom != nil {
+                        navigateToChatRoom = true
+                    }
+                }
+            } else if icon == .call {
+                // TODO: 전화 걸기 기능
+            }
+        } label: {
             Image.contactIcon(icon)
                 .frame(width: 18, height: 18)
                 .frame(width: 40, height: 40)
                 .background(Color.deepCream)
                 .cornerRadius(10)
+                .opacity(intent.state.isCreatingChatRoom ? 0.5 : 1.0)
         }
+        .disabled(intent.state.isCreatingChatRoom)
     }
 
     // MARK: - Z6: Bottom CTA
@@ -497,6 +529,19 @@ struct EstateDetailView: View {
             return "월세 \(estate.deposit)/\(estate.monthly_rent)"
         }
         return "전세 \(estate.deposit)"
+    }
+
+    @ViewBuilder
+    private func chatRoomDestination() -> some View {
+        if let room = intent.state.createdChatRoom,
+           let estate = intent.state.estate {
+            ChatRoomView(
+                roomId: room.room_id,
+                opponent: estate.creator
+            )
+        } else {
+            EmptyView()
+        }
     }
 }
 
