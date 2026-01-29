@@ -294,6 +294,23 @@ final class MapIntent: ObservableObject {
         state.maxDistance = distance
     }
 
+    func initializeWithCategory(_ category: EstateCategory?, at coordinate: CLLocationCoordinate2D?) {
+        // 1. 카테고리 설정
+        if let category = category {
+            state.selectedCategory = category.rawValue
+            print("🗺️ [MapIntent] 초기 카테고리 설정: \(category.rawValue)")
+        }
+
+        // 2. 좌표 설정
+        if let coord = coordinate {
+            state.region = MKCoordinateRegion(
+                center: coord,
+                span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+            )
+            print("🗺️ [MapIntent] 초기 좌표 설정: \(coord.latitude), \(coord.longitude)")
+        }
+    }
+
     // MARK: - Clustering
 
     func updateClusters() {

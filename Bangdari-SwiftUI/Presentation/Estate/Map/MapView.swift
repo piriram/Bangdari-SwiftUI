@@ -46,18 +46,59 @@ struct MapFilterState {
     var isImmediateActive: Bool = false
 }
 
+// MARK: - Navigation Data
+
+struct MapNavigationData: Hashable {
+    let category: EstateCategory?
+    let initialCoordinate: CLLocationCoordinate2D?
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(category?.rawValue)
+        hasher.combine(initialCoordinate?.latitude)
+        hasher.combine(initialCoordinate?.longitude)
+    }
+
+    static func == (lhs: MapNavigationData, rhs: MapNavigationData) -> Bool {
+        lhs.category == rhs.category &&
+        lhs.initialCoordinate?.latitude == rhs.initialCoordinate?.latitude &&
+        lhs.initialCoordinate?.longitude == rhs.initialCoordinate?.longitude
+    }
+}
+
 // MARK: - Map View
 
 struct EstateMapView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var intent = MapIntent()
+    @StateObject private var intent: MapIntent
 
-    @State private var position: MapCameraPosition = .region(.defaultRegion)
+    let initialCategory: EstateCategory?
+    let initialCoordinate: CLLocationCoordinate2D?
+
+    @State private var position: MapCameraPosition
     @State private var viewState: MapViewState = .idle
     @State private var filterState = MapFilterState()
     @State private var selectedEstateIndex: Int = 0
     @State private var selectedEstateIdForDetail: String?
     @State private var navigateToList: Bool = false
+
+    init(initialCategory: EstateCategory? = nil, initialCoordinate: CLLocationCoordinate2D? = nil) {
+        self.initialCategory = initialCategory
+        self.initialCoordinate = initialCoordinate
+
+        // MapIntent 초기화
+        let mapIntent = MapIntent()
+        _intent = StateObject(wrappedValue: mapIntent)
+
+        // 초기 position 설정
+        if let coord = initialCoordinate {
+            _position = State(initialValue: .region(MKCoordinateRegion(
+                center: coord,
+                span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+            )))
+        } else {
+            _position = State(initialValue: .region(.defaultRegion))
+        }
+    }
 
     private var selectedEstate: EstateSummaryResponse? {
         guard !intent.state.estates.isEmpty,
@@ -92,6 +133,9 @@ struct EstateMapView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
+            // 초기 카테고리 및 좌표 설정
+            intent.initializeWithCategory(initialCategory, at: initialCoordinate)
+
             intent.requestLocationPermission()
             Task { await intent.loadEstatesInCurrentRegion() }
         }
