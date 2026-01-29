@@ -10,6 +10,11 @@ struct EstateDetailState {
     var isLikeLoading: Bool = false
     var errorMessage: String?
 
+    // 채팅 관련 상태
+    var isCreatingChatRoom: Bool = false
+    var chatRoomError: String?
+    var createdChatRoom: ChatRoomResponse?
+
     var isLiked: Bool {
         estate?.is_liked ?? false
     }
@@ -22,14 +27,17 @@ final class EstateDetailIntent: ObservableObject {
     @Published private(set) var state = EstateDetailState()
 
     private let estateRepository: EstateRepository
+    private let chatRepository: ChatRepository
     private let estateId: String
 
     init(
         estateId: String,
-        estateRepository: EstateRepository? = nil
+        estateRepository: EstateRepository? = nil,
+        chatRepository: ChatRepository? = nil
     ) {
         self.estateId = estateId
         self.estateRepository = estateRepository ?? DIContainer.shared.makeEstateRepository()
+        self.chatRepository = chatRepository ?? DIContainer.shared.makeChatRepository()
     }
 
     // MARK: - Actions
@@ -89,5 +97,30 @@ final class EstateDetailIntent: ObservableObject {
         }
 
         state.isLikeLoading = false
+    }
+
+    func createChatRoomWithAgent() async {
+        guard let estate = state.estate else { return }
+
+        state.isCreatingChatRoom = true
+        state.chatRoomError = nil
+        state.createdChatRoom = nil
+
+        do {
+            let room = try await chatRepository.createOrGetChatRoom(
+                opponentId: estate.creator.user_id
+            )
+            state.createdChatRoom = room
+        } catch let error as NetworkError {
+            state.chatRoomError = error.message
+        } catch {
+            state.chatRoomError = "채팅방 생성에 실패했습니다."
+        }
+
+        state.isCreatingChatRoom = false
+    }
+
+    func clearChatRoomError() {
+        state.chatRoomError = nil
     }
 }
