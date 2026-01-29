@@ -13,21 +13,28 @@ struct PostDetailView: View {
     }
 
     var body: some View {
-        Group {
-            if intent.state.isLoading && intent.state.post == nil {
-                ProgressView()
-            } else if let post = intent.state.post {
-                detailContent(post)
-            } else if let error = intent.state.errorMessage {
-                errorView(error)
-            }
-        }
-        .standardNavigationBar()
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+        VStack(spacing: 0) {
+            // 네비게이션 바
+            CustomNavigationBar(onBack: { dismiss() }) {
+                Text("게시글")
+                    .font(.pretendardBody1Bold)
+                    .foregroundColor(.gray90)
+            } trailing: {
                 likeButton
             }
+
+            // 콘텐츠
+            Group {
+                if intent.state.isLoading && intent.state.post == nil {
+                    ProgressView()
+                } else if let post = intent.state.post {
+                    detailContent(post)
+                } else if let error = intent.state.errorMessage {
+                    errorView(error)
+                }
+            }
         }
+        .navigationBarHidden(true)
         .task {
             await intent.loadDetail()
         }

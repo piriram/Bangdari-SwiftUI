@@ -159,17 +159,8 @@ struct EstateMapView: View {
         VStack(spacing: 0) {
             VStack(spacing: 12) {
                 // 상단 row: 뒤로가기 / 위치 / 리스트전환
-                HStack(spacing: 12) {
-                    // 뒤로가기
-                    Button { dismiss() } label: {
-                        Image(dsIcon: .chevron)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.gray90)
-                    }
-
-                    // 위치 텍스트
+                CustomNavigationBar(onBack: { dismiss() }) {
+                    // Center: Location + Text
                     HStack(spacing: 6) {
                         Image(dsIcon: .location)
                             .resizable()
@@ -181,10 +172,8 @@ struct EstateMapView: View {
                             .font(.pretendardBody1Bold)
                             .foregroundColor(.gray90)
                     }
-
-                    Spacer()
-
-                    // 리스트 전환 버튼
+                } trailing: {
+                    // Trailing: List 전환 버튼
                     Button {
                         navigateToList = true
                     } label: {

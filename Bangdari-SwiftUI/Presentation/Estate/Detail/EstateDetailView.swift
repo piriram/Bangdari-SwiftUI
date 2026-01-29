@@ -21,28 +21,45 @@ struct EstateDetailView: View {
     }
 
     var body: some View {
-        Group {
+        VStack(spacing: 0) {
+            // 네비게이션 바
             if let estate = intent.state.estate {
-                detailContent(estate)
-                    .standardNavigationBar(title: estate.title)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button {
-                                Task { await intent.toggleLike() }
-                            } label: {
-                                Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
-                                    .renderingMode(.template)
-                                    .foregroundColor(intent.state.isLiked ? .red : .gray60)
-                            }
-                            .disabled(intent.state.isLikeLoading)
-                        }
+                CustomNavigationBar(onBack: { dismiss() }) {
+                    Text(estate.title)
+                        .font(.pretendardBody1Bold)
+                        .foregroundColor(.gray90)
+                        .lineLimit(1)
+                } trailing: {
+                    Button {
+                        Task { await intent.toggleLike() }
+                    } label: {
+                        Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
+                            .renderingMode(.template)
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(intent.state.isLiked ? .red : .gray60)
                     }
-            } else if let error = intent.state.errorMessage {
-                errorView(error)
+                    .disabled(intent.state.isLikeLoading)
+                }
             } else {
-                ProgressView()
+                CustomNavigationBar(onBack: { dismiss() }) {
+                    Text("매물 상세")
+                        .font(.pretendardBody1Bold)
+                        .foregroundColor(.gray90)
+                }
+            }
+
+            // 콘텐츠
+            Group {
+                if let estate = intent.state.estate {
+                    detailContent(estate)
+                } else if let error = intent.state.errorMessage {
+                    errorView(error)
+                } else {
+                    ProgressView()
+                }
             }
         }
+        .navigationBarHidden(true)
         .task {
             await intent.loadDetail()
         }

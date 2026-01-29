@@ -2,6 +2,7 @@ import SwiftUI
 
 struct EstateCommentView: View {
     @StateObject private var intent: EstateCommentIntent
+    @Environment(\.dismiss) private var dismiss
     @FocusState private var isCommentFocused: Bool
 
     init(estateId: String) {
@@ -9,27 +10,37 @@ struct EstateCommentView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // 댓글 목록
-            ScrollView {
-                VStack(spacing: 0) {
-                    if intent.state.isLoading {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else if intent.state.comments.isEmpty {
-                        emptyState
-                    } else {
-                        commentsSection
-                    }
-                }
-                .padding(.bottom, 80) // 입력 바 공간
+        VStack(spacing: 0) {
+            // 네비게이션 바
+            CustomNavigationBar(onBack: { dismiss() }) {
+                Text("댓글 \(intent.state.comments.count)")
+                    .font(.pretendardBody1Bold)
+                    .foregroundColor(.gray90)
             }
 
-            // 댓글 입력 바
-            commentInputBar
-                .background(Color.gray0)
+            // 콘텐츠
+            ZStack(alignment: .bottom) {
+                // 댓글 목록
+                ScrollView {
+                    VStack(spacing: 0) {
+                        if intent.state.isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else if intent.state.comments.isEmpty {
+                            emptyState
+                        } else {
+                            commentsSection
+                        }
+                    }
+                    .padding(.bottom, 80) // 입력 바 공간
+                }
+
+                // 댓글 입력 바
+                commentInputBar
+                    .background(Color.gray0)
+            }
         }
-        .standardNavigationBar(title: "댓글 \(intent.state.comments.count)")
+        .navigationBarHidden(true)
         .task {
             await intent.loadComments()
         }

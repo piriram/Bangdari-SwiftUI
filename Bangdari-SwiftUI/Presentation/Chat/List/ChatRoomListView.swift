@@ -5,20 +5,27 @@ import SwiftUI
 
 struct ChatRoomListView: View {
     @StateObject private var intent = ChatRoomListIntent()
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        Group {
-            if intent.state.isLoading && intent.state.chatRooms.isEmpty {
-                loadingView
-            } else if let error = intent.state.errorMessage, intent.state.chatRooms.isEmpty {
-                errorView(error)
-            } else if intent.state.chatRooms.isEmpty {
-                emptyView
-            } else {
-                chatRoomList
+        VStack(spacing: 0) {
+            // 네비게이션 바
+            CustomNavigationBar(onBack: { dismiss() }, title: "채팅")
+
+            // 콘텐츠
+            Group {
+                if intent.state.isLoading && intent.state.chatRooms.isEmpty {
+                    loadingView
+                } else if let error = intent.state.errorMessage, intent.state.chatRooms.isEmpty {
+                    errorView(error)
+                } else if intent.state.chatRooms.isEmpty {
+                    emptyView
+                } else {
+                    chatRoomList
+                }
             }
         }
-        .standardNavigationBar(title: "채팅")
+        .navigationBarHidden(true)
         .task {
             await intent.loadChatRooms()
         }

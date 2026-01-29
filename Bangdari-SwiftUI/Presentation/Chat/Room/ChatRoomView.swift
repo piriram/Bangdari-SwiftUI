@@ -15,18 +15,12 @@ struct ChatRoomView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // 메시지 목록
-            messageList
-
-            // 입력창
-            messageInputBar
-        }
-        .standardNavigationBar()
-        .toolbar {
-            ToolbarItem(placement: .principal) {
+            // 네비게이션 바
+            CustomNavigationBar(onBack: { dismiss() }) {
                 HStack(spacing: 8) {
                     Text(intent.state.opponent?.nick ?? "채팅")
-                        .font(.headline)
+                        .font(.pretendardBody1Bold)
+                        .foregroundColor(.gray90)
 
                     // 연결 상태 표시
                     if intent.state.isConnected {
@@ -36,7 +30,14 @@ struct ChatRoomView: View {
                     }
                 }
             }
+
+            // 메시지 목록
+            messageList
+
+            // 입력창
+            messageInputBar
         }
+        .navigationBarHidden(true)
         .task {
             await intent.onAppear()
         }

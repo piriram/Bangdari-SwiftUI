@@ -64,38 +64,21 @@ struct EstateListView: View {
     // MARK: - Navigation Bar
 
     private var navigationBar: some View {
-        HStack(spacing: 0) {
-            // Back Chevron (11×20px)
-            Button {
-                dismiss()
-            } label: {
-                Image(dsIcon: .chevron)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 11, height: 20)
-                    .foregroundColor(.gray90)
-            }
-            .padding(.leading, 21)
-
-            Spacer()
-                .frame(width: 24) // gap between chevron and location
-
-            // Location Pin + Text
+        CustomNavigationBar(onBack: { dismiss() }) {
+            // Center: Location + Text
             HStack(spacing: 6) {
                 Image(dsIcon: .location)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 18, height: 20)
+                    .frame(width: 16, height: 16)
                     .foregroundColor(.deepWood)
 
                 Text(locationText)
                     .font(.pretendardBody1Bold)
                     .foregroundColor(.gray90)
             }
-
-            Spacer()
-
-            // Map Icon (26×26px) - only for liked mode
+        } trailing: {
+            // Trailing: Map Icon (liked mode only)
             if case .liked = mode {
                 Button {
                     // TODO: Navigate to map
@@ -103,14 +86,11 @@ struct EstateListView: View {
                     Image(dsIcon: .map)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 26, height: 26)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(.gray90)
                 }
-                .padding(.trailing, 15)
             }
         }
-        .frame(height: 44)
-        .background(Color.gray0)
     }
 
     private var locationText: String {
