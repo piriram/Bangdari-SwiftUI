@@ -13,7 +13,7 @@ struct EstateCardSmall: View {
             KFImage.auth(url: imageURL)
                 .resizable()
                 .scaledToFill()
-                .frame(width: 88, height: 88)
+                .frame(width: 69, height: 69)
                 .background(Color.gray15)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
@@ -52,9 +52,12 @@ struct EstateCardSmall: View {
             Spacer(minLength: 0)
         }
         .padding(12)
-        .frame(height: 112)
         .background(Color.gray0)
-        .cornerRadius(12)
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.gray30, lineWidth: 1)
+        )
     }
 
     private var imageURL: URL? {

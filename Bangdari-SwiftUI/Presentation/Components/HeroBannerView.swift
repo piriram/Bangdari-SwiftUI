@@ -6,15 +6,8 @@ import SwiftUI
 struct HeroBannerView: View {
     let estates: [EstateSummaryResponse]
     var onTap: ((EstateSummaryResponse) -> Void)?
-    var onSearchTap: (() -> Void)?
 
     @State private var currentPage = 0
-
-    private var topSafeAreaInset: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?.windows.first?.safeAreaInsets.top ?? 0
-    }
 
     var body: some View {
         ZStack {
@@ -38,16 +31,7 @@ struct HeroBannerView: View {
                 )
                 .allowsHitTesting(false)
 
-                // 3️⃣ 검색바 (상단, Safe Area 아래)
-                VStack {
-                    heroSearchBar
-                        .padding(.horizontal, 16)
-                        .padding(.top, topSafeAreaInset + 8)
-                    Spacer()
-                        .allowsHitTesting(false)
-                }
-
-                // 4️⃣ 배너 텍스트 (좌측 하단)
+                // 3️⃣ 배너 텍스트 (좌측 하단)
                 VStack {
                     Spacer()
                     estateTextOverlay
@@ -56,7 +40,7 @@ struct HeroBannerView: View {
                 }
                 .allowsHitTesting(false)
 
-                // 5️⃣ 페이지 인디케이터 (하단 중앙)
+                // 4️⃣ 페이지 인디케이터 (하단 중앙)
                 VStack {
                     Spacer()
                     pageIndicator
@@ -73,32 +57,10 @@ struct HeroBannerView: View {
         GeometryReader { geo in
             KFImage.auth(url: imageURL(for: estate))
                 .resizable()
-                .scaledToFit()
+                .scaledToFill()
                 .frame(width: geo.size.width, height: geo.size.height)
+                .clipped()
         }
-    }
-
-    // MARK: - 검색바
-
-    private var heroSearchBar: some View {
-        Button(action: { onSearchTap?() }) {
-            HStack(spacing: 8) {
-                Image(dsIcon: .search)
-                    .renderingMode(.template)
-                    .foregroundColor(.gray60)
-
-                Text("검색어를 입력해주세요.")
-                    .font(.pretendard(.body2))
-                    .foregroundColor(.gray60)
-
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .frame(height: 48)
-            .background(Color.gray0)
-            .clipShape(Capsule())
-        }
-        .buttonStyle(.plain)
     }
 
     // MARK: - 매물 텍스트

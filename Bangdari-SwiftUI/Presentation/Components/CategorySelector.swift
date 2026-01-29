@@ -32,16 +32,25 @@ struct CategoryItem: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 8) {
-                Image(category.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 48, height: 48)
+                ZStack {
+                    Circle()
+                        .fill(Color.gray0)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.gray30, lineWidth: 1)
+                        )
+                        .frame(width: 56, height: 56)
+
+                    Image(category.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 28)
+                }
 
                 Text(category.rawValue)
                     .font(.pretendardCaption1)
                     .foregroundColor(isSelected ? .deepCoast : .gray90)
             }
-            .frame(minWidth: 60)
         }
         .buttonStyle(.plain)
     }
@@ -54,7 +63,7 @@ struct CategorySelector: View {
     var onSelect: ((EstateCategory) -> Void)?
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 17) {
             ForEach(EstateCategory.allCases) { category in
                 CategoryItem(
                     category: category,
@@ -67,10 +76,9 @@ struct CategorySelector: View {
                     }
                     onSelect?(category)
                 }
-                .frame(maxWidth: .infinity)
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
     }
 }
 

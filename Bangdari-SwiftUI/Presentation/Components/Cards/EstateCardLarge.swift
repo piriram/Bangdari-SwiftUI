@@ -8,94 +8,93 @@ struct EstateCardLarge: View {
     var viewerCount: Int? = nil
 
     var body: some View {
-        GeometryReader { geo in
-            ZStack {
-                // 배경 이미지
-                KFImage.auth(url: imageURL)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: geo.size.width, height: geo.size.height)
-                    .clipped()
+        ZStack {
+            // 배경 이미지
+            KFImage.auth(url: imageURL)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 240, height: 83)
+                .clipped()
 
-                // 전체 그라데이션 (약하게)
-                RadialGradient(
-                    colors: [
-                        .black.opacity(0.55),
-                        .black.opacity(0.0)
-                    ],
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: 400
-                )
+            // 전체 그라데이션 (약하게)
+            RadialGradient(
+                colors: [
+                    .black.opacity(0.55),
+                    .black.opacity(0.0)
+                ],
+                center: .center,
+                startRadius: 0,
+                endRadius: 200
+            )
 
-                // 좌상단 HOT 아이콘
-                VStack {
-                    HStack {
-                        Image(dsIcon: DesignSystemIcon.fire)
-                            .renderingMode(.template)
-                            .foregroundColor(.white)
-                            .frame(width:24,height: 24)
+            // 좌상단 HOT 아이콘
+            VStack {
+                HStack {
+                    Image(dsIcon: DesignSystemIcon.fire)
+                        .renderingMode(.template)
+                        .foregroundColor(.white)
+                        .frame(width: 20, height: 20)
 
-                        Spacer()
-                    }
                     Spacer()
                 }
-                .padding(12)
-
-                // 우상단 텍스트
-                VStack {
-                    HStack {
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 6) {
-                            Text(estate.title)
-                                .font(.yeongdeokCaption1())
-                                .foregroundColor(.gray0)
-                                .multilineTextAlignment(.trailing)
-                                .lineLimit(2)
-
-                            Text(priceText)
-                                .font(.pretendardBody1Bold)
-                                .foregroundColor(.gray0)
-                        }
-                    }
-                    Spacer()
-                }
-                .padding(16)
-
-                // 좌하단 시청자 수
-                if let count = viewerCount, count > 0 {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Text("\(count)명이 함께 보는 중")
-                                .font(.pretendardCaption1)
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 6)
-                                .background(Color.gray60.opacity(0.5))
-                                .cornerRadius(4)
-
-                            Spacer()
-                        }
-                    }
-                    .padding(16)
-                }
-
-                // 우하단 면적
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Text("문래동 \(estate.area.formatted())m²")
-                            .font(.pretendardCaption2)
-                            .foregroundColor(.gray45)
-                    }
-                }
-                .padding(16)
+                Spacer()
             }
-            .cornerRadius(16)
+            .padding(8)
+
+            // 우상단 텍스트
+            VStack {
+                HStack {
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text(estate.title)
+                            .font(.pretendard(.caption1, .semiBold))
+                            .foregroundColor(.gray0)
+                            .multilineTextAlignment(.trailing)
+                            .lineLimit(2)
+
+                        Text(priceText)
+                            .font(.pretendard(.body3, .bold))
+                            .foregroundColor(.gray0)
+                    }
+                }
+                Spacer()
+            }
+            .padding(10)
+
+            // 좌하단 시청자 수
+            if let count = viewerCount, count > 0 {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Text("\(count)명이 함께 보는 중")
+                            .font(.pretendard(.caption2))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 4)
+                            .background(Color.gray60.opacity(0.5))
+                            .cornerRadius(4)
+
+                        Spacer()
+                    }
+                }
+                .padding(10)
+            }
+
+            // 우하단 면적
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Text("\(estate.area.formatted())m²")
+                        .font(.pretendard(.caption3))
+                        .foregroundColor(.gray45)
+                }
+            }
+            .padding(10)
         }
-        .aspectRatio(2.5, contentMode: .fit)
+        .frame(width: 240, height: 83)
+        .cornerRadius(10)
+        .clipped()
     }
 
     // MARK: - Helpers
@@ -128,10 +127,10 @@ struct EstateCardLarge: View {
     ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 16) {
             EstateCardLarge(estate: .preview, viewerCount: 34)
-                .frame(width: 300)
+                .frame(width: 240, height: 83)
 
             EstateCardLarge(estate: .preview)
-                .frame(width: 300)
+                .frame(width: 240, height: 83)
         }
         .padding(.horizontal, 16)
     }

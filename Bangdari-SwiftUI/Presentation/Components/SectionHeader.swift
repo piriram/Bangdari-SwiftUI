@@ -18,12 +18,13 @@ struct SectionHeader: View {
             if let actionTitle, let action {
                 Button(action: action) {
                     Text(actionTitle)
-                        .font(.pretendardCaption1) // TODO: semibold
+                        .font(.pretendard(.caption1, .semiBold))
                         .foregroundColor(.deepCoast)
                 }
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.leading, 21)
+        .padding(.trailing, 22)
     }
 }
 
