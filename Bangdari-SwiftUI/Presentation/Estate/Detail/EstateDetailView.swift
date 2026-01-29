@@ -221,11 +221,11 @@ struct EstateDetailView: View {
             ("에어컨", "OptionAirConditioner", options.option1),
             ("냉장고", "OptionRefrigerator", options.option2),
             ("세탁기", "OptionWashingMachine", options.option3),
-            ("가스레인지", "OptionGasRange", options.option4),
-            ("인덕션", "OptionInduction", options.option5),
             ("전자레인지", "OptionMicrowave", options.option6),
-            ("책상", "OptionDesk", options.option7),
-            ("침대", "OptionBed", options.option8)
+            ("옷장", "OptionCloset", options.option9),
+            ("신발장", "OptionShoeCabinet", options.option10),
+            ("싱크대", "OptionSink", options.option4),
+            ("TV", "OptionTelevision", options.option5)
         ]
 
         return VStack(alignment: .leading, spacing: 12) {
@@ -406,10 +406,8 @@ struct EstateDetailView: View {
 
     private func contactButton(icon: ContactIcon) -> some View {
         Button {} label: {
-            Image(contactIcon: icon)
-                .renderingMode(.template)
+            Image.contactIcon(icon)
                 .frame(width: 18, height: 18)
-                .foregroundColor(.gray0)
                 .frame(width: 40, height: 40)
                 .background(Color.deepCream)
                 .cornerRadius(10)

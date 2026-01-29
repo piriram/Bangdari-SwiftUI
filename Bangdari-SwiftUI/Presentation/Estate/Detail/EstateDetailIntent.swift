@@ -46,6 +46,17 @@ final class EstateDetailIntent: ObservableObject {
             let detailResult = try await detail
             print("✅ [DEBUG] 상세 데이터 수신: \(detailResult.title)")
             print("✅ [DEBUG] files 개수: \(detailResult.files.count)")
+            print("✅ [DEBUG] 옵션 데이터:")
+            print("  - option1 (에어컨): \(detailResult.options.option1)")
+            print("  - option2 (냉장고): \(detailResult.options.option2)")
+            print("  - option3 (세탁기): \(detailResult.options.option3)")
+            print("  - option4: \(detailResult.options.option4)")
+            print("  - option5: \(detailResult.options.option5)")
+            print("  - option6 (전자레인지): \(detailResult.options.option6)")
+            print("  - option7: \(detailResult.options.option7)")
+            print("  - option8: \(detailResult.options.option8)")
+            print("  - option9 (옷장): \(detailResult.options.option9)")
+            print("  - option10 (신발장): \(detailResult.options.option10)")
             state.estate = detailResult
             state.similarEstates = (try? await similar) ?? []
             print("✅ [DEBUG] 유사매물 개수: \(state.similarEstates.count)")

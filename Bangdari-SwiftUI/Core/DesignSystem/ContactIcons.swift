@@ -11,4 +11,9 @@ extension Image {
     init(contactIcon: ContactIcon) {
         self.init(contactIcon.rawValue)
     }
+
+    static func contactIcon(_ icon: ContactIcon) -> Image {
+        Image(icon.rawValue)
+            .renderingMode(.template)
+    }
 }
