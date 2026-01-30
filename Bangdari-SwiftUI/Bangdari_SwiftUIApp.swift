@@ -2,6 +2,7 @@
 
 import SwiftUI
 import UIKit
+import iamport_ios
 
 @main
 struct Bangdari_SwiftUIApp: App {
@@ -17,6 +18,10 @@ struct Bangdari_SwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onOpenURL { url in
+                    print("🔗 URL Received: \(url)")
+                    Iamport.shared.receivedURL(url)
+                }
         }
     }
 

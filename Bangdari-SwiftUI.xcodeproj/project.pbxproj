@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21BAEA2C2F2C3261006DCCFF /* iamport-ios in Frameworks */ = {isa = PBXBuildFile; productRef = D482F613394B47AD90F94FD3 /* iamport-ios */; };
 		21E1A4512F214577009CE317 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 21E1A4502F214577009CE317 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21BAEA2C2F2C3261006DCCFF /* iamport-ios in Frameworks */,
 				21E1A4512F214577009CE317 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +86,7 @@
 			name = "Bangdari-SwiftUI";
 			packageProductDependencies = (
 				21E1A4502F214577009CE317 /* Kingfisher */,
+				D482F613394B47AD90F94FD3 /* iamport-ios */,
 			);
 			productName = "Bangdari-SwiftUI";
 			productReference = 21E1A3C52F20705B009CE317 /* Bangdari-SwiftUI.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				21E1A44F2F214577009CE317 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 21E1A3C62F20705B009CE317 /* Products */;
@@ -376,6 +380,14 @@
 				minimumVersion = 8.6.2;
 			};
 		};
+		E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/iamport/iamport-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -383,6 +395,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 21E1A44F2F214577009CE317 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		D482F613394B47AD90F94FD3 /* iamport-ios */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */;
+			productName = "iamport-ios";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

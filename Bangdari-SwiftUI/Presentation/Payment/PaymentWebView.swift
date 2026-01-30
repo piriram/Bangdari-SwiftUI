@@ -1,48 +1,35 @@
 import SwiftUI
 import WebKit
+import iamport_ios
+import Then
 
 // MARK: - Payment Web View
 
 struct PaymentWebView: View {
-    @StateObject private var viewModel: PaymentWebViewModel
-    @Environment(\.dismiss) private var dismiss
-    @State private var isLoading = true
-
+    let order: OrderCreateResponse
+    let estateName: String
     let onSuccess: (String) -> Void
     let onCancel: () -> Void
 
-    init(
-        order: OrderCreateResponse,
-        estateName: String,
-        onSuccess: @escaping (String) -> Void,
-        onCancel: @escaping () -> Void
-    ) {
-        _viewModel = StateObject(wrappedValue: PaymentWebViewModel(
-            order: order,
-            estateName: estateName
-        ))
-        self.onSuccess = onSuccess
-        self.onCancel = onCancel
-    }
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationView {
-            ZStack {
-                WebViewRepresentable(
-                    htmlContent: viewModel.htmlContent,
-                    onResult: handlePaymentResult,
-                    onLoadingChange: { isLoading = $0 }
-                )
-
-                if isLoading {
-                    VStack(spacing: 16) {
-                        ProgressView()
-                        Text("결제 페이지를 불러오는 중...")
-                            .font(.pretendard(.body2))
-                            .foregroundColor(.gray60)
+            IamportPaymentView(
+                payment: createPaymentData(),
+                onSuccess: { response in
+                    print("✅ 결제 성공: \(response.imp_uid ?? "")")
+                    if let impUid = response.imp_uid {
+                        onSuccess(impUid)
                     }
+                    dismiss()
+                },
+                onFailed: { response in
+                    print("❌ 결제 실패: \(response?.error_msg ?? "알 수 없는 오류")")
+                    onCancel()
+                    dismiss()
                 }
-            }
+            )
             .standardNavigationBar(title: "결제")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -55,79 +42,69 @@ struct PaymentWebView: View {
         }
     }
 
-    private func handlePaymentResult(_ result: [String: Any]) {
-        if let success = result["success"] as? Bool {
-            if success, let impUid = result["imp_uid"] as? String {
-                onSuccess(impUid)
-                dismiss()
-            } else if let error = result["error"] as? String {
-                onCancel()
-                dismiss()
-            }
+    private func createPaymentData() -> IamportPayment {
+        IamportPayment(
+            pg: PG.html5_inicis.makePgRawName(pgId: "INIpayTest"),
+            merchant_uid: order.order_code,
+            amount: String(order.total_price)
+        ).then {
+            $0.pay_method = PayMethod.card.rawValue
+            $0.name = estateName
+            $0.buyer_name = "홍길동"
+            $0.buyer_email = "user@example.com"
+            $0.app_scheme = "bangdari"
         }
     }
 }
 
-// MARK: - Web View Representable
+// MARK: - UIViewRepresentable
 
-struct WebViewRepresentable: UIViewRepresentable {
-    let htmlContent: String
-    let onResult: ([String: Any]) -> Void
-    let onLoadingChange: (Bool) -> Void
+struct IamportPaymentView: UIViewRepresentable {
+    let payment: IamportPayment
+    let onSuccess: (IamportResponse) -> Void
+    let onFailed: (IamportResponse?) -> Void
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(onResult: onResult, onLoadingChange: onLoadingChange)
+        Coordinator(onSuccess: onSuccess, onFailed: onFailed)
     }
 
     func makeUIView(context: Context) -> WKWebView {
-        let configuration = WKWebViewConfiguration()
-        configuration.userContentController.add(
-            context.coordinator,
-            name: "paymentResult"
-        )
-
-        // 팝업 허용 설정
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
-
-        let webView = WKWebView(frame: .zero, configuration: configuration)
-        webView.navigationDelegate = context.coordinator
+        let webView = WKWebView()
         webView.backgroundColor = .white
+
+        Iamport.shared.paymentWebView(
+            webViewMode: webView,
+            userCode: Secrets.impCode,
+            payment: payment
+        ) { response in
+            guard let response = response else {
+                context.coordinator.onFailed(nil)
+                return
+            }
+
+            if response.success == true {
+                context.coordinator.onSuccess(response)
+            } else {
+                context.coordinator.onFailed(response)
+            }
+        }
+
         return webView
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        webView.loadHTMLString(htmlContent, baseURL: nil)
+        // 업데이트 불필요
     }
 
     // MARK: - Coordinator
 
-    final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
-        let onResult: ([String: Any]) -> Void
-        let onLoadingChange: (Bool) -> Void
+    final class Coordinator {
+        let onSuccess: (IamportResponse) -> Void
+        let onFailed: (IamportResponse?) -> Void
 
-        init(onResult: @escaping ([String: Any]) -> Void, onLoadingChange: @escaping (Bool) -> Void) {
-            self.onResult = onResult
-            self.onLoadingChange = onLoadingChange
-        }
-
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            print("✅ WebView 로딩 완료")
-            onLoadingChange(false)
-        }
-
-        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            print("❌ WebView 로딩 실패: \(error.localizedDescription)")
-            onLoadingChange(false)
-        }
-
-        func userContentController(
-            _ userContentController: WKUserContentController,
-            didReceive message: WKScriptMessage
-        ) {
-            print("📩 JavaScript 메시지 수신: \(message.body)")
-            guard message.name == "paymentResult",
-                  let dict = message.body as? [String: Any] else { return }
-            onResult(dict)
+        init(onSuccess: @escaping (IamportResponse) -> Void, onFailed: @escaping (IamportResponse?) -> Void) {
+            self.onSuccess = onSuccess
+            self.onFailed = onFailed
         }
     }
 }
