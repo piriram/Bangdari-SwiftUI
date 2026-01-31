@@ -147,6 +147,8 @@ struct TopicRowSkeleton: View {
 // MARK: - Hero Banner Skeleton
 
 struct HeroBannerSkeleton: View {
+    let height: CGFloat
+
     var body: some View {
         ZStack {
             // 배경
@@ -191,7 +193,7 @@ struct HeroBannerSkeleton: View {
                 .padding(.bottom, 12)
             }
         }
-        .frame(height: 335)
+        .frame(height: height)
     }
 }
 
@@ -222,7 +224,7 @@ struct HeroBannerSkeleton: View {
             // Hero Banner
             Text("Hero Banner Skeleton")
                 .font(.headline)
-            HeroBannerSkeleton()
+            HeroBannerSkeleton(height: 355)
         }
         .padding(.vertical)
     }

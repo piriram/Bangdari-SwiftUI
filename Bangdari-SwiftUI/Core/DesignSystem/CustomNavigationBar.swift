@@ -160,10 +160,8 @@ extension CustomNavigationBar where Leading == EmptyView, Trailing == EmptyView 
             .foregroundColor(.gray90)
     } trailing: {
         Button {} label: {
-            Image(dsIcon: .likeFill)
-                .renderingMode(.template)
+            DSIconView(.likeFill, size: 24, renderingMode: .template)
                 .foregroundColor(.red)
-                .frame(width: 24, height: 24)
         }
     }
 }

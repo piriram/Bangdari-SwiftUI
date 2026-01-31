@@ -33,23 +33,20 @@ struct CategoryItem: View {
         Button(action: action) {
             VStack(spacing: 8) {
                 ZStack {
-                    Circle()
-                        .fill(Color.gray0)
-                        .overlay(
-                            Circle()
-                                .stroke(Color.gray30, lineWidth: 1)
-                        )
-                        .frame(width: 56, height: 56)
+                    Rectangle()
+                        .fill(Color.gray30)
+                        .cornerRadius(16)
+                        .frame(width: 50, height: 50)
 
                     Image(category.imageName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 28, height: 28)
+                        .frame(width: 32, height: 32)
                 }
 
                 Text(category.rawValue)
-                    .font(.pretendardCaption1)
-                    .foregroundColor(isSelected ? .deepCoast : .gray90)
+                    .font(.pretendard(.body3,.medium))
+                    .foregroundColor(isSelected ? .deepCoast : .gray75)
             }
         }
         .buttonStyle(.plain)
@@ -78,6 +75,7 @@ struct CategorySelector: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, 20)
     }
 }

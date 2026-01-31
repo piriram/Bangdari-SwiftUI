@@ -10,52 +10,56 @@ struct MainView: View {
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            ZStack(alignment: .topLeading) {
-                ScrollView {
-                    VStack(spacing: 24) {
-                        // 히어로 배너
-                        if intent.state.heroBannerSkeleton {
-                            HeroBannerSkeleton()
-                        } else if !intent.state.todayEstates.isEmpty {
-                            HeroBannerView(
-                                estates: intent.state.todayEstates,
-                                onTap: { estate in
-                                    navigationPath.append(estate.estate_id)
-                                }
-                            )
-                        }
+            GeometryReader { geo in
+                ZStack(alignment: .topLeading) {
+                    ScrollView {
+                        VStack(spacing: 24) {
+                            // 히어로 배너
+                            if intent.state.heroBannerSkeleton {
+                                HeroBannerSkeleton(height: DesignSystem.Layout.heroBannerHeight)
+                            } else if !intent.state.todayEstates.isEmpty {
+                                HeroBannerView(
+                                    estates: intent.state.todayEstates,
+                                    height: DesignSystem.Layout.heroBannerHeight,
+                                    onTap: { estate in
+                                        navigationPath.append(estate.estate_id)
+                                    }
+                                )
+                            }
 
-                        // 카테고리 선택
-                        CategorySelector(selectedCategory: $selectedCategory) { category in
-                            handleCategorySelection(category)
-                        }
+                            // 카테고리 선택
+                            CategorySelector(selectedCategory: $selectedCategory) { category in
+                                handleCategorySelection(category)
+                            }
 
-                        // 최근 검색 / 오늘의 매물
-                        if !intent.state.todayEstateSkeletons.isEmpty || !intent.state.todayEstates.isEmpty {
-                            todayEstatesSection
-                        }
+                            // 최근 검색 / 오늘의 매물
+                            if !intent.state.todayEstateSkeletons.isEmpty || !intent.state.todayEstates.isEmpty {
+                                todayEstatesSection
+                            }
 
-                        // HOT 매물
-                        if !intent.state.hotEstateSkeletons.isEmpty || !intent.state.hotEstates.isEmpty {
-                            hotEstatesSection
-                        }
+                            // HOT 매물
+                            if !intent.state.hotEstateSkeletons.isEmpty || !intent.state.hotEstates.isEmpty {
+                                hotEstatesSection
+                            }
 
-                        // 오늘의 토픽
-                        if !intent.state.topicSkeletons.isEmpty || !intent.state.topics.isEmpty {
-                            topicSection
+                            // 오늘의 토픽
+                            if !intent.state.topicSkeletons.isEmpty || !intent.state.topics.isEmpty {
+                                topicSection
+                            }
                         }
+                        .padding(.bottom, 24)
                     }
-                    .padding(.bottom, 24)
-                }
-                .scrollContentBackground(.hidden)
-                .ignoresSafeArea(edges: .top)
-                .background(Color.gray15)
+                    .contentMargins(.top, -geo.safeAreaInsets.top, for: .scrollContent)
+                    .scrollContentBackground(.hidden)
+                    .ignoresSafeArea(edges: .top)
+                    .background(Color.gray15)
 
-                HomeSearchBar {
-                    // TODO: 검색 화면 이동
+                    HomeSearchBar {
+                        // TODO: 검색 화면 이동
+                    }
+                    .padding(.top, 3)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.top, topSafeAreaInset + 1)
-                .padding(.leading, 25)
             }
             .refreshable {
                 await intent.refresh()
@@ -74,12 +78,6 @@ struct MainView: View {
         .task {
             await intent.loadHomeData()
         }
-    }
-
-    private var topSafeAreaInset: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?.windows.first?.safeAreaInsets.top ?? 0
     }
 
     // MARK: - Private Methods
@@ -138,9 +136,8 @@ struct MainView: View {
                         }
                     }
                 }
-                .padding(.leading, 21)
-                .padding(.trailing, 22)
             }
+            .contentMargins(.horizontal, 20, for: .scrollContent)
         }
     }
 
@@ -170,9 +167,8 @@ struct MainView: View {
                         }
                     }
                 }
-                .padding(.leading, 20)
-                .padding(.trailing, 22)
             }
+            .contentMargins(.horizontal, 20, for: .scrollContent)
         }
     }
 
@@ -186,13 +182,12 @@ struct MainView: View {
                 if !intent.state.topicSkeletons.isEmpty {
                     ForEach(intent.state.topicSkeletons.indices, id: \.self) { index in
                         TopicRowSkeleton()
-                            .padding(.horizontal, 21)
+                            .padding(.horizontal, 20)
                         if index < intent.state.topicSkeletons.count - 1 {
                             Rectangle()
                                 .fill(Color.gray30)
                                 .frame(height: 1)
-                                .padding(.leading, 21)
-                                .padding(.trailing, 22)
+                                .padding(.horizontal, 20)
                         }
                     }
                 } else {
@@ -210,8 +205,7 @@ struct MainView: View {
                             Rectangle()
                                 .fill(Color.gray30)
                                 .frame(height: 1)
-                                .padding(.leading, 21)
-                                .padding(.trailing, 22)
+                                .padding(.horizontal, 20)
                         }
                     }
                 }
@@ -244,8 +238,7 @@ struct TopicRow: View {
                 .font(.pretendardCaption2)
                 .foregroundColor(.gray60)
         }
-        .padding(.leading, 21)
-        .padding(.trailing, 22)
+        .padding(.horizontal, 20)
         .frame(height: 76)
     }
 }
@@ -264,23 +257,28 @@ private struct HomeSearchBar: View {
             HStack(spacing: 8) {
                 Image(dsIcon: .search)
                     .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
                     .foregroundColor(.gray60)
 
                 Text("검색어를 입력해주세요.")
-                    .font(.pretendard(.body3))
+                    .font(.pretendard(.body2))
                     .foregroundColor(.gray60)
 
                 Spacer()
             }
             .padding(.horizontal, 12)
-            .frame(width: 340, height: 38)
+            .frame(height: 40)
             .background(Color.gray0)
-            .clipShape(Capsule())
-            .overlay(
-                Capsule()
-                    .stroke(Color.gray30, lineWidth: 1)
+            .proportionalCornerRadius(
+                baseWidth: 350,
+                baseRadius: 20,
+                strokeColor: .gray30,
+                lineWidth: 1
             )
         }
         .buttonStyle(.plain)
+        .frame(height: 40)
     }
 }

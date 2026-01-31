@@ -33,9 +33,7 @@ struct EstateDetailView: View {
                     Button {
                         Task { await intent.toggleLike() }
                     } label: {
-                        Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
-                            .renderingMode(.template)
-                            .frame(width: 24, height: 24)
+                        DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: 24, renderingMode: .template)
                             .foregroundColor(intent.state.isLiked ? .red : .gray60)
                     }
                     .disabled(intent.state.isLikeLoading)
@@ -214,9 +212,7 @@ struct EstateDetailView: View {
             // 안심매물 배지 (오른쪽)
             if estate.is_safe_estate {
                 HStack(spacing: 4) {
-                    Image(dsIcon: .safety)
-                        .renderingMode(.template)
-                        .frame(width: 14, height: 14)
+                    DSIconView(.safety, size: 14, renderingMode: .template)
                     Text("구매자 안심매물")
                         .font(.pretendard(.caption1))
                 }
@@ -528,9 +524,7 @@ struct EstateDetailView: View {
             Button {
                 Task { await intent.toggleLike() }
             } label: {
-                Image(dsIcon: intent.state.isLiked ? .likeFill : .likeEmpty)
-                    .renderingMode(.template)
-                    .frame(width: 24, height: 24)
+                DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: 24, renderingMode: .template)
                     .foregroundColor(intent.state.isLiked ? .red : .gray75)
                     .frame(width: 56, height: 56)
                     .background(Color.gray30)

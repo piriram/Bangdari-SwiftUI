@@ -10,7 +10,7 @@ struct SectionHeader: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.pretendardBody1Bold)
+                .font(.pretendard(.body2,.bold))
                 .foregroundColor(.gray90)
 
             Spacer()
@@ -23,8 +23,7 @@ struct SectionHeader: View {
                 }
             }
         }
-        .padding(.leading, 21)
-        .padding(.trailing, 22)
+        .padding(.horizontal, 20)
     }
 }
 

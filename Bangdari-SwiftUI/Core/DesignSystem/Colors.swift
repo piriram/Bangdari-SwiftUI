@@ -22,6 +22,8 @@ extension Color {
     static let gray75 = Color(hex: "757575")
     static let gray90 = Color(hex: "424242")
     static let gray100 = Color(hex: "000000")
+    
+    static let introductionGray = Color(hex: "ABABAE")
 }
 
 // MARK: - Hex Initializer

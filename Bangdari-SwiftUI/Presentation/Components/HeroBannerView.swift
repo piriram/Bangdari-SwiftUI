@@ -5,9 +5,11 @@ import SwiftUI
 
 struct HeroBannerView: View {
     let estates: [EstateSummaryResponse]
+    let height: CGFloat
     var onTap: ((EstateSummaryResponse) -> Void)?
 
     @State private var currentPage = 0
+    @State private var locationCache: [String: String] = [:] // estate_id: 주소
 
     var body: some View {
         ZStack {
@@ -23,13 +25,11 @@ struct HeroBannerView: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
 
-                // 2️⃣ 하단 그라데이션
-                LinearGradient(
-                    colors: [.black.opacity(0.45), .clear],
-                    startPoint: .bottom,
-                    endPoint: .center
-                )
-                .allowsHitTesting(false)
+                // 2️⃣ 하단 딤 (Dim)
+                Image("_Dim View")
+                    .resizable()
+                    .scaledToFill()
+                    .allowsHitTesting(false)
 
                 // 3️⃣ 배너 텍스트 (좌측 하단)
                 VStack {
@@ -48,7 +48,7 @@ struct HeroBannerView: View {
                 }
                 .allowsHitTesting(false)
         }
-        .frame(height: 335)
+        .frame(height: height)
     }
 
     // MARK: - 배경 이미지
@@ -66,32 +66,51 @@ struct HeroBannerView: View {
     // MARK: - 매물 텍스트
 
     private var estateTextOverlay: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             if currentPage < estates.count {
+                let estate = estates[currentPage]
+
                 // 위치 정보
                 HStack(spacing: 4) {
-                    Image(dsIcon: .location)
-                        .renderingMode(.template)
-                        .foregroundColor(.gray0)
-                    Text(extractLocation(from: estates[currentPage]))
-                        .font(.pretendard(.caption1))
-                        .foregroundColor(.gray0)
+                    DSIconView(.location, size: 16, renderingMode: .template)
+                        .foregroundColor(.gray15)
+
+                    if let location = locationCache[estate.estate_id] {
+                        Text(location)
+                            .font(.pretendard(.caption2,.medium))
+                            .foregroundColor(.gray15)
+                    } else {
+                        // 로딩 중
+                        Text("위치 로딩중...")
+                            .font(.pretendard(.caption2,.medium))
+                            .foregroundColor(.gray15)
+                    }
                 }
+                .padding(.vertical, 4)
+                .padding(.horizontal, 8)
+                .background(Color.gray60.opacity(0.2))
+//                .cornerRadius(10)
+                .clipShape(Capsule())
 
-                // 메인 타이틀
-                Text(estates[currentPage].title)
-                    .font(.pretendard(.title1, .bold))
-                    .foregroundColor(.gray0)
-                    .lineLimit(2)
+                VStack(alignment: .leading, spacing: 12){
+                    // 메인 타이틀
+                    Text(estate.title)
+                        .font(.yeongdeokTitle1())
+                        .foregroundColor(.gray15)
+                        .lineLimit(2)
 
-                // 설명
-                Text(estates[currentPage].introduction)
-                    .font(.pretendard(.body3))
-                    .foregroundColor(.gray15)
-                    .lineLimit(1)
+                    // 설명
+                    Text(estate.introduction)
+                        .font(.yeongdeokCaption1())
+                        .foregroundColor(.introductionGray)
+                        .lineLimit(1)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .task(id: currentPage) {
+            await loadLocationIfNeeded()
+        }
     }
 
     // MARK: - 페이지 인디케이터
@@ -108,19 +127,26 @@ struct HeroBannerView: View {
 
     // MARK: - Helpers
 
-    /// 매물에서 위치 정보 추출 ("서울 XX동" 패턴)
-    private func extractLocation(from estate: EstateSummaryResponse) -> String {
-        let intro = estate.introduction
-        if intro.isEmpty {
-            return estate.category
+    /// 현재 페이지의 위치 정보를 로드 (캐시 확인 후 필요 시 역지오코딩)
+    private func loadLocationIfNeeded() async {
+        guard currentPage < estates.count else { return }
+
+        let estate = estates[currentPage]
+
+        // 이미 캐시에 있으면 스킵
+        if locationCache[estate.estate_id] != nil {
+            return
         }
 
-        // "서울 XX동", "경기 XX시" 패턴 추출
-        let components = intro.split(separator: " ")
-        if components.count >= 2 {
-            return "\(components[0]) \(components[1])"
-        }
-        return estate.category
+        // 역지오코딩
+        let location = await LocationService.shared.reverseGeocode(
+            latitude: estate.geolocation.latitude,
+            longitude: estate.geolocation.longitude,
+            format: .short  // "서울 반포동"
+        )
+
+        // 캐시에 저장
+        locationCache[estate.estate_id] = location ?? estate.category
     }
 
     private func imageURL(for estate: EstateSummaryResponse) -> URL? {
@@ -128,159 +154,6 @@ struct HeroBannerView: View {
         return URL(string: APIConfig.baseURL + "/" + first)
     }
 }
-
-// MARK: - Legacy (Deprecated)
-// 아래는 Banner 광고 API 기반 구버전 (참고용 보존)
-
-/*
-struct HeroBannerView_Legacy: View {
-    let banners: [Banner]
-    var onTap: ((Banner) -> Void)?
-    var onSearchTap: (() -> Void)?
-
-    @State private var currentPage = 0
-
-    private var topSafeAreaInset: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?.windows.first?.safeAreaInsets.top ?? 0
-    }
-
-    var body: some View {
-        ZStack {
-                // 1️⃣ 배경 이미지 캐러셀
-                TabView(selection: $currentPage) {
-                    ForEach(Array(banners.enumerated()), id: \.element.banner_id) { index, banner in
-                        bannerImage(banner: banner)
-                            .tag(index)
-                            .onTapGesture {
-                                onTap?(banner)
-                            }
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-
-                // 2️⃣ 하단 그라데이션
-                LinearGradient(
-                    colors: [.black.opacity(0.45), .clear],
-                    startPoint: .bottom,
-                    endPoint: .center
-                )
-                .allowsHitTesting(false)
-
-                // 3️⃣ 검색바 (상단, Safe Area 아래)
-                VStack {
-                    heroSearchBar
-                        .padding(.horizontal, 16)
-                        .padding(.top, topSafeAreaInset + 8)
-                    Spacer()
-                        .allowsHitTesting(false)
-                }
-
-                // 4️⃣ 배너 텍스트 (좌측 하단)
-                VStack {
-                    Spacer()
-                    bannerTextOverlay
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 32)
-                }
-                .allowsHitTesting(false)
-
-                // 5️⃣ 페이지 인디케이터 (하단 중앙)
-                VStack {
-                    Spacer()
-                    pageIndicator
-                        .padding(.bottom, 12)
-                }
-                .allowsHitTesting(false)
-        }
-        .frame(height: 335)
-    }
-
-    // MARK: - 배경 이미지
-
-    private func bannerImage(banner: Banner) -> some View {
-        GeometryReader { geo in
-            KFImage.auth(url: imageURL(for: banner))
-                .resizable()
-                .scaledToFit()
-                .frame(width: geo.size.width, height: geo.size.height)
-        }
-    }
-
-    // MARK: - 검색바
-
-    private var heroSearchBar: some View {
-        Button(action: { onSearchTap?() }) {
-            HStack(spacing: 8) {
-                Image(dsIcon: .search)
-                    .renderingMode(.template)
-                    .foregroundColor(.gray60)
-
-                Text("검색어를 입력해주세요.")
-                    .font(.pretendard(.body2))
-                    .foregroundColor(.gray60)
-
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .frame(height: 48)
-            .background(Color.gray0)
-            .clipShape(Capsule())
-        }
-        .buttonStyle(.plain)
-    }
-
-    // MARK: - 배너 텍스트
-
-    private var bannerTextOverlay: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // 위치 정보
-            HStack(spacing: 4) {
-                Image(dsIcon: .location)
-                    .renderingMode(.template)
-                    .foregroundColor(.gray0)
-                Text("서울 반포동")
-                    .font(.pretendard(.caption1))
-                    .foregroundColor(.gray0)
-            }
-
-            // 메인 타이틀
-            if currentPage < banners.count {
-                Text(banners[currentPage].title)
-                    .font(.pretendard(.title1, .bold))
-                    .foregroundColor(.gray0)
-                    .lineLimit(2)
-            }
-
-            // 서브 카피
-            Text("외국 무료 사진 퍼온 것 같겠지만 한강입니다.")
-                .font(.pretendard(.body3))
-                .foregroundColor(.gray15)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    // MARK: - 페이지 인디케이터
-
-    private var pageIndicator: some View {
-        HStack(spacing: 6) {
-            ForEach(0..<banners.count, id: \.self) { index in
-                Circle()
-                    .fill(index == currentPage ? Color.gray0 : Color.gray60.opacity(0.5))
-                    .frame(width: 6, height: 6)
-            }
-        }
-    }
-
-    // MARK: - Helpers
-
-    private func imageURL(for banner: Banner) -> URL? {
-        guard !banner.image.isEmpty else { return nil }
-        return URL(string: APIConfig.baseURL + "/" + banner.image)
-    }
-}
-*/
 
 // MARK: - Featured Estate Banner (매물 기반 배너)
 
@@ -309,8 +182,7 @@ struct FeaturedEstateBanner: View {
 
                     if !location.isEmpty {
                         HStack(spacing: 4) {
-                            Image(dsIcon: .location)
-                                .renderingMode(.template)
+                            DSIconView(.location, size: 16, renderingMode: .template)
                             Text(location)
                                 .font(.pretendard(.caption1))
                         }

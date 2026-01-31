@@ -30,10 +30,8 @@ struct EstateCardLarge: View {
             // 좌상단 HOT 아이콘
             VStack {
                 HStack {
-                    Image(dsIcon: DesignSystemIcon.fire)
-                        .renderingMode(.template)
+                    DSIconView(.fire, size: 20, renderingMode: .template)
                         .foregroundColor(.white)
-                        .frame(width: 20, height: 20)
 
                     Spacer()
                 }
