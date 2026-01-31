@@ -47,6 +47,7 @@ struct MainView: View {
                                 topicSection
                             }
                         }
+                        .frame(maxWidth: geo.size.width)
                         .padding(.bottom, 24)
                     }
                     .contentMargins(.top, -geo.safeAreaInsets.top, for: .scrollContent)
