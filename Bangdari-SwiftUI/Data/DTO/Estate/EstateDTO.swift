@@ -375,12 +375,14 @@ struct Banner: Decodable {
     let banner_id: String
     let title: String
     let image: String
-    let link: String?
+    let payload: BannerPayload?
+    let link: String?  // 하위 호환성용 (deprecated)
 
     private enum CodingKeys: String, CodingKey {
         case banner_id, id, _id
         case title, name
         case image, imageUrl, img
+        case payload
         case link, url
     }
 
@@ -418,11 +420,26 @@ struct Banner: Decodable {
             image = ""
         }
 
-        // Link
+        // Payload (우선순위)
+        payload = try container.decodeIfPresent(BannerPayload.self, forKey: .payload)
+
+        // Link (하위 호환성)
         if let l = try container.decodeIfPresent(String.self, forKey: .link) {
             link = l
         } else {
             link = try container.decodeIfPresent(String.self, forKey: .url)
         }
     }
+
+    /// 배너 클릭 시 이동할 URL (payload 우선, 없으면 link 사용)
+    var actionUrl: String? {
+        payload?.value ?? link
+    }
+}
+
+// MARK: - Banner Payload
+
+struct BannerPayload: Decodable {
+    let type: String   // 예: "WEBVIEW"
+    let value: String  // type=WEBVIEW일 때 웹페이지 URL
 }
