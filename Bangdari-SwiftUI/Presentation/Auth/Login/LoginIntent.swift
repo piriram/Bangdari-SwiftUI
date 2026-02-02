@@ -45,8 +45,7 @@ final class LoginIntent: ObservableObject {
 
         let request = LoginRequest(
             email: state.email,
-            password: state.password,
-            deviceToken: nil
+            password: state.password
         )
 
         do {
