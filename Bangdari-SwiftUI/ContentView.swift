@@ -68,14 +68,6 @@ struct MainTabView: View {
             .tag(MainTab.community)
 
             NavigationStack {
-                ChatRoomListView()
-            }
-            .tabItem {
-                Label("채팅", systemImage: "message")
-            }
-            .tag(MainTab.chat)
-
-            NavigationStack {
                 MyPageView()
             }
             .tabItem {
@@ -95,7 +87,6 @@ private enum MainTab {
     case map
     case like
     case community
-    case chat
     case my
 }
 

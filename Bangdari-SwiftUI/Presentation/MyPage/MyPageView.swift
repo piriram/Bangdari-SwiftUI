@@ -7,6 +7,17 @@ struct MyPageView: View {
 
     var body: some View {
         List {
+            Section("채팅") {
+                NavigationLink {
+                    ChatRoomListView()
+                } label: {
+                    HStack {
+                        Image(systemName: "message")
+                        Text("채팅 목록")
+                    }
+                }
+            }
+
             Section("개발") {
                 NavigationLink {
                     ServerLogView()
@@ -30,6 +41,7 @@ struct MyPageView: View {
                 }
             }
         }
+        .standardNavigationBar(title: "MY")
         .alert("로그아웃", isPresented: $showLogoutAlert) {
             Button("취소", role: .cancel) {}
             Button("로그아웃", role: .destructive) {
