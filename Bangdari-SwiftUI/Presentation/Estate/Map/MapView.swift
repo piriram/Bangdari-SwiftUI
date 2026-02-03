@@ -118,10 +118,7 @@ struct EstateMapView: View {
             // Z3: Floating UI
             floatingUI
 
-            // Z4: Navigation Bar
-            navigationBar
-
-            // Z5: 로딩 인디케이터 (화면 중앙) - 스켈레톤이 없을 때만 표시
+            // Z4: 로딩 인디케이터 (화면 중앙) - 스켈레톤이 없을 때만 표시
             if intent.state.isLoading && intent.state.skeletonClusters.isEmpty {
                 ProgressView()
                     .scaleEffect(1.2)
@@ -131,7 +128,47 @@ struct EstateMapView: View {
                     .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
             }
         }
-        .navigationBarHidden(true)
+        .searchable(
+            text: Binding(
+                get: { intent.state.searchQuery },
+                set: { intent.updateSearchQuery($0) }
+            ),
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "지역 또는 매물을 검색하세요"
+        )
+        .onSubmit(of: .search) {
+            Task { await intent.searchEstates() }
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Button {
+                    // TODO: 위치 선택 모달
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(dsIcon: .location)
+                            .renderingMode(.template)
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.deepWood)
+                        Text(intent.state.locationText)
+                            .font(.pretendardBody2Bold)
+                            .foregroundColor(.gray90)
+                    }
+                }
+            }
+
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    navigateToList = true
+                } label: {
+                    Image(dsIcon: .list)
+                        .renderingMode(.template)
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.gray90)
+                }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.visible, for: .navigationBar)
         .onAppear {
             // 초기 카테고리 및 좌표 설정
             intent.initializeWithCategory(initialCategory, at: initialCoordinate)
@@ -153,57 +190,12 @@ struct EstateMapView: View {
         }
     }
 
-    // MARK: - Z4: Navigation Bar
-
-    private var navigationBar: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 12) {
-                // 상단 row: 뒤로가기 / 위치 / 리스트전환
-                CustomNavigationBar(onBack: { dismiss() }) {
-                    // Center: Location + Text
-                    HStack(spacing: 6) {
-                        Image(dsIcon: .location)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(.deepWood)
-
-                        Text(intent.state.locationText)
-                            .font(.pretendardBody1Bold)
-                            .foregroundColor(.gray90)
-                    }
-                } trailing: {
-                    // Trailing: List 전환 버튼
-                    Button {
-                        navigateToList = true
-                    } label: {
-                        Image(dsIcon: .list)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.gray90)
-                    }
-                }
-
-                // 검색 필드
-                SearchBarButton(placeholder: "지역 또는 매물을 검색하세요", style: .bordered) {
-                    // TODO: 검색 화면
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color.gray0)
-
-            Spacer()
-        }
-    }
-
     // MARK: - Z3: Floating UI
 
     private var floatingUI: some View {
         VStack(spacing: 0) {
-            // NavBar 높이만큼 spacing
-            Spacer().frame(height: 120)
+            // iOS 26 네비바 + 검색창 높이만큼 spacing
+            Spacer().frame(height: 96)
 
             // 필터 버튼 그룹 (S4가 아닐 때만 표시)
             if !isFilterAdjusting {

@@ -38,6 +38,9 @@ struct MapState {
 
     // 위치 텍스트 (역지오코딩 결과)
     var locationText: String = "위치 정보 로딩 중..."
+
+    // 검색
+    var searchQuery: String = ""
 }
 
 // MARK: - Skeleton Clusㅌㅌter
@@ -309,6 +312,29 @@ final class MapIntent: ObservableObject {
             )
             print("🗺️ [MapIntent] 초기 좌표 설정: \(coord.latitude), \(coord.longitude)")
         }
+    }
+
+    // MARK: - Search
+
+    func updateSearchQuery(_ query: String) {
+        state.searchQuery = query
+    }
+
+    func searchEstates() async {
+        guard !state.searchQuery.isEmpty else {
+            // 검색어가 비어있으면 현재 위치 기준으로 재조회
+            await loadEstatesInCurrentRegion()
+            return
+        }
+
+        state.isLoading = true
+        print("🔍 [Search] 검색 시작: \(state.searchQuery)")
+
+        // TODO: EstateRepository에 검색 API 추가 필요
+        // 현재는 검색 기능을 지원하지 않으므로 일반 조회로 대체
+        await loadEstatesInCurrentRegion()
+
+        print("🔍 [Search] 검색 완료")
     }
 
     // MARK: - Clustering

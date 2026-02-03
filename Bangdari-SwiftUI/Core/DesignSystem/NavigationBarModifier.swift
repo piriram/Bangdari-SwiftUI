@@ -35,7 +35,8 @@ private struct StandardNavigationBarModifier: ViewModifier {
             .navigationBarTitleDisplayMode(displayMode)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color.white, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
+            // iOS 26 Liquid Glass와 충돌하므로 제거
+            // .toolbarColorScheme(.light, for: .navigationBar)
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
