@@ -193,17 +193,10 @@ struct EstateListView: View {
                     .buttonStyle(.plain)
 
                     // Dynamic interval banners (map mode only)
+                    // 한 페이지에 배너 2개 정도 보이도록 간격 조정
                     if case .map = mode, index < displayEstates.count - 1 {
-                        // 첫 번째 배너: 3번째 항목 후
-                        if index == 2 {
-                            InlinePromoItem()
-                        }
-                        // 두 번째 배너: 8번째 항목 후
-                        else if index == 7 {
-                            InlinePromoItem()
-                        }
-                        // 그 이후: 6개 간격으로
-                        else if index > 7 && (index - 7) % 6 == 0 {
+                        // 4개마다 배너 표시 (index: 3, 7, 11, 15...)
+                        if (index + 1) % 4 == 0 {
                             InlinePromoItem()
                         }
                     }
@@ -306,7 +299,7 @@ struct EstateListItem: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
-            // Thumbnail (140×108px)
+            // Thumbnail (140×124px)
             thumbnail
                 .padding(.leading, 20) // Thumbnail Left Inset
 
@@ -318,7 +311,7 @@ struct EstateListItem: View {
 
             Spacer()
         }
-        .frame(height: 108) // Match thumbnail height
+        .frame(height: 124) // Match thumbnail height
         .background(Color.gray0)
     }
 
@@ -331,7 +324,7 @@ struct EstateListItem: View {
                 }
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 140, height: 108)
+                .frame(width: 140, height: 124)
                 .clipped()
                 .cornerRadius(8) // Thumbnail radius (Figma spec)
 
