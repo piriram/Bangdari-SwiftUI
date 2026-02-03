@@ -80,3 +80,28 @@ extension View {
         )
     }
 }
+
+// MARK: - Scroll Offset Tracking
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+extension View {
+    /// 스크롤 오프셋을 측정합니다 (coordinate space "scroll" 필요)
+    func measureScrollOffset(_ onChange: @escaping (CGFloat) -> Void) -> some View {
+        background(
+            GeometryReader { geometry in
+                Color.clear.preference(
+                    key: ScrollOffsetPreferenceKey.self,
+                    value: geometry.frame(in: .named("scroll")).minY
+                )
+            }
+        )
+        .onPreferenceChange(ScrollOffsetPreferenceKey.self, perform: onChange)
+    }
+}
