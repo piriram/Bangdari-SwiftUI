@@ -37,6 +37,19 @@ final class RemoteAuthRepository: AuthRepository {
         return response
     }
 
+    func loginApple(request: AppleLoginRequest) async throws -> AuthResponse {
+        let response = try await network.request(.loginApple, body: request, type: AuthResponse.self)
+
+        // 토큰 저장
+        keychain.saveTokens(
+            access: response.accessToken,
+            refresh: response.refreshToken,
+            userId: response.user_id
+        )
+
+        return response
+    }
+
     func logout() async throws {
         try await network.requestWithoutResponse(.logout)
         keychain.clearTokens()

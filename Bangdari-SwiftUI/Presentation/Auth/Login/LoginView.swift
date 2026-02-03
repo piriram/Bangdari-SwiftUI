@@ -1,4 +1,5 @@
 import SwiftUI
+import AuthenticationServices
 
 // MARK: - Login View
 
@@ -26,6 +27,12 @@ struct LoginView: View {
 
                 // 로그인 버튼
                 loginButton
+
+                // 소셜 로그인 구분선
+                socialDivider
+
+                // 애플 로그인 버튼
+                appleLoginButton
 
                 // 회원가입 링크
                 signUpLink
@@ -101,6 +108,42 @@ struct LoginView: View {
         .disabled(!intent.state.canSubmit)
     }
 
+    // MARK: - Social Divider
+
+    private var socialDivider: some View {
+        HStack(spacing: 16) {
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .frame(height: 1)
+
+            Text("또는")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .frame(height: 1)
+        }
+    }
+
+    // MARK: - Apple Login Button
+
+    private var appleLoginButton: some View {
+        SignInWithAppleButton(
+            onRequest: { request in
+                request.requestedScopes = [.email, .fullName]
+            },
+            onCompletion: { result in
+                Task {
+                    await handleAppleSignIn(result)
+                }
+            }
+        )
+        .signInWithAppleButtonStyle(.black)
+        .frame(height: 50)
+        .cornerRadius(12)
+    }
+
     // MARK: - SignUp Link
 
     private var signUpLink: some View {
@@ -114,6 +157,30 @@ struct LoginView: View {
                     .fontWeight(.medium)
             }
             .font(.subheadline)
+        }
+    }
+
+    // MARK: - Helper Methods
+
+    private func handleAppleSignIn(_ result: Result<ASAuthorization, Error>) async {
+        switch result {
+        case .success(let authorization):
+            guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+                  let identityToken = appleIDCredential.identityToken,
+                  let idTokenString = String(data: identityToken, encoding: .utf8) else {
+                intent.setErrorMessage("애플 로그인 정보를 가져올 수 없습니다.")
+                return
+            }
+
+            await intent.loginWithApple(idToken: idTokenString)
+
+        case .failure(let error):
+            if let authError = error as? ASAuthorizationError,
+               authError.code == .canceled {
+                // 사용자가 취소한 경우 에러 메시지 표시하지 않음
+                return
+            }
+            intent.setErrorMessage("애플 로그인 중 오류가 발생했습니다.")
         }
     }
 }

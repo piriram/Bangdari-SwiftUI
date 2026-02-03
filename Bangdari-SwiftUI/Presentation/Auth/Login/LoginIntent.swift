@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import AuthenticationServices
 
 // MARK: - Login State
 
@@ -59,6 +60,32 @@ final class LoginIntent: ObservableObject {
         }
 
         state.isLoading = false
+    }
+
+    func loginWithApple(idToken: String) async {
+        state.isLoading = true
+        state.errorMessage = nil
+
+        let request = AppleLoginRequest(
+            idToken: idToken,
+            deviceToken: nil
+        )
+
+        do {
+            _ = try await authRepository.loginApple(request: request)
+            state.isLoginSuccess = true
+            NotificationCenter.default.post(name: .didLogin, object: nil)
+        } catch let error as NetworkError {
+            state.errorMessage = error.message
+        } catch {
+            state.errorMessage = "애플 로그인 중 오류가 발생했습니다."
+        }
+
+        state.isLoading = false
+    }
+
+    func setErrorMessage(_ message: String) {
+        state.errorMessage = message
     }
 
     func clearError() {

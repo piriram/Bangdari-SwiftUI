@@ -20,6 +20,11 @@ struct LoginRequest: Encodable {
     let password: String
 }
 
+struct AppleLoginRequest: Encodable {
+    let idToken: String
+    let deviceToken: String?
+}
+
 // MARK: - Response
 
 struct AuthResponse: Decodable {
