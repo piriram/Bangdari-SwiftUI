@@ -26,7 +26,7 @@ struct AppleLoginRequest: Encodable {
 }
 
 struct KakaoLoginRequest: Encodable {
-    let accessToken: String
+    let oauthToken: String
     let deviceToken: String?
 }
 

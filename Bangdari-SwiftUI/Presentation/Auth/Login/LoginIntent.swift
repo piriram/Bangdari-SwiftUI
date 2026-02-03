@@ -89,7 +89,7 @@ final class LoginIntent: ObservableObject {
         state.errorMessage = nil
 
         let request = KakaoLoginRequest(
-            accessToken: accessToken,
+            oauthToken: accessToken,
             deviceToken: nil
         )
 

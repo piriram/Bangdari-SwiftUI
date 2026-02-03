@@ -19,6 +19,15 @@ final class DIContainer: @unchecked Sendable {
         }
     }
 
+    func makeUserRepository() -> UserRepository {
+        switch AppEnvironment.current {
+        case .live:
+            return RemoteUserRepository()
+        case .mock:
+            return RemoteUserRepository() // TODO: MockUserRepository
+        }
+    }
+
     func makeEstateRepository() -> EstateRepository {
         switch AppEnvironment.current {
         case .live:

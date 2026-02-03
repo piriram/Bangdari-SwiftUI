@@ -8,6 +8,9 @@ import KakaoSDKAuth
 
 @main
 struct Bangdari_SwiftUIApp: App {
+    // AppDelegate 연결
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     init() {
         // KakaoSDK 초기화
         KakaoSDK.initSDK(appKey: Secrets.kakaoAppKey)
@@ -23,6 +26,18 @@ struct Bangdari_SwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear {
+                    // 앱 시작 시 푸시 알림 권한 요청
+                    Task { @MainActor in
+                        await PushNotificationManager.shared.requestAuthorization()
+                    }
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .didLogin)) { _ in
+                    // 로그인 시 디바이스 토큰 업데이트
+                    Task { @MainActor in
+                        await PushNotificationManager.shared.updateTokenAfterLogin()
+                    }
+                }
                 .onOpenURL { url in
                     print("🔗 URL Received: \(url)")
 
