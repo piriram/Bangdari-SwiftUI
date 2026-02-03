@@ -75,6 +75,14 @@ struct MainView: View {
                     initialCoordinate: navData.initialCoordinate
                 )
             }
+            .navigationDestination(for: EstateListNavigationData.self) { navData in
+                switch navData {
+                case .todayEstates:
+                    EstateListView(mode: .todayEstates(estates: intent.state.todayEstates))
+                case .hotEstates:
+                    EstateListView(mode: .hotEstates(estates: intent.state.hotEstates))
+                }
+            }
         }
         .task {
             await intent.loadHomeData()
@@ -114,7 +122,7 @@ struct MainView: View {
     private var todayEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(title: "최근검색 매물", actionTitle: "더보기") {
-                // TODO: 전체보기
+                navigationPath.append(EstateListNavigationData.todayEstates)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -147,7 +155,7 @@ struct MainView: View {
     private var hotEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(title: "HOT 매물", actionTitle: "더보기") {
-                // TODO: 전체보기
+                navigationPath.append(EstateListNavigationData.hotEstates)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -246,6 +254,13 @@ struct TopicRow: View {
 
 #Preview {
     MainView()
+}
+
+// MARK: - Navigation Data
+
+enum EstateListNavigationData: Hashable {
+    case todayEstates
+    case hotEstates
 }
 
 // MARK: - Home Search Bar
