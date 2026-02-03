@@ -25,68 +25,74 @@ struct ContentView: View {
 struct MainTabView: View {
     @State private var selectedTab: MainTab = .home
 
+    init() {
+        configureTabBarAppearance()
+    }
+
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 MainView()
             }
             .tabItem {
-                VStack {
-                    Image(selectedTab == .home ? "TabHomeFill" : "TabHomeEmpty")
-                        .renderingMode(.original)
-                    Text("홈")
-                }
+                Image(selectedTab == .home ? "TabHomeFill" : "TabHomeEmpty")
+                    .renderingMode(.template)
+                Text("홈")
             }
             .tag(MainTab.home)
-
-            NavigationStack {
-                EstateMapView()
-            }
-            .tabItem {
-                Label("지도", systemImage: "map")
-            }
-            .tag(MainTab.map)
 
             NavigationStack {
                 EstateListView(mode: .liked)
             }
             .tabItem {
-                VStack {
-                    Image(selectedTab == .like ? "TabLikeFill" : "TabLikeEmpty")
-                        .renderingMode(.original)
-                    Text("좋아요")
-                }
+                Image(selectedTab == .like ? "TabLikeFill" : "TabLikeEmpty")
+                    .renderingMode(.template)
+                Text("관심매물")
             }
             .tag(MainTab.like)
-
-            NavigationStack {
-                CommunityListView()
-            }
-            .tabItem {
-                Label("커뮤니티", systemImage: "bubble.left.and.bubble.right")
-            }
-            .tag(MainTab.community)
 
             NavigationStack {
                 MyPageView()
             }
             .tabItem {
-                VStack {
-                    Image(selectedTab == .my ? "TabMyFill" : "TabMyEmpty")
-                        .renderingMode(.original)
-                    Text("MY")
-                }
+                Image(selectedTab == .my ? "TabMyFill" : "TabMyEmpty")
+                    .renderingMode(.template)
+                Text("설정")
             }
             .tag(MainTab.my)
         }
+    }
+
+    private func configureTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor(Color.gray0)
+
+        // 비선택 아이템 색상 (gray45)
+        let normalItemAppearance = UITabBarItemAppearance()
+        normalItemAppearance.normal.iconColor = UIColor(Color.gray45)
+        normalItemAppearance.normal.titleTextAttributes = [
+            .foregroundColor: UIColor(Color.gray45)
+        ]
+
+        // 선택 아이템 색상 (gray90)
+        normalItemAppearance.selected.iconColor = UIColor(Color.gray90)
+        normalItemAppearance.selected.titleTextAttributes = [
+            .foregroundColor: UIColor(Color.gray90)
+        ]
+
+        appearance.stackedLayoutAppearance = normalItemAppearance
+        appearance.inlineLayoutAppearance = normalItemAppearance
+        appearance.compactInlineLayoutAppearance = normalItemAppearance
+
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 }
 
 private enum MainTab {
     case home
-    case map
     case like
-    case community
     case my
 }
 
