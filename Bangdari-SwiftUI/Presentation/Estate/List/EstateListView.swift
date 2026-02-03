@@ -17,6 +17,8 @@ struct EstateListView: View {
     enum ListMode {
         case map(coordinate: CLLocationCoordinate2D, estates: [EstateSummaryResponse], locationText: String)
         case liked
+        case todayEstates(estates: [EstateSummaryResponse])
+        case hotEstates(estates: [EstateSummaryResponse])
     }
 
     enum FilterType {
@@ -99,6 +101,10 @@ struct EstateListView: View {
             return text
         case .liked:
             return "좋아요한 매물"
+        case .todayEstates:
+            return "최근검색 매물"
+        case .hotEstates:
+            return "HOT 매물"
         }
     }
 
@@ -186,11 +192,20 @@ struct EstateListView: View {
                     }
                     .buttonStyle(.plain)
 
-                    // Inline Promo every 5 items (map mode only)
-                    if case .map = mode,
-                       (index + 1) % 5 == 0,
-                       index < displayEstates.count - 1 {
-                        InlinePromoItem()
+                    // Dynamic interval banners (map mode only)
+                    if case .map = mode, index < displayEstates.count - 1 {
+                        // 첫 번째 배너: 3번째 항목 후
+                        if index == 2 {
+                            InlinePromoItem()
+                        }
+                        // 두 번째 배너: 8번째 항목 후
+                        else if index == 7 {
+                            InlinePromoItem()
+                        }
+                        // 그 이후: 6개 간격으로
+                        else if index > 7 && (index - 7) % 6 == 0 {
+                            InlinePromoItem()
+                        }
                     }
                 }
 
@@ -232,6 +247,10 @@ struct EstateListView: View {
             return "이 지역에 매물이 없습니다"
         case .liked:
             return "좋아요한 매물이 없습니다"
+        case .todayEstates:
+            return "최근검색 매물이 없습니다"
+        case .hotEstates:
+            return "HOT 매물이 없습니다"
         }
     }
 
@@ -244,6 +263,10 @@ struct EstateListView: View {
         case .liked:
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
+        case .todayEstates(let estates):
+            displayEstates = estates
+        case .hotEstates(let estates):
+            displayEstates = estates
         }
     }
 
@@ -255,6 +278,10 @@ struct EstateListView: View {
         case .liked:
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
+        case .todayEstates(let estates):
+            displayEstates = estates
+        case .hotEstates(let estates):
+            displayEstates = estates
         }
     }
 
@@ -264,6 +291,10 @@ struct EstateListView: View {
             displayEstates = estates // TODO: Apply filter
         case .liked:
             displayEstates = intent.state.estates
+        case .todayEstates(let estates):
+            displayEstates = estates
+        case .hotEstates(let estates):
+            displayEstates = estates
         }
     }
 }
