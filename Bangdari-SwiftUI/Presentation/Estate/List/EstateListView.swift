@@ -17,6 +17,8 @@ struct EstateListView: View {
     enum ListMode {
         case map(coordinate: CLLocationCoordinate2D, estates: [EstateSummaryResponse], locationText: String)
         case liked
+        case todayEstates(estates: [EstateSummaryResponse])
+        case hotEstates(estates: [EstateSummaryResponse])
     }
 
     enum FilterType {
@@ -99,15 +101,18 @@ struct EstateListView: View {
             return text
         case .liked:
             return "좋아요한 매물"
+        case .todayEstates:
+            return "최근검색 매물"
+        case .hotEstates:
+            return "HOT 매물"
         }
     }
 
     // MARK: - Filter Chip Row
 
     private var filterChipRow: some View {
-        HStack(spacing: 0) {
-            // Chip Group
-            HStack(spacing: 2) { // Chip-Chip Gap: 2px
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
                 filterChip("면적 순", isActive: activeFilter == .area) {
                     toggleFilter(.area)
                 }
@@ -124,35 +129,23 @@ struct EstateListView: View {
                     toggleFilter(.immediate)
                 }
             }
-            .padding(.leading, 20) // Left Inset
-
-            Spacer()
-                .frame(width: 33) // Chip Group → Sort Gap
-
-            // Sort Icon (19×21px visible)
-            Button {
-                // TODO: Sort action
-            } label: {
-                Image(dsIcon: .sort)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 19, height: 21)
-                    .foregroundColor(.gray75)
-            }
-            .padding(.trailing, 22) // Right Inset
+            .padding(.horizontal, 16)
         }
-        .frame(height: 32)
+        .frame(height: 48)
     }
 
     private func filterChip(_ title: String, isActive: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
-                .font(.pretendardCaption1)
-                .foregroundColor(isActive ? .gray0 : .gray75)
+                .font(.pretendardBody3)
+                .foregroundColor(isActive ? .deepCoast : .gray75)
                 .padding(.horizontal, 12)
-                .frame(height: 32) // Chip Height: 32px
-                .background(isActive ? Color.deepWood : Color.gray0)
-                .clipShape(Capsule()) // Radius: height/2 = 16px
+                .frame(height: 32)
+                .background(Color.gray0)
+                .overlay(
+                    Capsule()
+                        .stroke(isActive ? Color.deepCoast : Color.gray45, lineWidth: 1)
+                )
         }
     }
 
@@ -171,13 +164,7 @@ struct EstateListView: View {
 
     private var estateListContent: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 0) {
-                // First item gap: 40px from chip row bottom (map mode only)
-                if case .map = mode {
-                    Spacer()
-                        .frame(height: 40)
-                }
-
+            LazyVStack(spacing: 12) {
                 ForEach(Array(displayEstates.enumerated()), id: \.element.estate_id) { index, estate in
                     Button {
                         selectedEstateIdForDetail = estate.estate_id
@@ -186,11 +173,13 @@ struct EstateListView: View {
                     }
                     .buttonStyle(.plain)
 
-                    // Inline Promo every 5 items (map mode only)
-                    if case .map = mode,
-                       (index + 1) % 5 == 0,
-                       index < displayEstates.count - 1 {
-                        InlinePromoItem()
+                    // Dynamic interval banners (all modes)
+                    // 한 페이지에 배너 2개 정도 보이도록 간격 조정
+                    if index < displayEstates.count - 1 {
+                        // 4개마다 배너 표시 (index: 3, 7, 11, 15...)
+                        if (index + 1) % 4 == 0 {
+                            InlinePromoItem()
+                        }
                     }
                 }
 
@@ -200,15 +189,9 @@ struct EstateListView: View {
                         .padding()
                 }
             }
-            .padding(.horizontal, horizontalPadding)
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
         }
-    }
-
-    private var horizontalPadding: CGFloat {
-        if case .liked = mode {
-            return 16
-        }
-        return 0
     }
 
     // MARK: - Empty View
@@ -232,6 +215,10 @@ struct EstateListView: View {
             return "이 지역에 매물이 없습니다"
         case .liked:
             return "좋아요한 매물이 없습니다"
+        case .todayEstates:
+            return "최근검색 매물이 없습니다"
+        case .hotEstates:
+            return "HOT 매물이 없습니다"
         }
     }
 
@@ -244,6 +231,10 @@ struct EstateListView: View {
         case .liked:
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
+        case .todayEstates(let estates):
+            displayEstates = estates
+        case .hotEstates(let estates):
+            displayEstates = estates
         }
     }
 
@@ -255,6 +246,10 @@ struct EstateListView: View {
         case .liked:
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
+        case .todayEstates(let estates):
+            displayEstates = estates
+        case .hotEstates(let estates):
+            displayEstates = estates
         }
     }
 
@@ -264,6 +259,10 @@ struct EstateListView: View {
             displayEstates = estates // TODO: Apply filter
         case .liked:
             displayEstates = intent.state.estates
+        case .todayEstates(let estates):
+            displayEstates = estates
+        case .hotEstates(let estates):
+            displayEstates = estates
         }
     }
 }
@@ -274,21 +273,14 @@ struct EstateListItem: View {
     let estate: EstateSummaryResponse
 
     var body: some View {
-        HStack(alignment: .top, spacing: 0) {
-            // Thumbnail (140×108px)
+        HStack(alignment: .top, spacing: 12) {
             thumbnail
-                .padding(.leading, 20) // Thumbnail Left Inset
-
-            Spacer()
-                .frame(width: 20) // Thumbnail → Text Gap
-
-            // Text Stack
             textStack
-
-            Spacer()
         }
-        .frame(height: 108) // Match thumbnail height
+        .padding(12)
+        .frame(height: 140)
         .background(Color.gray0)
+        .cornerRadius(20)
     }
 
     private var thumbnail: some View {
@@ -302,26 +294,26 @@ struct EstateListItem: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 140, height: 108)
                 .clipped()
-                .cornerRadius(8) // Thumbnail radius (Figma spec)
+                .cornerRadius(12)
 
-            // Overlay Circle Button (18×18px)
+            // Overlay Circle Button (20×20px)
             Circle()
                 .fill(Color.deepCoast)
-                .frame(width: 18, height: 18)
+                .frame(width: 20, height: 20)
                 .overlay {
                     Image(dsIcon: .focus)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 10, height: 10)
+                        .frame(width: 14, height: 14)
                         .foregroundColor(.gray0)
                 }
-                .offset(x: 9, y: 9) // Top/Left Inset: 9px
+                .offset(x: 8, y: 8)
         }
     }
 
     private var textStack: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            // 1. Tag Badge (36×17px)
+        VStack(alignment: .leading, spacing: 4) {
+            // 1. Tag Badge
             tagBadge
 
             // 2. Title
@@ -340,8 +332,6 @@ struct EstateListItem: View {
                 .font(.pretendardCaption2)
                 .foregroundColor(.gray60)
 
-            Spacer()
-
             // 5. Distance (if available)
             if let distance = estate.distance {
                 Text(distanceText(distance))
@@ -351,17 +341,20 @@ struct EstateListItem: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.trailing, 20)
     }
 
     private var tagBadge: some View {
         Text(estate.category)
-            .font(.pretendardCaption3)
+            .font(.pretendardCaption1)
             .foregroundColor(.gray75)
             .padding(.horizontal, 8)
-            .frame(height: 17) // Tag Height: 17px
-            .background(Color.gray15)
-            .clipShape(Capsule()) // Radius: 8.5px (17/2)
+            .frame(height: 20)
+            .background(Color.gray0)
+            .overlay(
+                Capsule()
+                    .stroke(Color.gray45, lineWidth: 1)
+            )
+            .clipShape(Capsule())
     }
 
     private var imageURL: URL? {
@@ -414,23 +407,20 @@ struct InlinePromoItem: View {
                     .font(.pretendardCaption1)
                     .foregroundColor(.gray60)
             }
-            .padding(.leading, 52)
 
             Spacer()
 
-            // Right: Illustration (60×44px)
+            // Right: Illustration (64×64px)
             Image(systemName: "star.fill")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 60, height: 44)
+                .frame(width: 64, height: 64)
                 .foregroundColor(.brightCream)
-                .padding(.trailing, 56) // 390-334 = 56
         }
-        .frame(height: 80)
-        .background(Color.gray15)
-        .cornerRadius(8)
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
+        .padding(12)
+        .frame(height: 72)
+        .background(Color.gray0)
+        .cornerRadius(20)
     }
 }
 
