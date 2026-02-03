@@ -1,5 +1,7 @@
 import SwiftUI
 import AuthenticationServices
+import KakaoSDKUser
+import KakaoSDKAuth
 
 // MARK: - Login View
 
@@ -30,6 +32,9 @@ struct LoginView: View {
 
                 // 소셜 로그인 구분선
                 socialDivider
+
+                // 카카오 로그인 버튼
+                kakaoLoginButton
 
                 // 애플 로그인 버튼
                 appleLoginButton
@@ -126,6 +131,26 @@ struct LoginView: View {
         }
     }
 
+    // MARK: - Kakao Login Button
+
+    private var kakaoLoginButton: some View {
+        Button {
+            Task { await handleKakaoLogin() }
+        } label: {
+            HStack {
+                Image(systemName: "message.fill")
+                    .foregroundColor(.black)
+                Text("카카오로 시작하기")
+                    .fontWeight(.medium)
+                    .foregroundColor(.black)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 50)
+            .background(Color(red: 254/255, green: 229/255, blue: 0/255))
+            .cornerRadius(12)
+        }
+    }
+
     // MARK: - Apple Login Button
 
     private var appleLoginButton: some View {
@@ -161,6 +186,35 @@ struct LoginView: View {
     }
 
     // MARK: - Helper Methods
+
+    private func handleKakaoLogin() async {
+        // 카카오톡 앱 설치 여부 확인
+        if UserApi.isKakaoTalkLoginAvailable() {
+            // 카카오톡 앱으로 로그인
+            UserApi.shared.loginWithKakaoTalk { oauthToken, error in
+                if let error = error {
+                    print("카카오톡 로그인 실패: \(error)")
+                    self.intent.setErrorMessage("카카오톡 로그인에 실패했습니다.")
+                } else if let token = oauthToken {
+                    Task {
+                        await self.intent.loginWithKakao(accessToken: token.accessToken)
+                    }
+                }
+            }
+        } else {
+            // 카카오 계정으로 웹 로그인
+            UserApi.shared.loginWithKakaoAccount { oauthToken, error in
+                if let error = error {
+                    print("카카오 계정 로그인 실패: \(error)")
+                    self.intent.setErrorMessage("카카오 로그인에 실패했습니다.")
+                } else if let token = oauthToken {
+                    Task {
+                        await self.intent.loginWithKakao(accessToken: token.accessToken)
+                    }
+                }
+            }
+        }
+    }
 
     private func handleAppleSignIn(_ result: Result<ASAuthorization, Error>) async {
         switch result {

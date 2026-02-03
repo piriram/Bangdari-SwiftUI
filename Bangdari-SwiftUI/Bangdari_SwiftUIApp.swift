@@ -3,10 +3,15 @@
 import SwiftUI
 import UIKit
 import iamport_ios
+import KakaoSDKCommon
+import KakaoSDKAuth
 
 @main
 struct Bangdari_SwiftUIApp: App {
     init() {
+        // KakaoSDK 초기화
+        KakaoSDK.initSDK(appKey: Secrets.kakaoAppKey)
+
         configureNavigationBarAppearance()
 
         for family in UIFont.familyNames.sorted() {
@@ -20,7 +25,14 @@ struct Bangdari_SwiftUIApp: App {
             ContentView()
                 .onOpenURL { url in
                     print("🔗 URL Received: \(url)")
-                    Iamport.shared.receivedURL(url)
+
+                    // 카카오 로그인 URL 처리
+                    if AuthApi.isKakaoTalkLoginUrl(url) {
+                        _ = AuthController.handleOpenUrl(url: url)
+                    } else {
+                        // 포트원 결제 URL 처리
+                        Iamport.shared.receivedURL(url)
+                    }
                 }
         }
     }

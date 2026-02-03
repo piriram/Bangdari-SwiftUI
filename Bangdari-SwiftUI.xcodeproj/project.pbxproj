@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		21BAEA2C2F2C3261006DCCFF /* iamport-ios in Frameworks */ = {isa = PBXBuildFile; productRef = D482F613394B47AD90F94FD3 /* iamport-ios */; };
+		21D6377F2F319AC200ACD9E7 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 21D6377E2F319AC200ACD9E7 /* KakaoSDK */; };
+		21D637812F319AC200ACD9E7 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 21D637802F319AC200ACD9E7 /* KakaoSDKAuth */; };
+		21D637832F319AC200ACD9E7 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 21D637822F319AC200ACD9E7 /* KakaoSDKCommon */; };
+		21D637852F319AC200ACD9E7 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 21D637842F319AC200ACD9E7 /* KakaoSDKUser */; };
 		21E1A4512F214577009CE317 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 21E1A4502F214577009CE317 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +47,10 @@
 			files = (
 				21BAEA2C2F2C3261006DCCFF /* iamport-ios in Frameworks */,
 				21E1A4512F214577009CE317 /* Kingfisher in Frameworks */,
+				21D637852F319AC200ACD9E7 /* KakaoSDKUser in Frameworks */,
+				21D6377F2F319AC200ACD9E7 /* KakaoSDK in Frameworks */,
+				21D637832F319AC200ACD9E7 /* KakaoSDKCommon in Frameworks */,
+				21D637812F319AC200ACD9E7 /* KakaoSDKAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +95,10 @@
 			packageProductDependencies = (
 				21E1A4502F214577009CE317 /* Kingfisher */,
 				D482F613394B47AD90F94FD3 /* iamport-ios */,
+				21D6377E2F319AC200ACD9E7 /* KakaoSDK */,
+				21D637802F319AC200ACD9E7 /* KakaoSDKAuth */,
+				21D637822F319AC200ACD9E7 /* KakaoSDKCommon */,
+				21D637842F319AC200ACD9E7 /* KakaoSDKUser */,
 			);
 			productName = "Bangdari-SwiftUI";
 			productReference = 21E1A3C52F20705B009CE317 /* Bangdari-SwiftUI.app */;
@@ -119,6 +131,7 @@
 			packageReferences = (
 				21E1A44F2F214577009CE317 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */,
+				21D6377D2F319AC200ACD9E7 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 21E1A3C62F20705B009CE317 /* Products */;
@@ -376,6 +389,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		21D6377D2F319AC200ACD9E7 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.27.2;
+			};
+		};
 		21E1A44F2F214577009CE317 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -395,6 +416,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		21D6377E2F319AC200ACD9E7 /* KakaoSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21D6377D2F319AC200ACD9E7 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDK;
+		};
+		21D637802F319AC200ACD9E7 /* KakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21D6377D2F319AC200ACD9E7 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
+		};
+		21D637822F319AC200ACD9E7 /* KakaoSDKCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21D6377D2F319AC200ACD9E7 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCommon;
+		};
+		21D637842F319AC200ACD9E7 /* KakaoSDKUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21D6377D2F319AC200ACD9E7 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKUser;
+		};
 		21E1A4502F214577009CE317 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 21E1A44F2F214577009CE317 /* XCRemoteSwiftPackageReference "Kingfisher" */;

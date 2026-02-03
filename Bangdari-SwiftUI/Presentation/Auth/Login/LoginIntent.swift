@@ -84,6 +84,28 @@ final class LoginIntent: ObservableObject {
         state.isLoading = false
     }
 
+    func loginWithKakao(accessToken: String) async {
+        state.isLoading = true
+        state.errorMessage = nil
+
+        let request = KakaoLoginRequest(
+            accessToken: accessToken,
+            deviceToken: nil
+        )
+
+        do {
+            _ = try await authRepository.loginKakao(request: request)
+            state.isLoginSuccess = true
+            NotificationCenter.default.post(name: .didLogin, object: nil)
+        } catch let error as NetworkError {
+            state.errorMessage = error.message
+        } catch {
+            state.errorMessage = "카카오 로그인 중 오류가 발생했습니다."
+        }
+
+        state.isLoading = false
+    }
+
     func setErrorMessage(_ message: String) {
         state.errorMessage = message
     }

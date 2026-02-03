@@ -7,5 +7,6 @@ protocol AuthRepository {
     func join(request: JoinRequest) async throws -> AuthResponse
     func login(request: LoginRequest) async throws -> AuthResponse
     func loginApple(request: AppleLoginRequest) async throws -> AuthResponse
+    func loginKakao(request: KakaoLoginRequest) async throws -> AuthResponse
     func logout() async throws
 }

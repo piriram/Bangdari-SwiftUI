@@ -14,6 +14,14 @@
 				<string>bangdari</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakaod8d86395b711a71670debadcf4ee2c55</string>
+			</array>
+		</dict>
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
@@ -57,5 +65,7 @@
 		<string>Pretendard-Thin.otf</string>
 		<string>Yeongdeok Haeparang.ttf</string>
 	</array>
+	<key>KAKAO_APP_KEY</key>
+	<string>d8d86395b711a71670debadcf4ee2c55</string>
 </dict>
 </plist>
