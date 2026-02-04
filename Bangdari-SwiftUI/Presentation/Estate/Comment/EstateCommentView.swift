@@ -4,6 +4,7 @@ struct EstateCommentView: View {
     @StateObject private var intent: EstateCommentIntent
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isCommentFocused: Bool
+    @State private var confirmDeleteCommentId: String? = nil
 
     init(estateId: String) {
         _intent = StateObject(wrappedValue: EstateCommentIntent(estateId: estateId))
@@ -41,6 +42,20 @@ struct EstateCommentView: View {
             }
         }
         .navigationBarHidden(true)
+        .confirmationDialog("댓글을 삭제하시겠습니다?", isPresented: Binding(
+            get: { confirmDeleteCommentId != nil },
+            set: { if !$0 { confirmDeleteCommentId = nil } }
+        )) {
+            Button("삭제", role: .destructive) {
+                if let commentId = confirmDeleteCommentId {
+                    Task { await intent.deleteComment(commentId) }
+                    confirmDeleteCommentId = nil
+                }
+            }
+            Button("취소", role: .cancel) {}
+        } message: {
+            Text("삭제된 댓글은 복구할 수 없습니다.")
+        }
         .task {
             await intent.loadComments()
         }
@@ -88,7 +103,10 @@ struct EstateCommentView: View {
     // MARK: - Comment Row
 
     private func commentRow(_ comment: EstateComment, isReply: Bool = false) -> some View {
-        HStack(alignment: .top, spacing: 12) {
+        let isOwner = comment.creator.user_id == intent.state.myUserId
+        let isEditing = intent.state.editingCommentId == comment.comment_id
+
+        return HStack(alignment: .top, spacing: 12) {
             if isReply {
                 Image(systemName: "arrow.turn.down.right")
                     .font(.system(size: 14))
@@ -97,7 +115,7 @@ struct EstateCommentView: View {
             }
 
             VStack(alignment: .leading, spacing: 6) {
-                // 작성자 + 날짜
+                // 작성자 + 날짜 + 메뉴
                 HStack {
                     Text(comment.creator.nick)
                         .font(.pretendard(.caption1, .semiBold))
@@ -108,25 +126,80 @@ struct EstateCommentView: View {
                     Text(formatDate(comment.createdAt))
                         .font(.pretendard(.caption2))
                         .foregroundColor(.gray60)
+
+                    if isOwner {
+                        Menu {
+                            Button {
+                                intent.startEditing(comment)
+                            } label: {
+                                Label("수정", systemImage: "pencil")
+                            }
+
+                            Button(role: .destructive) {
+                                confirmDeleteCommentId = comment.comment_id
+                            } label: {
+                                Label("삭제", systemImage: "trash")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .font(.system(size: 16))
+                                .foregroundColor(.gray60)
+                        }
+                    }
                 }
 
-                // 댓글 내용
-                Text(comment.content)
+                // 수정 모드 or 일반 표시
+                if isEditing {
+                    TextField("수정 중...", text: Binding(
+                        get: { intent.state.editingText },
+                        set: { intent.updateEditingText($0) }
+                    ), axis: .vertical)
+                    .lineLimit(1...4)
                     .font(.pretendard(.body2))
-                    .foregroundColor(.gray75)
-                    .lineSpacing(4)
+                    .textFieldStyle(.plain)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .background(Color.gray15)
+                    .cornerRadius(8)
 
-                // 답글 버튼 (대댓글에는 표시 안함)
-                if !isReply {
-                    Button {
-                        intent.setReplyingTo(comment)
-                        isCommentFocused = true
-                    } label: {
-                        Text("답글")
-                            .font(.pretendard(.caption1, .medium))
-                            .foregroundColor(.deepCoast)
+                    HStack(spacing: 12) {
+                        Button {
+                            intent.cancelEditing()
+                        } label: {
+                            Text("취소")
+                                .font(.pretendard(.caption1, .medium))
+                                .foregroundColor(.gray60)
+                        }
+
+                        Button {
+                            Task { await intent.saveEdit() }
+                        } label: {
+                            Text("저장")
+                                .font(.pretendard(.caption1, .semiBold))
+                                .foregroundColor(.deepCoast)
+                        }
+                        .disabled(intent.state.editingText.trimmingCharacters(in: .whitespaces).isEmpty)
                     }
                     .padding(.top, 4)
+                } else {
+                    // 댓글 내용
+                    Text(comment.content)
+                        .font(.pretendard(.body2))
+                        .foregroundColor(.gray75)
+                        .lineSpacing(4)
+
+                    // 답글 버튼 (대댓글에는 표시 안함)
+                    if !isReply {
+                        Button {
+                            intent.setReplyingTo(comment)
+                            isCommentFocused = true
+                        } label: {
+                            Text("답글")
+                                .font(.pretendard(.caption1, .medium))
+                                .foregroundColor(.deepCoast)
+                        }
+                        .padding(.top, 4)
+                    }
                 }
             }
         }

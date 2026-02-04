@@ -9,9 +9,16 @@ struct EstateCommentState {
     var isCommentLoading: Bool = false
     var errorMessage: String?
 
+    // 현재 로그인 유저
+    var myUserId: String = ""
+
     // 댓글 입력
     var commentText: String = ""
     var replyingTo: EstateComment? = nil
+
+    // 수정 모드
+    var editingCommentId: String? = nil
+    var editingText: String = ""
 
     var comments: [EstateComment] {
         estate?.comments ?? []
@@ -30,6 +37,7 @@ final class EstateCommentIntent: ObservableObject {
     init(estateId: String, estateRepository: EstateRepository? = nil) {
         self.estateId = estateId
         self.estateRepository = estateRepository ?? DIContainer.shared.makeEstateRepository()
+        self.state.myUserId = KeychainManager.shared.userId ?? ""
     }
 
     // MARK: - Load
@@ -80,6 +88,62 @@ final class EstateCommentIntent: ObservableObject {
             await loadComments()
         } catch {
             state.errorMessage = "댓글 작성에 실패했습니다."
+        }
+
+        state.isCommentLoading = false
+    }
+
+    // MARK: - Edit
+
+    func startEditing(_ comment: EstateComment) {
+        state.editingCommentId = comment.comment_id
+        state.editingText = comment.content
+    }
+
+    func cancelEditing() {
+        state.editingCommentId = nil
+        state.editingText = ""
+    }
+
+    func updateEditingText(_ text: String) {
+        state.editingText = text
+    }
+
+    func saveEdit() async {
+        guard let commentId = state.editingCommentId,
+              !state.editingText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+
+        state.isCommentLoading = true
+
+        do {
+            try await estateRepository.updateComment(
+                estateId: estateId,
+                commentId: commentId,
+                content: state.editingText
+            )
+            state.editingCommentId = nil
+            state.editingText = ""
+            await loadComments()
+        } catch {
+            state.errorMessage = "댓글 수정에 실패했습니다."
+        }
+
+        state.isCommentLoading = false
+    }
+
+    // MARK: - Delete
+
+    func deleteComment(_ commentId: String) async {
+        state.isCommentLoading = true
+
+        do {
+            try await estateRepository.deleteComment(
+                estateId: estateId,
+                commentId: commentId
+            )
+            await loadComments()
+        } catch {
+            state.errorMessage = "댓글 삭제에 실패했습니다."
         }
 
         state.isCommentLoading = false
