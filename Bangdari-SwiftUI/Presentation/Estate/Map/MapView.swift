@@ -173,8 +173,14 @@ struct EstateMapView: View {
             // 초기 카테고리 및 좌표 설정
             intent.initializeWithCategory(initialCategory, at: initialCoordinate)
 
-            intent.requestLocationPermission()
-            Task { await intent.loadEstatesInCurrentRegion() }
+            // 초기 좌표가 없으면 사용자 현재 위치로 초기화
+            if initialCoordinate == nil {
+                intent.initializeLocation()
+            } else {
+                // 초기 좌표가 있으면 해당 위치 로드
+                intent.requestLocationPermission()
+                Task { await intent.loadEstatesInCurrentRegion() }
+            }
         }
         .navigationDestination(item: $selectedEstateIdForDetail) { estateId in
             EstateDetailView(estateId: estateId)
@@ -292,7 +298,11 @@ struct EstateMapView: View {
             handleClusterTap(cluster)
         } label: {
             if cluster.isSingle, let estate = cluster.firstEstate {
-                estateBubbleMarker(estate, isSelected: selectedEstate?.estate_id == estate.estate_id)
+                // 새로운 EstateMarkerView 사용
+                EstateMarkerView(
+                    estate: estate,
+                    isSelected: selectedEstate?.estate_id == estate.estate_id
+                )
             } else {
                 clusterBubble(cluster.count)
             }
@@ -300,47 +310,35 @@ struct EstateMapView: View {
         .buttonStyle(.plain)
     }
 
-    /// 단일 매물 마커 (가격 버블)
-    private func estateBubbleMarker(_ estate: EstateSummaryResponse, isSelected: Bool) -> some View {
-        VStack(spacing: 0) {
-            Text(priceText(estate))
-                .font(.pretendardCaption2)
-                .fontWeight(.bold)
-                .foregroundColor(.gray0)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(isSelected ? Color.brightWood : Color.deepWood)
-                .cornerRadius(6)
-
-            Image(systemName: "triangle.fill")
-                .font(.system(size: 8))
-                .foregroundColor(isSelected ? .brightWood : .deepWood)
-                .rotationEffect(.degrees(180))
-                .offset(y: -2)
-        }
-    }
-
-    /// 클러스터 마커 (원형 + 숫자)
+    /// 클러스터 마커 (원형 + 숫자) - 개수에 따라 크기 조정
     private func clusterBubble(_ count: Int) -> some View {
         ZStack {
+            // 외곽 테두리 효과
             Circle()
-                .fill(Color.deepCream.opacity(0.65))
+                .fill(Color.deepCream.opacity(0.3))
                 .frame(width: clusterSize(count) + 12, height: clusterSize(count) + 12)
 
+            // 메인 원
             Circle()
-                .fill(Color.deepCream)
+                .fill(Color.deepCream.opacity(0.75))
                 .frame(width: clusterSize(count), height: clusterSize(count))
 
             Text("\(count)")
                 .font(.pretendardBody1Bold)
                 .foregroundColor(.gray0)
         }
+        .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+        .animation(.spring(response: 0.4, dampingFraction: 0.6), value: count)
     }
 
+    /// 클러스터 크기 - 개수에 따라 동적 조정 (한 덩어리 효과)
     private func clusterSize(_ count: Int) -> CGFloat {
-        if count >= 100 { return 60 }
-        if count >= 50 { return 52 }
-        return 44
+        if count >= 200 { return 120 }  // 매우 큰 클러스터
+        if count >= 100 { return 90 }   // 큰 클러스터
+        if count >= 50 { return 70 }    // 중간 클러스터
+        if count >= 20 { return 56 }    // 작은 클러스터
+        if count >= 10 { return 48 }    // 매우 작은 클러스터
+        return 40                        // 최소 크기
     }
 
     /// 스켈레톤 마커 (로딩 중 플레이스홀더)

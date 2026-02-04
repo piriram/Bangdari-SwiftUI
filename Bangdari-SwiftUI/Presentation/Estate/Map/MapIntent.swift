@@ -31,7 +31,7 @@ struct MapState {
 
     // 필터
     var selectedCategory: String? = nil
-    var maxDistance: Int = 5000  // 5km (확장)
+    var maxDistance: Int = 15000  // 15km (넓은 범위로 확장)
 
     // Skeleton UI
     var skeletonClusters: [SkeletonCluster] = []
@@ -66,8 +66,8 @@ enum MapConstants {
     /// 값이 작을수록 더 확대해야 개별 마커가 보임
     static let clusteringDisableThreshold: Double = 0.008
 
-    /// 자동 재조회 트리거 거리 (미터)
-    static let reloadDistanceThreshold: Double = 500
+    /// 자동 재조회 트리거 거리 (미터) - 3km로 증가하여 API 호출 빈도 감소
+    static let reloadDistanceThreshold: Double = 3000
 
     /// debounce 시간 (밀리초)
     static let debounceMilliseconds: Int = 500
@@ -171,6 +171,26 @@ final class MapIntent: ObservableObject {
 
     func requestLocationPermission() {
         locationManager.requestWhenInUseAuthorization()
+    }
+
+    /// 현재 위치로 이동 (초기 로드용)
+    func initializeLocation() {
+        // 위치 권한이 있으면 즉시 현재 위치로 이동
+        if let location = locationManager.location {
+            print("📍 [initializeLocation] 현재 위치로 초기화: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+            state.region = MKCoordinateRegion(
+                center: location.coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+            )
+
+            Task {
+                await loadEstates(at: location.coordinate)
+            }
+        } else {
+            // 위치 권한이 없으면 권한 요청
+            print("📍 [initializeLocation] 위치 권한 없음, 권한 요청")
+            requestLocationPermission()
+        }
     }
 
     func moveToCurrentLocation() {
@@ -346,7 +366,7 @@ final class MapIntent: ObservableObject {
         state.clusters = newClusters
     }
 
-    /// 그리드 기반 클러스터링
+    /// 거리 기반 계층적 클러스터링 (한 덩어리 → 점진적 분산)
     private func clusterEstates(
         _ estates: [EstateSummaryResponse],
         in region: MKCoordinateRegion
@@ -368,37 +388,72 @@ final class MapIntent: ObservableObject {
             }
         }
 
-        // 줌 레벨에 따라 클러스터 셀 크기 결정
-        let cellSize = region.span.latitudeDelta / 10
-        print("📍 [Clustering] 클러스터 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)), cellSize: \(String(format: "%.6f", cellSize)))")
+        // 줌 레벨에 따라 클러스터 거리 임계값 동적 조정 (한 덩어리 효과)
+        let clusterDistance = calculateClusterDistance(for: region)
+        print("📍 [Clustering] 거리 기반 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)), distance: \(String(format: "%.0f", clusterDistance))m)")
 
-        // 그리드 딕셔너리: (gridX, gridY) -> estates
-        var grid: [String: [EstateSummaryResponse]] = [:]
+        // 거리 기반 클러스터링
+        var remainingEstates = estates
+        var clusters: [[EstateSummaryResponse]] = []
 
-        for estate in estates {
-            let lat = estate.geolocation.latitude
-            let lng = estate.geolocation.longitude
+        while !remainingEstates.isEmpty {
+            // 첫 번째 매물을 시드로 사용
+            let seed = remainingEstates.removeFirst()
+            var currentCluster = [seed]
 
-            let gridX = Int(floor(lng / cellSize))
-            let gridY = Int(floor(lat / cellSize))
-            let key = "\(gridX),\(gridY)"
+            // 거리 임계값 내의 모든 매물을 같은 클러스터로 묶기
+            remainingEstates = remainingEstates.filter { estate in
+                let distance = distanceBetween(seed.geolocation.coordinate, estate.geolocation.coordinate)
+                if distance <= clusterDistance {
+                    currentCluster.append(estate)
+                    return false // 클러스터에 추가되었으므로 제거
+                }
+                return true // 남겨둠
+            }
 
-            grid[key, default: []].append(estate)
+            clusters.append(currentCluster)
         }
 
-        print("📍 [Clustering] 그리드 개수: \(grid.count)")
+        print("📍 [Clustering] 클러스터 개수: \(clusters.count)")
 
-        // 클러스터 생성 (key를 id로 사용하여 깜빡임 방지)
-        return grid.map { key, groupedEstates in
+        // MapCluster로 변환
+        return clusters.enumerated().map { index, groupedEstates in
             // 클러스터 중심 계산
             let avgLat = groupedEstates.map(\.geolocation.latitude).reduce(0, +) / Double(groupedEstates.count)
             let avgLng = groupedEstates.map(\.geolocation.longitude).reduce(0, +) / Double(groupedEstates.count)
 
+            // 안정적인 ID 생성 (첫 번째 매물 ID + 카운트)
+            let id = "cluster-\(groupedEstates.first?.estate_id ?? "unknown")-\(groupedEstates.count)"
+
             return MapCluster(
-                id: key,
+                id: id,
                 coordinate: CLLocationCoordinate2D(latitude: avgLat, longitude: avgLng),
                 estates: groupedEstates
             )
+        }
+    }
+
+    /// 줌 레벨에 따라 클러스터 거리 임계값 계산
+    private func calculateClusterDistance(for region: MKCoordinateRegion) -> Double {
+        // span이 클수록 (줌 아웃) 더 넓은 범위를 클러스터링
+        // span이 작을수록 (줌 인) 더 좁은 범위를 클러스터링
+
+        let span = region.span.latitudeDelta
+
+        // 줌 레벨별 거리 (미터)
+        switch span {
+        case 0.5...:        // 매우 넓은 범위 (도시 전체)
+            return 5000     // 5km
+        case 0.1..<0.5:     // 넓은 범위 (구 단위)
+            return 2000     // 2km
+        case 0.05..<0.1:    // 중간 범위 (여러 동)
+            return 1000     // 1km
+        case 0.02..<0.05:   // 좁은 범위 (동 단위)
+            return 500      // 500m
+        case 0.01..<0.02:   // 매우 좁은 범위 (동 일부)
+            return 200      // 200m
+        default:            // 개별 마커 표시 직전
+            return 100      // 100m
         }
     }
 
