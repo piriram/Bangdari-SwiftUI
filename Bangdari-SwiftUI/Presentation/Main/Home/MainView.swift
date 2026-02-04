@@ -1,4 +1,5 @@
 import CoreLocation
+import Kingfisher
 import SwiftUI
 
 // MARK: - Main View
@@ -7,6 +8,8 @@ struct MainView: View {
     @StateObject private var intent = HomeIntent()
     @State private var selectedCategory: EstateCategory?
     @State private var navigationPath = NavigationPath()
+    @State private var showBannerWebView = false
+    @State private var bannerWebURL: URL? = nil
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -27,19 +30,34 @@ struct MainView: View {
                                 )
                             }
 
-                            // 카테고리 선택
-                            CategorySelector(selectedCategory: $selectedCategory) { category in
-                                handleCategorySelection(category)
+                            // 이벤트 배너
+                            if !intent.state.banners.isEmpty {
+                                bannerSection
                             }
 
+                            // 카테고리 선택
+                            CategorySelector(selectedCategory: $selectedCategory)
+
                             // 최근 검색 / 오늘의 매물
-                            if !intent.state.todayEstateSkeletons.isEmpty || !intent.state.todayEstates.isEmpty {
+                            if !intent.state.todayEstateSkeletons.isEmpty || !filteredTodayEstates.isEmpty {
                                 todayEstatesSection
                             }
 
                             // HOT 매물
-                            if !intent.state.hotEstateSkeletons.isEmpty || !intent.state.hotEstates.isEmpty {
+                            if !intent.state.hotEstateSkeletons.isEmpty || !filteredHotEstates.isEmpty {
                                 hotEstatesSection
+                            }
+
+                            // 카테고리별 매물 없음
+                            if selectedCategory != nil
+                                && intent.state.todayEstateSkeletons.isEmpty
+                                && filteredTodayEstates.isEmpty
+                                && filteredHotEstates.isEmpty {
+                                Text("해당 카테고리 매물이 없습니다.")
+                                    .font(.pretendard(.body2))
+                                    .foregroundColor(.gray60)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 24)
                             }
 
                             // 오늘의 토픽
@@ -56,7 +74,7 @@ struct MainView: View {
                     .background(Color.gray15)
 
                     HomeSearchBar {
-                        // TODO: 검색 화면 이동
+                        navigationPath.append(SearchNavigationTag())
                     }
                     .padding(.top, 3)
                     .padding(.horizontal, 20)
@@ -78,43 +96,35 @@ struct MainView: View {
             .navigationDestination(for: EstateListNavigationData.self) { navData in
                 switch navData {
                 case .todayEstates:
-                    EstateListView(mode: .todayEstates(estates: intent.state.todayEstates))
+                    EstateListView(mode: .todayEstates(estates: filteredTodayEstates))
                 case .hotEstates:
-                    EstateListView(mode: .hotEstates(estates: intent.state.hotEstates))
+                    EstateListView(mode: .hotEstates(estates: filteredHotEstates))
                 }
+            }
+            .navigationDestination(for: SearchNavigationTag.self) { _ in
+                SearchView()
             }
         }
         .task {
             await intent.loadHomeData()
         }
+        .sheet(isPresented: $showBannerWebView) {
+            if let url = bannerWebURL {
+                BannerWebViewScreen(url: url)
+            }
+        }
     }
 
-    // MARK: - Private Methods
+    // MARK: - Filtered Estates
 
-    private func handleCategorySelection(_ category: EstateCategory) {
-        print("🏠 [MainView] 카테고리 선택: \(category.rawValue)")
+    private var filteredTodayEstates: [EstateSummaryResponse] {
+        guard let category = selectedCategory else { return intent.state.todayEstates }
+        return intent.state.todayEstates.filter { $0.category == category.rawValue }
+    }
 
-        // 1. 현재 위치 가져오기
-        let coordinate = intent.getCurrentCoordinate()
-
-        // 2. 위치가 없으면 서울역 기본값 사용
-        let finalCoordinate = coordinate ?? CLLocationCoordinate2D(
-            latitude: 37.5547125,
-            longitude: 126.9707878
-        )
-
-        if coordinate == nil {
-            print("🏠 [MainView] 위치 없음 → 서울역 기본값 사용")
-        }
-
-        // 3. 네비게이션 데이터 생성 및 이동
-        let navData = MapNavigationData(
-            category: category,
-            initialCoordinate: finalCoordinate
-        )
-        navigationPath.append(navData)
-
-        print("🏠 [MainView] 지도 뷰로 이동")
+    private var filteredHotEstates: [EstateSummaryResponse] {
+        guard let category = selectedCategory else { return intent.state.hotEstates }
+        return intent.state.hotEstates.filter { $0.category == category.rawValue }
     }
 
     // MARK: - Today Estates Section
@@ -134,11 +144,11 @@ struct MainView: View {
                         }
                     } else {
                         // 실제 데이터
-                        ForEach(intent.state.todayEstates, id: \.estate_id) { estate in
+                        ForEach(filteredTodayEstates, id: \.estate_id) { estate in
                             NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
                                 EstateCardSmall(
                                     estate: estate,
-                                    isRecommended: intent.state.todayEstates.first?.estate_id == estate.estate_id
+                                    isRecommended: filteredTodayEstates.first?.estate_id == estate.estate_id
                                 )
                             }
                             .buttonStyle(.plain)
@@ -165,11 +175,11 @@ struct MainView: View {
                             EstateCardLargeSkeleton()
                         }
                     } else {
-                        ForEach(intent.state.hotEstates, id: \.estate_id) { estate in
+                        ForEach(filteredHotEstates, id: \.estate_id) { estate in
                             NavigationLink(destination: EstateDetailView(estateId: estate.estate_id)) {
                                 EstateCardLarge(
                                     estate: estate,
-                                    viewerCount: Int.random(in: 10...50)  // TODO: 실제 데이터
+                                    viewerCount: estate.like_count
                                 )
                             }
                             .buttonStyle(.plain)
@@ -220,6 +230,40 @@ struct MainView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Banner Section
+
+    private var bannerSection: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(intent.state.banners, id: \.banner_id) { banner in
+                    Button {
+                        guard banner.payload?.type == "WEBVIEW",
+                              let actionUrl = banner.actionUrl,
+                              let url = URL(string: actionUrl) else { return }
+                        bannerWebURL = url
+                        showBannerWebView = true
+                    } label: {
+                        KFImage.auth(url: bannerImageURL(banner))
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 300, height: 150)
+                            .clipped()
+                            .cornerRadius(12)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .contentMargins(.horizontal, 20, for: .scrollContent)
+    }
+
+    private func bannerImageURL(_ banner: Banner) -> URL? {
+        if banner.image.hasPrefix("http") {
+            return URL(string: banner.image)
+        }
+        return URL(string: APIConfig.baseURL + "/" + banner.image)
     }
 }
 
