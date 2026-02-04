@@ -15,6 +15,17 @@ struct MyPageView: View {
 
     var body: some View {
         List {
+            Section("프로필") {
+                NavigationLink {
+                    ProfileEditView()
+                } label: {
+                    HStack {
+                        Image(systemName: "person.circle")
+                        Text("프로필 수정")
+                    }
+                }
+            }
+
             Section("채팅") {
                 NavigationLink {
                     ChatRoomListView()
