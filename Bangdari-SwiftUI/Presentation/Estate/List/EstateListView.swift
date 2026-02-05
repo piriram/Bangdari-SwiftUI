@@ -177,11 +177,17 @@ struct EstateListView: View {
                     .buttonStyle(.plain)
 
                     // Dynamic interval banners (all modes)
-                    // 한 페이지에 배너 2개 정도 보이도록 간격 조정
-                    if index < displayEstates.count - 1 {
-                        // 4개마다 배너 표시 (index: 3, 7, 11, 15...)
-                        if (index + 1) % 4 == 0 {
-                            InlinePromoItem()
+                    // 동적 간격으로 배너 표시 (순환 로직)
+                    if index < displayEstates.count - 1,
+                       !intent.state.banners.isEmpty {
+                        if (index + 1) % bannerInterval == 0 {
+                            let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
+                            let banner = intent.state.banners[bannerIndex]
+
+                            InlinePromoItem(banner: banner) { url in
+                                // TODO: BannerWebView 네비게이션 구현
+                                print("🔗 Banner clicked: \(url)")
+                            }
                         }
                     }
                 }
