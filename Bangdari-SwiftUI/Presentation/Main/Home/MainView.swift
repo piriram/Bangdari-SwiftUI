@@ -74,7 +74,6 @@ struct MainView: View {
                     .background(Color.gray15)
 
                     HomeSearchBar(blurProgress: blurProgress) {
-                        navigationPath.append(SearchNavigationTag())
                     }
                     .padding(.top, 3)
                     .padding(.horizontal, 20)
