@@ -1,21 +1,69 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isLoggedIn = KeychainManager.shared.isLoggedIn
+    private enum AuthState {
+        case loading    // accessToken 있고, refresh 검증 중
+        case loggedIn
+        case loggedOut
+    }
+
+    @State private var authState: AuthState = KeychainManager.shared.isLoggedIn ? .loading : .loggedOut
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
-            if isLoggedIn {
+            switch authState {
+            case .loading:
+                Color(.systemBackground)
+            case .loggedIn:
                 MainTabView()
-            } else {
+            case .loggedOut:
                 LoginView()
             }
         }
+        .onAppear {
+            if authState == .loading {
+                checkToken()
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active && authState == .loggedIn {
+                refreshTokenSilently()
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .didLogin)) { _ in
-            isLoggedIn = true
+            authState = .loggedIn
         }
         .onReceive(NotificationCenter.default.publisher(for: .didLogout)) { _ in
-            isLoggedIn = false
+            authState = .loggedOut
+        }
+    }
+
+    /// 앱 시작 시 토큰 검증 (loading 상태에서 호출)
+    private func checkToken() {
+        Task {
+            do {
+                try await NetworkService.shared.validateAndRefreshToken()
+                authState = .loggedIn
+            } catch NetworkError.refreshTokenExpired {
+                authState = .loggedOut
+            } catch {
+                // 네트워크 단절 등 기타 에러 → 기존 토큰으로 진행 (API 시점에서 갱신 재시도)
+                authState = .loggedIn
+            }
+        }
+    }
+
+    /// foreground 복귀 시 백그라운드 silent refresh
+    private func refreshTokenSilently() {
+        Task {
+            do {
+                try await NetworkService.shared.validateAndRefreshToken()
+            } catch NetworkError.refreshTokenExpired {
+                authState = .loggedOut
+            } catch {
+                // 기타 에러는 무시 (다음 API 호출 시 자동 갱신 로직이 처리)
+            }
         }
     }
 }
