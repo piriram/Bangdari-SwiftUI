@@ -342,7 +342,6 @@ final class MapIntent: ObservableObject {
 
     func searchEstates() async {
         guard !state.searchQuery.isEmpty else {
-            // 검색어가 비어있으면 현재 위치 기준으로 재조회
             await loadEstatesInCurrentRegion()
             return
         }
@@ -350,11 +349,45 @@ final class MapIntent: ObservableObject {
         state.isLoading = true
         print("🔍 [Search] 검색 시작: \(state.searchQuery)")
 
-        // TODO: EstateRepository에 검색 API 추가 필요
-        // 현재는 검색 기능을 지원하지 않으므로 일반 조회로 대체
-        await loadEstatesInCurrentRegion()
+        if let (coordinate, span) = await geocodeQuery(state.searchQuery) {
+            state.region = MKCoordinateRegion(center: coordinate, span: span)
+            await loadEstates(at: coordinate)
+            await updateLocationText(for: coordinate)
+        } else {
+            print("🔍 [Search] geocoding 실패 → 현재 영역 폴백")
+            await loadEstatesInCurrentRegion()
+        }
 
         print("🔍 [Search] 검색 완료")
+    }
+
+    private func geocodeQuery(_ query: String) async -> (CLLocationCoordinate2D, MKCoordinateSpan)? {
+        let geocoder = CLGeocoder()
+        let seoulRegion = CLCircularRegion(
+            center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780),
+            radius: 30_000,
+            identifier: "seoul"
+        )
+
+        do {
+            // async 버전 사용 (region 파라미터 없음) → 결과를 서울 영역으로 필터링
+            let placemarks = try await geocoder.geocodeAddressString(query, in: seoulRegion)
+
+            guard let placemark = placemarks.first, let location = placemark.location else {
+                print("🔍 [geocodeQuery] '\(query)' → 결과 없음")
+                return nil
+            }
+
+            let coordinate = location.coordinate
+            let latDelta: Double = placemark.subLocality != nil ? 0.015 : 0.04
+            let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: latDelta)
+
+            print("🔍 [geocodeQuery] '\(query)' → \(coordinate.latitude), \(coordinate.longitude) span: \(latDelta)")
+            return (coordinate, span)
+        } catch {
+            print("🔍 [geocodeQuery] '\(query)' 실패: \(error.localizedDescription)")
+            return nil
+        }
     }
 
     // MARK: - Clustering
@@ -528,3 +561,4 @@ final class MapIntent: ObservableObject {
         return String(format: "%.4f°, %.4f°", coordinate.latitude, coordinate.longitude)
     }
 }
+
