@@ -99,6 +99,7 @@
 				21D637802F319AC200ACD9E7 /* KakaoSDKAuth */,
 				21D637822F319AC200ACD9E7 /* KakaoSDKCommon */,
 				21D637842F319AC200ACD9E7 /* KakaoSDKUser */,
+				A1B2C3D4E5F6A1B2C3D40002 /* SocketIO */,
 			);
 			productName = "Bangdari-SwiftUI";
 			productReference = 21E1A3C52F20705B009CE317 /* Bangdari-SwiftUI.app */;
@@ -413,6 +414,14 @@
 				minimumVersion = 1.4.3;
 			};
 		};
+		A1B2C3D4E5F6A1B2C3D40001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -445,6 +454,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */;
 			productName = "iamport-ios";
+		};
+		A1B2C3D4E5F6A1B2C3D40002 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3D4E5F6A1B2C3D40001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
