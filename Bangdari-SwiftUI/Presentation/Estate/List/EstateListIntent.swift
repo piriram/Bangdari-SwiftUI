@@ -48,25 +48,33 @@ final class EstateListIntent: ObservableObject {
         state.currentLocation = location
 
         // 매물과 배너를 병렬로 로드
-        async let estatesTask: Void = {
-            do {
-                let estates = try await estateRepository.fetchEstatesByLocation(
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                    maxDistance: state.maxDistance,
-                    category: state.selectedCategory
-                )
-                state.estates = estates
-            } catch let error as NetworkError {
-                state.errorMessage = error.message
-            } catch {
-                state.errorMessage = "매물을 불러오는 중 오류가 발생했습니다."
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                do {
+                    let estates = try await self.estateRepository.fetchEstatesByLocation(
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        maxDistance: self.state.maxDistance,
+                        category: self.state.selectedCategory
+                    )
+                    await MainActor.run {
+                        self.state.estates = estates
+                    }
+                } catch let error as NetworkError {
+                    await MainActor.run {
+                        self.state.errorMessage = error.message
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.state.errorMessage = "매물을 불러오는 중 오류가 발생했습니다."
+                    }
+                }
             }
-        }()
 
-        async let bannersTask = loadBanners()
-
-        _ = await (estatesTask, bannersTask)
+            group.addTask {
+                await self.loadBanners()
+            }
+        }
 
         state.isLoading = false
     }
@@ -78,26 +86,34 @@ final class EstateListIntent: ObservableObject {
         state.hasMore = true
 
         // 매물과 배너를 병렬로 로드
-        async let estatesTask: Void = {
-            do {
-                let response = try await estateRepository.fetchMyLikedEstates(
-                    next: nil,
-                    limit: 20,
-                    category: state.selectedCategory
-                )
-                state.estates = response.data
-                state.nextCursor = response.next_cursor
-                state.hasMore = response.hasMore
-            } catch let error as NetworkError {
-                state.errorMessage = error.message
-            } catch {
-                state.errorMessage = "좋아요 매물을 불러오는 중 오류가 발생했습니다."
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                do {
+                    let response = try await self.estateRepository.fetchMyLikedEstates(
+                        next: nil,
+                        limit: 20,
+                        category: self.state.selectedCategory
+                    )
+                    await MainActor.run {
+                        self.state.estates = response.data
+                        self.state.nextCursor = response.next_cursor
+                        self.state.hasMore = response.hasMore
+                    }
+                } catch let error as NetworkError {
+                    await MainActor.run {
+                        self.state.errorMessage = error.message
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.state.errorMessage = "좋아요 매물을 불러오는 중 오류가 발생했습니다."
+                    }
+                }
             }
-        }()
 
-        async let bannersTask = loadBanners()
-
-        _ = await (estatesTask, bannersTask)
+            group.addTask {
+                await self.loadBanners()
+            }
+        }
 
         state.isLoading = false
     }
