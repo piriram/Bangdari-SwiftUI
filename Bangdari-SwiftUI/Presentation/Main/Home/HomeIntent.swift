@@ -19,7 +19,6 @@ struct HomeState {
     var todayEstates: [EstateSummaryResponse] = []
     var hotEstates: [EstateSummaryResponse] = []
     var topics: [EstateTopic] = []
-    var banners: [Banner] = []
 
     // 스켈레톤 데이터 (로딩 중일 때만 존재)
     var todayEstateSkeletons: [SkeletonEstate] = []
@@ -67,9 +66,8 @@ final class HomeIntent: ObservableObject {
         async let todayTask = loadTodayEstates()
         async let hotTask = loadHotEstates()
         async let topicsTask = loadTopics()
-        async let bannersTask = loadBanners()
 
-        _ = await (todayTask, hotTask, topicsTask, bannersTask)
+        _ = await (todayTask, hotTask, topicsTask)
 
         // 모든 로딩 완료
         state.isLoading = false
@@ -106,15 +104,6 @@ final class HomeIntent: ObservableObject {
             state.topicSkeletons = []
         } catch {
             state.topicSkeletons = []
-        }
-    }
-
-    private func loadBanners() async {
-        do {
-            let banners = try await estateRepository.fetchMainBanners()
-            state.banners = banners
-        } catch {
-            // Banner 로드 실패 시 무시
         }
     }
 
