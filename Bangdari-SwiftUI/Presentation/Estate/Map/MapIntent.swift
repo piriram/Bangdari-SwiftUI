@@ -66,6 +66,10 @@ enum MapConstants {
     /// 값이 작을수록 더 확대해야 개별 마커가 보임
     static let clusteringDisableThreshold: Double = 0.008
 
+    /// 단일 클러스터가 말풍선으로 전환되는 줄기준
+    /// span < 이 값 → 말풍선(EstateMarkerView), span >= 이 값 → 클러스터 버튼
+    static let markerBalloonThreshold: Double = 0.02
+
     /// 자동 재조회 트리거 거리 (미터) - 3km로 증가하여 API 호출 빈도 감소
     static let reloadDistanceThreshold: Double = 3000
 

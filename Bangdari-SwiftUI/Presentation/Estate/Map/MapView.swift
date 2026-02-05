@@ -297,8 +297,8 @@ struct EstateMapView: View {
         Button {
             handleClusterTap(cluster)
         } label: {
-            if cluster.isSingle, let estate = cluster.firstEstate {
-                // 새로운 EstateMarkerView 사용
+            if cluster.isSingle && intent.state.region.span.latitudeDelta < MapConstants.markerBalloonThreshold, let estate = cluster.firstEstate {
+                // 충분히 확대된 상태에서만 말풍선 마커 표시
                 EstateMarkerView(
                     estate: estate,
                     isSelected: selectedEstate?.estate_id == estate.estate_id
@@ -690,18 +690,26 @@ struct EstateMapView: View {
         print("🎯 [Cluster Tap] ID: \(cluster.id), 매물 수: \(cluster.count), isSingle: \(cluster.isSingle)")
 
         if cluster.isSingle, let estate = cluster.firstEstate {
-            // 단일 매물 → S3
-            print("🎯 [Cluster Tap] → 단일 매물 선택")
-            if let index = intent.state.estates.firstIndex(where: { $0.estate_id == estate.estate_id }) {
-                withAnimation {
-                    selectedEstateIndex = index
-                    viewState = .estateSelected(index)
-                }
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    position = .region(MKCoordinateRegion(
-                        center: cluster.coordinate,
-                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                    ))
+            let isBalloonMode = intent.state.region.span.latitudeDelta < MapConstants.markerBalloonThreshold
+
+            if isBalloonMode {
+                // 말풍선 탭 → EstateDetailView로 push
+                print("🎯 [Cluster Tap] → 말풍선 탭, 디테일 이동")
+                selectedEstateIdForDetail = estate.estate_id
+            } else {
+                // 클러스터 버튼 탭 → S3 (하단 카드 캐러셀)
+                print("🎯 [Cluster Tap] → 단일 클러스터 버튼 탭, S3 표시")
+                if let index = intent.state.estates.firstIndex(where: { $0.estate_id == estate.estate_id }) {
+                    withAnimation {
+                        selectedEstateIndex = index
+                        viewState = .estateSelected(index)
+                    }
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        position = .region(MKCoordinateRegion(
+                            center: cluster.coordinate,
+                            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                        ))
+                    }
                 }
             }
         } else {
