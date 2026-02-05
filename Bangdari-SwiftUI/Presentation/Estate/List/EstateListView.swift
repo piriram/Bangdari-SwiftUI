@@ -13,6 +13,8 @@ struct EstateListView: View {
     @State private var selectedEstateIdForDetail: String?
     @State private var activeFilter: FilterType?
     @State private var displayEstates: [EstateSummaryResponse] = []
+    @State private var bannerInterval: Int = 6  // 기본값
+    @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
 
     enum ListMode {
         case map(coordinate: CLLocationCoordinate2D, estates: [EstateSummaryResponse], locationText: String)
@@ -56,6 +58,7 @@ struct EstateListView: View {
             EstateDetailView(estateId: estateId)
         }
         .task {
+            bannerInterval = calculateBannerInterval()
             await loadInitialData()
         }
         .refreshable {
@@ -264,6 +267,35 @@ struct EstateListView: View {
         case .hotEstates(let estates):
             displayEstates = estates
         }
+    }
+
+    /// 화면 높이에 따라 배너 간격을 동적으로 계산
+    /// - 한 화면에 배너가 1~2개 보이도록 조정
+    /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한)
+    private func calculateBannerInterval() -> Int {
+        // 상수
+        let estateCardHeight: CGFloat = 140  // EstateListItem 높이
+        let cardSpacing: CGFloat = 12        // LazyVStack spacing
+        let itemHeight = estateCardHeight + cardSpacing  // 152pt
+
+        // 네비게이션 바 + 안전 영역 + 필터 칩 영역 (대략적인 추정)
+        let navigationAndFilterHeight: CGFloat = 130
+
+        // 사용 가능한 높이 계산
+        let usableHeight = screenHeight - navigationAndFilterHeight
+
+        // 화면당 보이는 카드 수
+        let cardsPerScreen = usableHeight / itemHeight
+
+        // 배너 간격 = 화면당 카드 수 / 2 (한 화면에 1~2개 배너)
+        let calculatedInterval = Int(cardsPerScreen / 2)
+
+        // 4~10 사이로 제한 (너무 촘촘하거나 드문 것 방지)
+        let interval = max(4, min(10, calculatedInterval))
+
+        print("📐 Banner interval calculated: \(interval) (screen height: \(screenHeight), cards per screen: \(cardsPerScreen))")
+
+        return interval
     }
 }
 
