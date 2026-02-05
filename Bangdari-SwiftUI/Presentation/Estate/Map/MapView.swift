@@ -118,10 +118,7 @@ struct EstateMapView: View {
             // Z3: Floating UI
             floatingUI
 
-            // Z4: Navigation Bar
-            navigationBar
-
-            // Z5: 로딩 인디케이터 (화면 중앙) - 스켈레톤이 없을 때만 표시
+            // Z4: 로딩 인디케이터 (화면 중앙) - 스켈레톤이 없을 때만 표시
             if intent.state.isLoading && intent.state.skeletonClusters.isEmpty {
                 ProgressView()
                     .scaleEffect(1.2)
@@ -131,13 +128,59 @@ struct EstateMapView: View {
                     .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
             }
         }
-        .navigationBarHidden(true)
+        .searchable(
+            text: Binding(
+                get: { intent.state.searchQuery },
+                set: { intent.updateSearchQuery($0) }
+            ),
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "지역 또는 매물을 검색하세요"
+        )
+        .onSubmit(of: .search) {
+            Task { await intent.searchEstates() }
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Button {
+                    // TODO: 위치 선택 모달
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(dsIcon: .location)
+                            .renderingMode(.template)
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.deepWood)
+                        Text(intent.state.locationText)
+                            .font(.pretendardBody2Bold)
+                            .foregroundColor(.gray90)
+                    }
+                }
+            }
+
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    navigateToList = true
+                } label: {
+                    Image(dsIcon: .list)
+                        .renderingMode(.template)
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.gray90)
+                }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.visible, for: .navigationBar)
         .onAppear {
             // 초기 카테고리 및 좌표 설정
             intent.initializeWithCategory(initialCategory, at: initialCoordinate)
 
-            intent.requestLocationPermission()
-            Task { await intent.loadEstatesInCurrentRegion() }
+            // 초기 좌표가 없으면 사용자 현재 위치로 초기화
+            if initialCoordinate == nil {
+                intent.initializeLocation()
+            } else {
+                // 초기 좌표가 있으면 해당 위치 로드
+                intent.requestLocationPermission()
+                Task { await intent.loadEstatesInCurrentRegion() }
+            }
         }
         .navigationDestination(item: $selectedEstateIdForDetail) { estateId in
             EstateDetailView(estateId: estateId)
@@ -153,57 +196,12 @@ struct EstateMapView: View {
         }
     }
 
-    // MARK: - Z4: Navigation Bar
-
-    private var navigationBar: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 12) {
-                // 상단 row: 뒤로가기 / 위치 / 리스트전환
-                CustomNavigationBar(onBack: { dismiss() }) {
-                    // Center: Location + Text
-                    HStack(spacing: 6) {
-                        Image(dsIcon: .location)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(.deepWood)
-
-                        Text(intent.state.locationText)
-                            .font(.pretendardBody1Bold)
-                            .foregroundColor(.gray90)
-                    }
-                } trailing: {
-                    // Trailing: List 전환 버튼
-                    Button {
-                        navigateToList = true
-                    } label: {
-                        Image(dsIcon: .list)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.gray90)
-                    }
-                }
-
-                // 검색 필드
-                SearchBarButton(placeholder: "지역 또는 매물을 검색하세요", style: .bordered) {
-                    // TODO: 검색 화면
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color.gray0)
-
-            Spacer()
-        }
-    }
-
     // MARK: - Z3: Floating UI
 
     private var floatingUI: some View {
         VStack(spacing: 0) {
-            // NavBar 높이만큼 spacing
-            Spacer().frame(height: 120)
+            // iOS 26 네비바 + 검색창 높이만큼 spacing
+            Spacer().frame(height: 96)
 
             // 필터 버튼 그룹 (S4가 아닐 때만 표시)
             if !isFilterAdjusting {
@@ -300,7 +298,11 @@ struct EstateMapView: View {
             handleClusterTap(cluster)
         } label: {
             if cluster.isSingle, let estate = cluster.firstEstate {
-                estateBubbleMarker(estate, isSelected: selectedEstate?.estate_id == estate.estate_id)
+                // 새로운 EstateMarkerView 사용
+                EstateMarkerView(
+                    estate: estate,
+                    isSelected: selectedEstate?.estate_id == estate.estate_id
+                )
             } else {
                 clusterBubble(cluster.count)
             }
@@ -308,47 +310,35 @@ struct EstateMapView: View {
         .buttonStyle(.plain)
     }
 
-    /// 단일 매물 마커 (가격 버블)
-    private func estateBubbleMarker(_ estate: EstateSummaryResponse, isSelected: Bool) -> some View {
-        VStack(spacing: 0) {
-            Text(priceText(estate))
-                .font(.pretendardCaption2)
-                .fontWeight(.bold)
-                .foregroundColor(.gray0)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(isSelected ? Color.brightWood : Color.deepWood)
-                .cornerRadius(6)
-
-            Image(systemName: "triangle.fill")
-                .font(.system(size: 8))
-                .foregroundColor(isSelected ? .brightWood : .deepWood)
-                .rotationEffect(.degrees(180))
-                .offset(y: -2)
-        }
-    }
-
-    /// 클러스터 마커 (원형 + 숫자)
+    /// 클러스터 마커 (원형 + 숫자) - 개수에 따라 크기 조정
     private func clusterBubble(_ count: Int) -> some View {
         ZStack {
+            // 외곽 테두리 효과
             Circle()
-                .fill(Color.deepCream.opacity(0.65))
+                .fill(Color.deepCream.opacity(0.3))
                 .frame(width: clusterSize(count) + 12, height: clusterSize(count) + 12)
 
+            // 메인 원
             Circle()
-                .fill(Color.deepCream)
+                .fill(Color.deepCream.opacity(0.75))
                 .frame(width: clusterSize(count), height: clusterSize(count))
 
             Text("\(count)")
                 .font(.pretendardBody1Bold)
                 .foregroundColor(.gray0)
         }
+        .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+        .animation(.spring(response: 0.4, dampingFraction: 0.6), value: count)
     }
 
+    /// 클러스터 크기 - 개수에 따라 동적 조정 (한 덩어리 효과)
     private func clusterSize(_ count: Int) -> CGFloat {
-        if count >= 100 { return 60 }
-        if count >= 50 { return 52 }
-        return 44
+        if count >= 200 { return 120 }  // 매우 큰 클러스터
+        if count >= 100 { return 90 }   // 큰 클러스터
+        if count >= 50 { return 70 }    // 중간 클러스터
+        if count >= 20 { return 56 }    // 작은 클러스터
+        if count >= 10 { return 48 }    // 매우 작은 클러스터
+        return 40                        // 최소 크기
     }
 
     /// 스켈레톤 마커 (로딩 중 플레이스홀더)

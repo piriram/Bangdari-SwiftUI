@@ -7,6 +7,8 @@ struct MainView: View {
     @StateObject private var intent = HomeIntent()
     @State private var selectedCategory: EstateCategory?
     @State private var navigationPath = NavigationPath()
+    @State private var showBannerWebView = false
+    @State private var bannerWebURL: URL? = nil
     @State private var scrollOffset: CGFloat = 0
 
     private var blurProgress: CGFloat {
@@ -72,7 +74,6 @@ struct MainView: View {
                     .background(Color.gray15)
 
                     HomeSearchBar(blurProgress: blurProgress) {
-                        // TODO: 검색 화면 이동
                     }
                     .padding(.top, 3)
                     .padding(.horizontal, 20)

@@ -198,6 +198,41 @@ final class NetworkService: @unchecked Sendable {
         return request
     }
 
+    // MARK: - Token Validation
+
+    /// 앱 시작 / foreground 복귀 시 토큰 유효성 검사 및 갱신
+    /// 418(RefreshToken 만료) → NetworkError.refreshTokenExpired throw
+    /// 기타 에러 → 해당 에러 throw (호출자에서 fallback 처리)
+    func validateAndRefreshToken() async throws {
+        guard let refreshToken = keychain.refreshToken else {
+            throw NetworkError.refreshTokenExpired
+        }
+
+        var request = URLRequest(url: URL(string: Secrets.baseURL + "/v1/auth/refresh")!)
+        request.httpMethod = "GET"
+        request.setValue(Secrets.sesacKey, forHTTPHeaderField: "SeSACKey")
+        request.setValue(refreshToken, forHTTPHeaderField: "RefreshToken")
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+
+        if [401, 403, 418].contains(httpResponse.statusCode) {
+            keychain.clearTokens()
+            throw NetworkError.refreshTokenExpired
+        }
+
+        guard httpResponse.statusCode == 200 else {
+            throw NetworkError.from(statusCode: httpResponse.statusCode)
+        }
+
+        let tokenResponse = try JSONDecoder().decode(TokenResponse.self, from: data)
+        keychain.accessToken = tokenResponse.accessToken
+        keychain.refreshToken = tokenResponse.refreshToken
+    }
+
     // MARK: - Token Refresh
 
     private func refreshTokenAndRetry() async throws {
@@ -243,8 +278,8 @@ final class NetworkService: @unchecked Sendable {
             throw NetworkError.invalidResponse
         }
 
-        // 418: RefreshToken도 만료 → 재로그인 필요
-        if httpResponse.statusCode == 418 {
+        // 401/403/418: 재로그인 필요
+        if [401, 403, 418].contains(httpResponse.statusCode) {
             keychain.clearTokens()
             await MainActor.run {
                 NotificationCenter.default.post(name: .didLogout, object: nil)
@@ -267,7 +302,7 @@ final class NetworkService: @unchecked Sendable {
 
 // MARK: - Token Response DTO
 
-private struct TokenResponse: Decodable {
+struct TokenResponse: Decodable {
     let accessToken: String
     let refreshToken: String
 }

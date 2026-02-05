@@ -324,7 +324,7 @@ struct EstateComment: Decodable, Identifiable {
     let content: String
     let creator: UserInfo
     let createdAt: String
-    let updatedAt: String
+    let updatedAt: String?
     let replies: [EstateComment]?
 
     var id: String { comment_id }
@@ -339,6 +339,17 @@ struct EstateCommentRequest: Encodable {
     init(content: String, parentId: String? = nil) {
         self.content = content
         self.parent_comment_id = parentId
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(content, forKey: .content)
+        try container.encode(parent_comment_id, forKey: .parent_comment_id)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case content
+        case parent_comment_id
     }
 }
 

@@ -170,31 +170,50 @@ struct EstateDetailView: View {
             .frame(height: imageHeight)
 
             // 하단 영역: Page Indicator + Image Count Badge
-            HStack {
-                Spacer()
+            ZStack {
+                // 그라데이션 배경
+                LinearGradient(
+                    gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.3)]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 80)
 
-                // Page Indicator (중앙)
-                HStack(spacing: 6) {
-                    ForEach(0..<max(files.count, 1), id: \.self) { index in
-                        Circle()
-                            .fill(index == currentImageIndex ? Color.gray90 : Color.gray45)
-                            .frame(width: 6, height: 6)
+                HStack {
+                    Spacer()
+
+                    // Page Indicator (중앙)
+                    HStack(spacing: 6) {
+                        ForEach(0..<max(files.count, 1), id: \.self) { index in
+                            Capsule()
+                                .fill(index == currentImageIndex ? Color.white : Color.white.opacity(0.4))
+                                .frame(width: index == currentImageIndex ? 20 : 6, height: 6)
+                                .animation(.spring(response: 0.3), value: currentImageIndex)
+                        }
                     }
-                }
-
-                Spacer()
-
-                // Image Count Badge (우측 하단)
-                Text("\(currentImageIndex + 1)/\(max(files.count, 1))")
-                    .font(.pretendard(.caption2, .medium))
-                    .foregroundColor(.gray0)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.gray100.opacity(0.4))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.black.opacity(0.3))
                     .clipShape(Capsule())
+
+                    Spacer()
+
+                    // Image Count Badge (우측 하단)
+                    HStack(spacing: 4) {
+                        Image(systemName: "photo.fill")
+                            .font(.system(size: 11))
+                        Text("\(currentImageIndex + 1)/\(max(files.count, 1))")
+                            .font(.pretendard(.caption2, .semiBold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color.black.opacity(0.5))
+                    .clipShape(Capsule())
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 12)
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 12)
         }
     }
 
@@ -203,9 +222,14 @@ struct EstateDetailView: View {
     private func statusRow(_ estate: EstateDetailResponse) -> some View {
         HStack(spacing: 8) {
             // 조회수 (왼쪽)
-            Text("\(estate.like_count)명이 함께 보는 중")
-                .font(.pretendard(.caption1))
-                .foregroundColor(.gray60)
+            HStack(spacing: 4) {
+                Image(systemName: "eye.fill")
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray60)
+                Text("\(estate.like_count)명이 함께 보는 중")
+                    .font(.pretendard(.caption1))
+                    .foregroundColor(.gray60)
+            }
 
             Spacer()
 
@@ -213,62 +237,102 @@ struct EstateDetailView: View {
             if estate.is_safe_estate {
                 HStack(spacing: 4) {
                     DSIconView(.safety, size: 14, renderingMode: .template)
-                    Text("구매자 안심매물")
-                        .font(.pretendard(.caption1))
+                    Text("안심매물")
+                        .font(.pretendard(.caption1, .medium))
                 }
                 .foregroundColor(.deepCoast)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
+                .background(Color.deepCoast.opacity(0.1))
                 .overlay(
                     Capsule()
                         .stroke(Color.deepCoast, lineWidth: 1)
                 )
-                .background(Color.gray0)
                 .clipShape(Capsule())
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 8)
+        .padding(.vertical, 12)
     }
 
     // MARK: - Z3: Core Info Section (주소 / 가격)
 
     private func coreInfoSection(_ estate: EstateDetailResponse) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             // 주소
-            Text(estate.title)
-                .font(.pretendard(.body3))
-                .foregroundColor(.gray75)
+            HStack(spacing: 6) {
+                Image(systemName: "mappin.circle.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(.deepCoast)
+                Text(estate.title)
+                    .font(.pretendard(.body3))
+                    .foregroundColor(.gray75)
+            }
 
             // 가격 (가장 강조)
             if estate.monthly_rent > 0 {
-                Text("월세 \(formatPrice(estate.deposit)) / \(estate.monthly_rent)")
-                    .font(.pretendard(.title1, .bold))
-                    .foregroundColor(.gray90)
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("월세")
+                        .font(.pretendard(.body2, .medium))
+                        .foregroundColor(.gray60)
+                    Text("\(formatPrice(estate.deposit))")
+                        .font(.pretendard(.title1, .bold))
+                        .foregroundColor(.gray90)
+                    Text("/")
+                        .font(.pretendard(.title1))
+                        .foregroundColor(.gray60)
+                    Text("\(estate.monthly_rent)")
+                        .font(.pretendard(.title1, .bold))
+                        .foregroundColor(.deepCoast)
+                }
             } else {
-                Text("전세 \(formatPrice(estate.deposit))")
-                    .font(.pretendard(.title1, .bold))
-                    .foregroundColor(.gray90)
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("전세")
+                        .font(.pretendard(.body2, .medium))
+                        .foregroundColor(.gray60)
+                    Text("\(formatPrice(estate.deposit))")
+                        .font(.pretendard(.title1, .bold))
+                        .foregroundColor(.gray90)
+                }
             }
 
-            // 부가정보 (관리비 / 면적)
-            HStack(spacing: 4) {
-                if estate.maintenance_fee > 0 {
-                    Text("관리비 \(estate.maintenance_fee)만원")
-                } else {
-                    Text("관리비 별도")
-                }
-                Text("·")
-                Text("\(String(format: "%.1f", estate.area))m²")
-                Text("·")
-                Text(estate.floors)
+            // 부가정보 (관리비 / 면적 / 층수)
+            HStack(spacing: 12) {
+                infoChip(
+                    icon: "wonsign.circle",
+                    text: estate.maintenance_fee > 0 ? "\(estate.maintenance_fee)만원" : "별도"
+                )
+                infoChip(
+                    icon: "square.grid.3x3",
+                    text: "\(String(format: "%.1f", estate.area))m²"
+                )
+                infoChip(
+                    icon: "building.2",
+                    text: estate.floors
+                )
             }
-            .font(.pretendard(.caption1))
-            .foregroundColor(.gray60)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 16)
+        .background(Color.gray0)
+        .cornerRadius(12)
+        .padding(.horizontal, 16)
+    }
+
+    private func infoChip(icon: String, text: String) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: icon)
+                .font(.system(size: 12))
+                .foregroundColor(.gray60)
+            Text(text)
+                .font(.pretendard(.caption1))
+                .foregroundColor(.gray75)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.gray15)
+        .cornerRadius(6)
     }
 
     // MARK: - Z4: Option Section
@@ -285,13 +349,25 @@ struct EstateDetailView: View {
             ("TV", "OptionTelevision", options.option5)
         ]
 
-        return VStack(alignment: .leading, spacing: 12) {
-            Text("옵션")
-                .font(.pretendard(.body2, .semiBold))
-                .foregroundColor(.gray90)
-                .padding(.horizontal, 16)
+        let enabledCount = allOptions.filter { $0.2 }.count
 
-            // 옵션 그리드 (gray0 배경)
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("포함 옵션")
+                    .font(.pretendard(.body2, .semiBold))
+                    .foregroundColor(.gray90)
+
+                Text("\(enabledCount)개")
+                    .font(.pretendard(.caption1, .medium))
+                    .foregroundColor(.deepCoast)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.deepCoast.opacity(0.1))
+                    .cornerRadius(8)
+            }
+            .padding(.horizontal, 16)
+
+            // 옵션 그리드
             LazyVGrid(columns: [
                 GridItem(.flexible()),
                 GridItem(.flexible()),
@@ -299,18 +375,28 @@ struct EstateDetailView: View {
                 GridItem(.flexible())
             ], spacing: 12) {
                 ForEach(allOptions, id: \.0) { name, icon, enabled in
-                    VStack(spacing: 6) {
-                        Image(icon)
-                            .resizable()
-                            .renderingMode(.template)
-                            .scaledToFit()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(enabled ? .gray90 : .gray45)
+                    VStack(spacing: 8) {
+                        ZStack {
+                            Circle()
+                                .fill(enabled ? Color.deepCream.opacity(0.2) : Color.gray30)
+                                .frame(width: 48, height: 48)
+
+                            Image(icon)
+                                .resizable()
+                                .renderingMode(.template)
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(enabled ? .deepCoast : .gray45)
+                        }
 
                         Text(name)
-                            .font(.pretendard(.caption1))
-                            .foregroundColor(enabled ? .gray75 : .gray45)
+                            .font(.pretendard(.caption1, enabled ? .medium : .regular))
+                            .foregroundColor(enabled ? .gray90 : .gray60)
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(enabled ? Color.gray0 : Color.clear)
+                    .cornerRadius(10)
                 }
             }
             .padding(16)
@@ -326,26 +412,30 @@ struct EstateDetailView: View {
     private func conditionRow(_ estate: EstateDetailResponse) -> some View {
         HStack(spacing: 8) {
             if estate.parking_count > 0 {
-                conditionChip(icon: "IconParking", text: "주차 가능")
+                conditionChip(icon: "IconParking", text: "주차 \(estate.parking_count)대 가능", isHighlight: true)
             }
             // 추가 조건들이 있으면 여기에 추가
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
     }
 
-    private func conditionChip(icon: String, text: String) -> some View {
+    private func conditionChip(icon: String, text: String, isHighlight: Bool = false) -> some View {
         HStack(spacing: 6) {
             Image(icon)
                 .renderingMode(.template)
                 .frame(width: 16, height: 16)
             Text(text)
-                .font(.pretendard(.caption1))
+                .font(.pretendard(.caption1, .medium))
         }
-        .foregroundColor(.gray75)
+        .foregroundColor(isHighlight ? .deepCoast : .gray75)
         .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-        .background(Color.gray30)
+        .padding(.vertical, 7)
+        .background(isHighlight ? Color.deepCoast.opacity(0.1) : Color.gray0)
+        .overlay(
+            Capsule()
+                .stroke(isHighlight ? Color.deepCoast.opacity(0.3) : Color.gray30, lineWidth: 1)
+        )
         .clipShape(Capsule())
     }
 
@@ -353,29 +443,48 @@ struct EstateDetailView: View {
 
     private func descriptionSection(_ estate: EstateDetailResponse) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("상세 설명")
-                .font(.pretendard(.body2, .semiBold))
-                .foregroundColor(.gray90)
+            HStack(spacing: 6) {
+                Image(systemName: "doc.text.fill")
+                    .font(.system(size: 16))
+                    .foregroundColor(.deepCoast)
+                Text("상세 설명")
+                    .font(.pretendard(.body2, .semiBold))
+                    .foregroundColor(.gray90)
+            }
 
             Text(estate.description.isEmpty ? estate.introduction : estate.description)
                 .font(.pretendard(.body2))
                 .foregroundColor(.gray75)
-                .lineSpacing(8)
+                .lineSpacing(6)
                 .lineLimit(nil)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
     }
 
     // MARK: - Z5: Similar Estates Section
 
     private var similarEstatesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("유사한 매물")
-                .font(.pretendard(.body2, .semiBold))
-                .foregroundColor(.gray90)
-                .padding(.horizontal, 16)
+            HStack {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 16))
+                    .foregroundColor(.deepCoast)
+                Text("이런 매물은 어때요?")
+                    .font(.pretendard(.body2, .semiBold))
+                    .foregroundColor(.gray90)
+
+                Spacer()
+
+                Text("\(intent.state.similarEstates.count)개")
+                    .font(.pretendard(.caption1, .medium))
+                    .foregroundColor(.gray60)
+            }
+            .padding(.horizontal, 16)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -424,27 +533,46 @@ struct EstateDetailView: View {
 
     private func commentsSection(_ estate: EstateDetailResponse) -> some View {
         NavigationLink(destination: EstateCommentView(estateId: estate.estate_id)) {
-            HStack(spacing: 12) {
-                // 댓글 아이콘
-                Image(systemName: "bubble.left")
-                    .font(.system(size: 20))
-                    .foregroundColor(.deepCoast)
+            VStack(spacing: 0) {
+                HStack(spacing: 12) {
+                    // 댓글 아이콘
+                    ZStack {
+                        Circle()
+                            .fill(Color.deepCoast.opacity(0.1))
+                            .frame(width: 36, height: 36)
 
-                // 댓글 개수
-                Text("댓글 \(estate.comments.count)개")
-                    .font(.pretendard(.body2, .medium))
-                    .foregroundColor(.gray90)
+                        Image(systemName: "bubble.left.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(.deepCoast)
+                    }
 
-                Spacer()
+                    // 댓글 텍스트
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("댓글")
+                            .font(.pretendard(.body2, .semiBold))
+                            .foregroundColor(.gray90)
 
-                // 화살표
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray60)
+                        Text("이웃들의 생생한 후기를 확인해보세요")
+                            .font(.pretendard(.caption1))
+                            .foregroundColor(.gray60)
+                    }
+
+                    Spacer()
+
+                    // 개수 + 화살표
+                    HStack(spacing: 4) {
+                        Text("\(estate.comments.count)")
+                            .font(.pretendard(.body2, .bold))
+                            .foregroundColor(.deepCoast)
+
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.gray60)
+                    }
+                }
+                .padding(16)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 16)
-            .background(Color.gray30)
+            .background(Color.gray0)
             .cornerRadius(12)
         }
         .buttonStyle(PlainButtonStyle())
@@ -456,28 +584,43 @@ struct EstateDetailView: View {
 
     private func agentSection(_ creator: UserInfo) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("중개사 정보")
-                .font(.pretendard(.body2, .semiBold))
-                .foregroundColor(.gray90)
+            HStack(spacing: 6) {
+                Image(systemName: "person.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundColor(.deepCoast)
+                Text("중개사 정보")
+                    .font(.pretendard(.body2, .semiBold))
+                    .foregroundColor(.gray90)
+            }
 
             HStack(spacing: 12) {
                 // 아바타
-                KFImage.auth(url: profileImageURL(creator.profileImage))
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 48, height: 48)
-                    .background(Color.gray30)
-                    .clipShape(Circle())
+                ZStack {
+                    Circle()
+                        .fill(Color.gray30)
+                        .frame(width: 56, height: 56)
+
+                    KFImage.auth(url: profileImageURL(creator.profileImage))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 56, height: 56)
+                        .clipShape(Circle())
+                }
 
                 // 이름 / 설명
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(creator.nick)
                         .font(.pretendard(.body2, .bold))
                         .foregroundColor(.gray90)
 
-                    Text("공인중개사")
-                        .font(.pretendard(.caption1))
-                        .foregroundColor(.gray60)
+                    HStack(spacing: 4) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 12))
+                            .foregroundColor(.deepCoast)
+                        Text("공인중개사")
+                            .font(.pretendard(.caption1, .medium))
+                            .foregroundColor(.gray60)
+                    }
                 }
 
                 Spacer()
@@ -489,8 +632,11 @@ struct EstateDetailView: View {
                 }
             }
         }
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(12)
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
     }
 
     private func contactButton(icon: ContactIcon) -> some View {
@@ -524,11 +670,18 @@ struct EstateDetailView: View {
             Button {
                 Task { await intent.toggleLike() }
             } label: {
-                DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: 24, renderingMode: .template)
-                    .foregroundColor(intent.state.isLiked ? .red : .gray75)
-                    .frame(width: 56, height: 56)
-                    .background(Color.gray30)
-                    .cornerRadius(14)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(intent.state.isLiked ? Color.red.opacity(0.1) : Color.gray0)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(intent.state.isLiked ? Color.red.opacity(0.3) : Color.gray30, lineWidth: 1)
+                        )
+
+                    DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: 24, renderingMode: .template)
+                        .foregroundColor(intent.state.isLiked ? .red : .gray60)
+                }
+                .frame(width: 56, height: 56)
             }
             .disabled(intent.state.isLikeLoading)
 
@@ -536,13 +689,25 @@ struct EstateDetailView: View {
             Button {
                 Task { await intent.createOrder() }
             } label: {
-                if intent.state.isReservationLoading {
-                    ProgressView()
-                        .tint(.gray0)
-                } else {
-                    Text(estate.is_reserved ? "예약완료" : "예약하기")
-                        .font(.pretendard(.body1, .bold))
+                ZStack {
+                    if intent.state.isReservationLoading {
+                        ProgressView()
+                            .tint(.gray0)
+                    } else {
+                        HStack(spacing: 6) {
+                            if !estate.is_reserved {
+                                Image(systemName: "calendar.badge.plus")
+                                    .font(.system(size: 18, weight: .semibold))
+                            } else {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.system(size: 18))
+                            }
+
+                            Text(estate.is_reserved ? "예약완료" : "예약하기")
+                                .font(.pretendard(.body1, .bold))
+                        }
                         .foregroundColor(estate.is_reserved ? .gray60 : .gray0)
+                    }
                 }
             }
             .frame(maxWidth: .infinity)
@@ -553,7 +718,10 @@ struct EstateDetailView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(Color.gray15)
+        .background(
+            Color.gray15
+                .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: -2)
+        )
     }
 
     // MARK: - Error View
