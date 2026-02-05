@@ -13,6 +13,8 @@ struct EstateListView: View {
     @State private var selectedEstateIdForDetail: String?
     @State private var activeFilter: FilterType?
     @State private var displayEstates: [EstateSummaryResponse] = []
+    @State private var bannerInterval: Int = 6  // 기본값
+    @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
 
     enum ListMode {
         case map(coordinate: CLLocationCoordinate2D, estates: [EstateSummaryResponse], locationText: String)
@@ -56,6 +58,7 @@ struct EstateListView: View {
             EstateDetailView(estateId: estateId)
         }
         .task {
+            bannerInterval = calculateBannerInterval()
             await loadInitialData()
         }
         .refreshable {
@@ -174,11 +177,17 @@ struct EstateListView: View {
                     .buttonStyle(.plain)
 
                     // Dynamic interval banners (all modes)
-                    // 한 페이지에 배너 2개 정도 보이도록 간격 조정
-                    if index < displayEstates.count - 1 {
-                        // 4개마다 배너 표시 (index: 3, 7, 11, 15...)
-                        if (index + 1) % 4 == 0 {
-                            InlinePromoItem()
+                    // 동적 간격으로 배너 표시 (순환 로직)
+                    if index < displayEstates.count - 1,
+                       !intent.state.banners.isEmpty {
+                        if (index + 1) % bannerInterval == 0 {
+                            let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
+                            let banner = intent.state.banners[bannerIndex]
+
+                            InlinePromoItem(banner: banner) { url in
+                                // TODO: BannerWebView 네비게이션 구현
+                                print("🔗 Banner clicked: \(url)")
+                            }
                         }
                     }
                 }
@@ -264,6 +273,35 @@ struct EstateListView: View {
         case .hotEstates(let estates):
             displayEstates = estates
         }
+    }
+
+    /// 화면 높이에 따라 배너 간격을 동적으로 계산
+    /// - 한 화면에 배너가 1~2개 보이도록 조정
+    /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한)
+    private func calculateBannerInterval() -> Int {
+        // 상수
+        let estateCardHeight: CGFloat = 140  // EstateListItem 높이
+        let cardSpacing: CGFloat = 12        // LazyVStack spacing
+        let itemHeight = estateCardHeight + cardSpacing  // 152pt
+
+        // 네비게이션 바 + 안전 영역 + 필터 칩 영역 (대략적인 추정)
+        let navigationAndFilterHeight: CGFloat = 130
+
+        // 사용 가능한 높이 계산
+        let usableHeight = screenHeight - navigationAndFilterHeight
+
+        // 화면당 보이는 카드 수
+        let cardsPerScreen = usableHeight / itemHeight
+
+        // 배너 간격 = 화면당 카드 수 / 2 (한 화면에 1~2개 배너)
+        let calculatedInterval = Int(cardsPerScreen / 2)
+
+        // 4~10 사이로 제한 (너무 촘촘하거나 드문 것 방지)
+        let interval = max(4, min(10, calculatedInterval))
+
+        print("📐 Banner interval calculated: \(interval) (screen height: \(screenHeight), cards per screen: \(cardsPerScreen))")
+
+        return interval
     }
 }
 
@@ -395,32 +433,60 @@ struct EstateListItem: View {
 // MARK: - Inline Promo Item
 
 struct InlinePromoItem: View {
+    let banner: Banner
+    let onTap: (String) -> Void
+
     var body: some View {
-        HStack(spacing: 0) {
-            // Left: Text Block
-            VStack(alignment: .leading, spacing: 4) {
-                Text("🎉 오늘의 특가 매물")
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
-
-                Text("지금 바로 확인하세요")
-                    .font(.pretendardCaption1)
-                    .foregroundColor(.gray60)
+        Button {
+            if let url = banner.actionUrl {
+                onTap(url)
             }
+        } label: {
+            HStack(spacing: 0) {
+                // Left: Text Block
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(banner.title)
+                        .font(.pretendardBody1Bold)
+                        .foregroundColor(.gray90)
+                        .lineLimit(2)
 
-            Spacer()
+                    if banner.payload?.type == "WEBVIEW" {
+                        Text("자세히 보기")
+                            .font(.pretendardCaption1)
+                            .foregroundColor(.gray60)
+                    }
+                }
 
-            // Right: Illustration (64×64px)
-            Image(systemName: "star.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 64, height: 64)
-                .foregroundColor(.brightCream)
+                Spacer()
+
+                // Right: Banner Image (64×64px)
+                KFImage.auth(url: imageURL)
+                    .placeholder {
+                        Image(systemName: "star.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 48, height: 48)
+                            .foregroundColor(.brightCream)
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 64, height: 64)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .padding(12)
+            .frame(height: 72)
+            .background(Color.gray0)
+            .cornerRadius(20)
         }
-        .padding(12)
-        .frame(height: 72)
-        .background(Color.gray0)
-        .cornerRadius(20)
+        .buttonStyle(.plain)
+    }
+
+    private var imageURL: URL? {
+        if banner.image.hasPrefix("http") {
+            return URL(string: banner.image)
+        } else {
+            return URL(string: Secrets.baseURL + "/" + banner.image)
+        }
     }
 }
 

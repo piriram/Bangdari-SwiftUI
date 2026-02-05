@@ -20,6 +20,11 @@ struct EstateListState {
     // 위치
     var currentLocation: CLLocationCoordinate2D?
     var maxDistance: Int = 5000  // 기본 5km
+
+    // 배너
+    var banners: [Banner] = []
+    var isBannersLoading: Bool = false
+    var bannerLoadError: String?
 }
 
 // MARK: - Estate List Intent
@@ -42,18 +47,33 @@ final class EstateListIntent: ObservableObject {
         state.errorMessage = nil
         state.currentLocation = location
 
-        do {
-            let estates = try await estateRepository.fetchEstatesByLocation(
-                latitude: location.latitude,
-                longitude: location.longitude,
-                maxDistance: state.maxDistance,
-                category: state.selectedCategory
-            )
-            state.estates = estates
-        } catch let error as NetworkError {
-            state.errorMessage = error.message
-        } catch {
-            state.errorMessage = "매물을 불러오는 중 오류가 발생했습니다."
+        // 매물과 배너를 병렬로 로드
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                do {
+                    let estates = try await self.estateRepository.fetchEstatesByLocation(
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        maxDistance: self.state.maxDistance,
+                        category: self.state.selectedCategory
+                    )
+                    await MainActor.run {
+                        self.state.estates = estates
+                    }
+                } catch let error as NetworkError {
+                    await MainActor.run {
+                        self.state.errorMessage = error.message
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.state.errorMessage = "매물을 불러오는 중 오류가 발생했습니다."
+                    }
+                }
+            }
+
+            group.addTask {
+                await self.loadBanners()
+            }
         }
 
         state.isLoading = false
@@ -65,19 +85,34 @@ final class EstateListIntent: ObservableObject {
         state.nextCursor = nil
         state.hasMore = true
 
-        do {
-            let response = try await estateRepository.fetchMyLikedEstates(
-                next: nil,
-                limit: 20,
-                category: state.selectedCategory
-            )
-            state.estates = response.data
-            state.nextCursor = response.next_cursor
-            state.hasMore = response.hasMore
-        } catch let error as NetworkError {
-            state.errorMessage = error.message
-        } catch {
-            state.errorMessage = "좋아요 매물을 불러오는 중 오류가 발생했습니다."
+        // 매물과 배너를 병렬로 로드
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                do {
+                    let response = try await self.estateRepository.fetchMyLikedEstates(
+                        next: nil,
+                        limit: 20,
+                        category: self.state.selectedCategory
+                    )
+                    await MainActor.run {
+                        self.state.estates = response.data
+                        self.state.nextCursor = response.next_cursor
+                        self.state.hasMore = response.hasMore
+                    }
+                } catch let error as NetworkError {
+                    await MainActor.run {
+                        self.state.errorMessage = error.message
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.state.errorMessage = "좋아요 매물을 불러오는 중 오류가 발생했습니다."
+                    }
+                }
+            }
+
+            group.addTask {
+                await self.loadBanners()
+            }
         }
 
         state.isLoading = false
@@ -116,5 +151,21 @@ final class EstateListIntent: ObservableObject {
         if let location = state.currentLocation {
             await loadEstates(at: location)
         }
+    }
+
+    func loadBanners() async {
+        state.isBannersLoading = true
+        state.bannerLoadError = nil
+
+        do {
+            let banners = try await estateRepository.fetchMainBanners()
+            state.banners = banners
+        } catch {
+            // 배너 로드 실패는 조용히 처리 (매물 리스트는 정상 표시)
+            state.bannerLoadError = error.localizedDescription
+            print("⚠️ Banner load failed: \(error.localizedDescription)")
+        }
+
+        state.isBannersLoading = false
     }
 }
