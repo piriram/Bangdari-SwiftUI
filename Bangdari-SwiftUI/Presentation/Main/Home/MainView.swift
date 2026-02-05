@@ -1,4 +1,5 @@
 import CoreLocation
+import MapKit
 import SwiftUI
 
 // MARK: - Main View
@@ -10,6 +11,7 @@ struct MainView: View {
     @State private var showBannerWebView = false
     @State private var bannerWebURL: URL? = nil
     @State private var scrollOffset: CGFloat = 0
+    @State private var showSearchSheet = false
 
     private var blurProgress: CGFloat {
         let threshold: CGFloat = 100
@@ -74,6 +76,7 @@ struct MainView: View {
                     .background(Color.gray15)
 
                     HomeSearchBar(blurProgress: blurProgress) {
+                        showSearchSheet = true
                     }
                     .padding(.top, 3)
                     .padding(.horizontal, 20)
@@ -89,7 +92,8 @@ struct MainView: View {
             .navigationDestination(for: MapNavigationData.self) { navData in
                 EstateMapView(
                     initialCategory: navData.category,
-                    initialCoordinate: navData.initialCoordinate
+                    initialCoordinate: navData.initialCoordinate,
+                    initialSpan: navData.coordinateSpan
                 )
             }
             .navigationDestination(for: EstateListNavigationData.self) { navData in
@@ -103,6 +107,18 @@ struct MainView: View {
         }
         .task {
             await intent.loadHomeData()
+        }
+        .sheet(isPresented: $showSearchSheet) {
+            HomeSearchSheetView { coordinate, span in
+                showSearchSheet = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    navigationPath.append(MapNavigationData(
+                        category: nil,
+                        initialCoordinate: coordinate,
+                        coordinateSpan: span
+                    ))
+                }
+            }
         }
     }
 
@@ -325,5 +341,91 @@ private struct HomeSearchBar: View {
         }
         .buttonStyle(.plain)
         .frame(height: 40)
+    }
+}
+
+// MARK: - Home Search Sheet
+
+private struct HomeSearchSheetView: View {
+    let onNavigateToMap: (CLLocationCoordinate2D, MKCoordinateSpan) -> Void
+
+    @State private var query = ""
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                // 빈 리스트 본디 — 에러/로딩만 표시
+                if isLoading {
+                    Section {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                    }
+                } else if let error = errorMessage {
+                    Section {
+                        Text(error)
+                            .font(.pretendardBody2)
+                            .foregroundColor(.gray60)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                }
+            }
+            .listStyle(.insetGrouped)
+            .navigationTitle("지역 검색")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("취소") { dismiss() }
+                        .font(.pretendardBody2)
+                        .foregroundColor(.gray60)
+                }
+            }
+            .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: "문래동, 서초구 등 지역명 검색")
+            .onSubmit(of: .search) {
+                Task { await performSearch() }
+            }
+        }
+    }
+
+    private func performSearch() async {
+        if query.trimmingCharacters(in: .whitespaces).isEmpty {
+            errorMessage = "검색어를 입력해주세요"
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+
+        let geocoder = CLGeocoder()
+        let seoulRegion = CLCircularRegion(
+            center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780),
+            radius: 30_000,
+            identifier: "seoul"
+        )
+
+        do {
+            let placemarks = try await geocoder.geocodeAddressString(query, in: seoulRegion)
+
+            guard let placemark = placemarks.first, let location = placemark.location else {
+                isLoading = false
+                errorMessage = "검색 결과가 없습니다"
+                return
+            }
+
+            let coordinate = location.coordinate
+            let latDelta: Double = placemark.subLocality != nil ? 0.015 : 0.04
+            let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: latDelta)
+
+            isLoading = false
+            onNavigateToMap(coordinate, span)
+        } catch {
+            isLoading = false
+            errorMessage = "검색 결과가 없습니다"
+        }
     }
 }
