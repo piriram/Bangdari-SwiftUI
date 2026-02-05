@@ -50,17 +50,26 @@ struct MapFilterState {
 struct MapNavigationData: Hashable {
     let category: EstateCategory?
     let initialCoordinate: CLLocationCoordinate2D?
+    let coordinateSpan: MKCoordinateSpan?
+
+    init(category: EstateCategory?, initialCoordinate: CLLocationCoordinate2D?, coordinateSpan: MKCoordinateSpan? = nil) {
+        self.category = category
+        self.initialCoordinate = initialCoordinate
+        self.coordinateSpan = coordinateSpan
+    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(category?.rawValue)
         hasher.combine(initialCoordinate?.latitude)
         hasher.combine(initialCoordinate?.longitude)
+        hasher.combine(coordinateSpan?.latitudeDelta)
     }
 
     static func == (lhs: MapNavigationData, rhs: MapNavigationData) -> Bool {
         lhs.category == rhs.category &&
         lhs.initialCoordinate?.latitude == rhs.initialCoordinate?.latitude &&
-        lhs.initialCoordinate?.longitude == rhs.initialCoordinate?.longitude
+        lhs.initialCoordinate?.longitude == rhs.initialCoordinate?.longitude &&
+        lhs.coordinateSpan?.latitudeDelta == rhs.coordinateSpan?.latitudeDelta
     }
 }
 
@@ -72,6 +81,7 @@ struct EstateMapView: View {
 
     let initialCategory: EstateCategory?
     let initialCoordinate: CLLocationCoordinate2D?
+    let initialSpan: MKCoordinateSpan?
 
     @State private var position: MapCameraPosition
     @State private var viewState: MapViewState = .idle
@@ -80,9 +90,10 @@ struct EstateMapView: View {
     @State private var selectedEstateIdForDetail: String?
     @State private var navigateToList: Bool = false
 
-    init(initialCategory: EstateCategory? = nil, initialCoordinate: CLLocationCoordinate2D? = nil) {
+    init(initialCategory: EstateCategory? = nil, initialCoordinate: CLLocationCoordinate2D? = nil, initialSpan: MKCoordinateSpan? = nil) {
         self.initialCategory = initialCategory
         self.initialCoordinate = initialCoordinate
+        self.initialSpan = initialSpan
 
         // MapIntent 초기화
         let mapIntent = MapIntent()
@@ -90,9 +101,10 @@ struct EstateMapView: View {
 
         // 초기 position 설정
         if let coord = initialCoordinate {
+            let span = initialSpan ?? MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
             _position = State(initialValue: .region(MKCoordinateRegion(
                 center: coord,
-                span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+                span: span
             )))
         } else {
             _position = State(initialValue: .region(.defaultRegion))
@@ -163,6 +175,9 @@ struct EstateMapView: View {
                 intent.requestLocationPermission()
                 Task { await intent.loadEstatesInCurrentRegion() }
             }
+        }
+        .onChange(of: intent.state.region.center.latitude) { _, _ in
+            position = .region(intent.state.region)
         }
         .navigationDestination(item: $selectedEstateIdForDetail) { estateId in
             EstateDetailView(estateId: estateId)

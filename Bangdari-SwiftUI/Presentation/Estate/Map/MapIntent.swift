@@ -349,7 +349,6 @@ final class MapIntent: ObservableObject {
 
     func searchEstates() async -> CLLocationCoordinate2D? {
         guard !state.searchQuery.isEmpty else {
-            // 검색어가 비어있으면 현재 위치 기준으로 재조회
             await loadEstatesInCurrentRegion()
             return nil
         }
@@ -398,6 +397,35 @@ final class MapIntent: ObservableObject {
             state.errorMessage = "검색 중 오류가 발생했습니다"
             state.isLoading = false
             print("🔍 [Search] ❌ Geocoding 실패: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    private func geocodeQuery(_ query: String) async -> (CLLocationCoordinate2D, MKCoordinateSpan)? {
+        let geocoder = CLGeocoder()
+        let seoulRegion = CLCircularRegion(
+            center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780),
+            radius: 30_000,
+            identifier: "seoul"
+        )
+
+        do {
+            // async 버전 사용 (region 파라미터 없음) → 결과를 서울 영역으로 필터링
+            let placemarks = try await geocoder.geocodeAddressString(query, in: seoulRegion)
+
+            guard let placemark = placemarks.first, let location = placemark.location else {
+                print("🔍 [geocodeQuery] '\(query)' → 결과 없음")
+                return nil
+            }
+
+            let coordinate = location.coordinate
+            let latDelta: Double = placemark.subLocality != nil ? 0.015 : 0.04
+            let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: latDelta)
+
+            print("🔍 [geocodeQuery] '\(query)' → \(coordinate.latitude), \(coordinate.longitude) span: \(latDelta)")
+            return (coordinate, span)
+        } catch {
+            print("🔍 [geocodeQuery] '\(query)' 실패: \(error.localizedDescription)")
             return nil
         }
     }
@@ -623,3 +651,4 @@ final class MapIntent: ObservableObject {
         updateClusters()
     }
 }
+
