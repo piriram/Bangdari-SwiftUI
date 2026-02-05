@@ -19,6 +19,7 @@ DerivedData/
 # CocoaPods / SPM
 Pods/
 .build/
+build/
 
 # macOS
 .DS_Store
