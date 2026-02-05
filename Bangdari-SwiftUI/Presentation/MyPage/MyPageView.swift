@@ -4,9 +4,28 @@ import SwiftUI
 
 struct MyPageView: View {
     @State private var showLogoutAlert = false
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
+
+    private let authRepository: AuthRepository
+
+    init(authRepository: AuthRepository = RemoteAuthRepository()) {
+        self.authRepository = authRepository
+    }
 
     var body: some View {
         List {
+            Section("프로필") {
+                NavigationLink {
+                    ProfileEditView()
+                } label: {
+                    HStack {
+                        Image(systemName: "person.circle")
+                        Text("프로필 수정")
+                    }
+                }
+            }
+
             Section("채팅") {
                 NavigationLink {
                     ChatRoomListView()
@@ -45,18 +64,28 @@ struct MyPageView: View {
         .alert("로그아웃", isPresented: $showLogoutAlert) {
             Button("취소", role: .cancel) {}
             Button("로그아웃", role: .destructive) {
-                logout()
+                Task { await logout() }
             }
         } message: {
             Text("정말 로그아웃 하시겠습니까?")
+        }
+        .alert("오류", isPresented: $showErrorAlert) {
+            Button("확인", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
         }
     }
 
     // MARK: - Actions
 
-    private func logout() {
-        KeychainManager.shared.clearTokens()
-        NotificationCenter.default.post(name: .didLogout, object: nil)
+    private func logout() async {
+        do {
+            try await authRepository.logout()
+            NotificationCenter.default.post(name: .didLogout, object: nil)
+        } catch {
+            errorMessage = "로그아웃 중 오류가 발생했습니다."
+            showErrorAlert = true
+        }
     }
 }
 

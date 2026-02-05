@@ -79,6 +79,7 @@ final class NetworkService: @unchecked Sendable {
             // 기타 에러
             let error = NetworkError.from(statusCode: httpResponse.statusCode)
             print("❌ Upload Error [\(httpResponse.statusCode)]: \(endpoint.path)")
+            if let body = String(data: data, encoding: .utf8) { print("📝 Server: \(body)") }
             throw error
 
         } catch let error as NetworkError {

@@ -10,6 +10,12 @@ struct MainView: View {
     @State private var navigationPath = NavigationPath()
     @State private var showBannerWebView = false
     @State private var bannerWebURL: URL? = nil
+    @State private var scrollOffset: CGFloat = 0
+
+    private var blurProgress: CGFloat {
+        let threshold: CGFloat = 100
+        return min(max(-scrollOffset / threshold, 0), 1)
+    }
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -17,6 +23,15 @@ struct MainView: View {
                 ZStack(alignment: .topLeading) {
                     ScrollView {
                         VStack(spacing: 24) {
+                            // 오프셋 측정용 anchor (invisible)
+                            Color.clear
+                                .frame(height: 0)
+                                .measureScrollOffset { offset in
+                                    withAnimation(.easeOut(duration: 0.25)) {
+                                        scrollOffset = offset
+                                    }
+                                }
+
                             // 히어로 배너
                             if intent.state.heroBannerSkeleton {
                                 HeroBannerSkeleton(height: DesignSystem.Layout.heroBannerHeight)
@@ -68,12 +83,13 @@ struct MainView: View {
                         .frame(maxWidth: geo.size.width)
                         .padding(.bottom, 24)
                     }
+                    .coordinateSpace(name: "scroll")
                     .contentMargins(.top, -geo.safeAreaInsets.top, for: .scrollContent)
                     .scrollContentBackground(.hidden)
                     .ignoresSafeArea(edges: .top)
                     .background(Color.gray15)
 
-                    HomeSearchBar {
+                    HomeSearchBar(blurProgress: blurProgress) {
                         navigationPath.append(SearchNavigationTag())
                     }
                     .padding(.top, 3)
@@ -310,6 +326,7 @@ enum EstateListNavigationData: Hashable {
 // MARK: - Home Search Bar
 
 private struct HomeSearchBar: View {
+    var blurProgress: CGFloat
     var action: () -> Void
 
     var body: some View {
@@ -330,11 +347,22 @@ private struct HomeSearchBar: View {
             }
             .padding(.horizontal, 12)
             .frame(height: 40)
-            .background(Color.gray0)
+            .background(
+                ZStack {
+                    // Base: 원래 배경 (점점 투명해짐)
+                    Color.gray0
+                        .opacity(1.0 - blurProgress * 0.2)
+
+                    // Blur: Material 레이어 (점점 진해짐)
+                    Color.clear
+                        .background(.ultraThinMaterial)
+                        .opacity(blurProgress)
+                }
+            )
             .proportionalCornerRadius(
                 baseWidth: 350,
                 baseRadius: 20,
-                strokeColor: .gray30,
+                strokeColor: Color.gray30.opacity(1.0 - blurProgress * 0.5),
                 lineWidth: 1
             )
         }
