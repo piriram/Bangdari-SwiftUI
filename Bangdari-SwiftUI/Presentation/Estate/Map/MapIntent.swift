@@ -71,6 +71,10 @@ enum MapConstants {
     /// span < 이 값 → 말풍선(EstateMarkerView), span >= 이 값 → 클러스터 버튼
     static let markerBalloonThreshold: Double = 0.02
 
+    /// 캐러셀 자동 표시 임계값 (동 단위, 약 5.5km)
+    /// span < 이 값 → 자동으로 하단 캐러셀 표시
+    static let autoCarouselThreshold: Double = 0.05
+
     /// 자동 재조회 트리거 거리 (미터) - 3km로 증가하여 API 호출 빈도 감소
     static let reloadDistanceThreshold: Double = 3000
 

@@ -167,6 +167,7 @@ struct EstateMapView: View {
         }
         .ignoresSafeArea(.container, edges: .bottom)
         .navigationBarHidden(true)
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             intent.initializeWithCategory(initialCategory, at: initialCoordinate)
             if initialCoordinate == nil {
@@ -324,6 +325,9 @@ struct EstateMapView: View {
             print("📷 [Camera Change] span: \(String(format: "%.6f", context.region.span.latitudeDelta))")
             intent.updateRegion(context.region)
             // 대안 D: updateClusters 제거 → debounce 후에만 업데이트
+
+            // 자동 캐러셀 표시 조건 체크
+            checkAutoCarousel(for: context.region)
 
             // 지도 이동 시 S1로 전환 (S3, S4 제외)
             if !isEstateSelected && !isFilterAdjusting {
@@ -502,9 +506,9 @@ struct EstateMapView: View {
     private func filterRangeText(_ type: MapViewState.FilterType) -> String {
         switch type {
         case .deposit:
-            return "\(formatPrice(filterState.depositRange.lowerBound)) ~ \(formatPrice(filterState.depositRange.upperBound))"
+            return "\(PriceFormatter.format(filterState.depositRange.lowerBound)) ~ \(PriceFormatter.format(filterState.depositRange.upperBound))"
         case .monthlyRent:
-            return "\(formatPrice(filterState.monthlyRentRange.lowerBound)) ~ \(formatPrice(filterState.monthlyRentRange.upperBound))"
+            return "\(PriceFormatter.format(filterState.monthlyRentRange.lowerBound)) ~ \(PriceFormatter.format(filterState.monthlyRentRange.upperBound))"
         case .area:
             return "\(Int(filterState.areaRange.lowerBound))평 ~ \(Int(filterState.areaRange.upperBound))평"
         }
@@ -799,6 +803,62 @@ struct EstateMapView: View {
         }
     }
 
+    // MARK: - Auto Carousel
+
+    /// 줌 레벨에 따라 캐러셀 자동 표시
+    private func checkAutoCarousel(for region: MKCoordinateRegion) {
+        let span = region.span.latitudeDelta
+
+        // 조건: span < 0.05이고, 매물이 1개 이상 있고, 현재 browsing 상태일 때
+        guard span < MapConstants.autoCarouselThreshold,
+              !intent.state.estates.isEmpty,
+              case .browsing = viewState else {
+            return
+        }
+
+        print("🎠 [Auto Carousel] 조건 충족: span=\(String(format: "%.6f", span)), 매물 수=\(intent.state.estates.count)")
+
+        // 화면 중앙에 가장 가까운 매물 찾기
+        let centerCoordinate = region.center
+        let nearestIndex = findNearestEstateIndex(to: centerCoordinate)
+
+        print("🎠 [Auto Carousel] 가장 가까운 매물 인덱스: \(nearestIndex)")
+
+        // S3로 전환 (캐러셀 표시)
+        withAnimation {
+            selectedEstateIndex = nearestIndex
+            viewState = .estateSelected(nearestIndex)
+        }
+    }
+
+    /// 화면 중앙에 가장 가까운 매물 인덱스 찾기
+    private func findNearestEstateIndex(to center: CLLocationCoordinate2D) -> Int {
+        guard !intent.state.estates.isEmpty else { return 0 }
+
+        let centerLocation = CLLocation(latitude: center.latitude, longitude: center.longitude)
+
+        var nearestIndex = 0
+        var minDistance = Double.infinity
+
+        for (index, estate) in intent.state.estates.enumerated() {
+            let estateLocation = CLLocation(
+                latitude: estate.geolocation.latitude,
+                longitude: estate.geolocation.longitude
+            )
+            let distance = centerLocation.distance(from: estateLocation)
+
+            if distance < minDistance {
+                minDistance = distance
+                nearestIndex = index
+            }
+        }
+
+        print("🎠 [Nearest] 최단 거리: \(String(format: "%.0f", minDistance))m")
+        return nearestIndex
+    }
+
+    // MARK: - Cluster Helpers
+
     /// 클러스터 내 모든 매물이 보이는 영역 계산
     private func regionToFitCluster(_ cluster: MapCluster) -> MKCoordinateRegion {
         let estates = cluster.estates
@@ -965,19 +1025,7 @@ struct EstateMapView: View {
     }
 
     private func formatPrice(_ value: Double) -> String {
-        let intValue = Int(value)
-        if intValue >= 100_000_000 {
-            let eok = intValue / 100_000_000
-            let cheonman = (intValue % 100_000_000) / 10_000_000
-            return cheonman > 0 ? "\(eok)억 \(cheonman)천만" : "\(eok)억"
-        }
-        if intValue >= 10_000_000 {
-            return "\(intValue / 10_000_000)천만"
-        }
-        if intValue >= 1_000_000 {
-            return "\(intValue / 1_000_000)백만"
-        }
-        return "\(intValue)"
+        return PriceFormatter.format(value)
     }
 
     private func imageURL(_ estate: EstateSummaryResponse) -> URL? {
