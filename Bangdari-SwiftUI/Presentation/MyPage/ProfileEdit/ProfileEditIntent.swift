@@ -144,6 +144,22 @@ final class ProfileEditIntent: ObservableObject {
     // MARK: - Private
 
     private func compressImage(_ image: UIImage) -> Data {
-        image.jpegData(compressionQuality: 0.7) ?? Data()
+        let resized = resizeIfNeeded(image, maxEdge: 1024)
+        let data = resized.jpegData(compressionQuality: 0.7) ?? Data()
+        print("📸 Upload: \(data.count / 1024)KB (\(Int(resized.size.width))x\(Int(resized.size.height)))")
+        return data
+    }
+
+    private func resizeIfNeeded(_ image: UIImage, maxEdge: CGFloat) -> UIImage {
+        let (w, h) = (image.size.width * image.scale, image.size.height * image.scale)
+        guard max(w, h) > maxEdge else { return image }
+        let ratio = maxEdge / max(w, h)
+        let newSize = CGSize(width: w * ratio, height: h * ratio)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1.0
+        let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+        }
     }
 }
