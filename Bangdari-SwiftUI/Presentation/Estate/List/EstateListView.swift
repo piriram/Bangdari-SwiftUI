@@ -427,32 +427,60 @@ struct EstateListItem: View {
 // MARK: - Inline Promo Item
 
 struct InlinePromoItem: View {
+    let banner: Banner
+    let onTap: (String) -> Void
+
     var body: some View {
-        HStack(spacing: 0) {
-            // Left: Text Block
-            VStack(alignment: .leading, spacing: 4) {
-                Text("🎉 오늘의 특가 매물")
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
-
-                Text("지금 바로 확인하세요")
-                    .font(.pretendardCaption1)
-                    .foregroundColor(.gray60)
+        Button {
+            if let url = banner.actionUrl {
+                onTap(url)
             }
+        } label: {
+            HStack(spacing: 0) {
+                // Left: Text Block
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(banner.title)
+                        .font(.pretendardBody1Bold)
+                        .foregroundColor(.gray90)
+                        .lineLimit(2)
 
-            Spacer()
+                    if banner.payload?.type == "WEBVIEW" {
+                        Text("자세히 보기")
+                            .font(.pretendardCaption1)
+                            .foregroundColor(.gray60)
+                    }
+                }
 
-            // Right: Illustration (64×64px)
-            Image(systemName: "star.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 64, height: 64)
-                .foregroundColor(.brightCream)
+                Spacer()
+
+                // Right: Banner Image (64×64px)
+                KFImage.auth(url: imageURL)
+                    .placeholder {
+                        Image(systemName: "star.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 48, height: 48)
+                            .foregroundColor(.brightCream)
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 64, height: 64)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .padding(12)
+            .frame(height: 72)
+            .background(Color.gray0)
+            .cornerRadius(20)
         }
-        .padding(12)
-        .frame(height: 72)
-        .background(Color.gray0)
-        .cornerRadius(20)
+        .buttonStyle(.plain)
+    }
+
+    private var imageURL: URL? {
+        if banner.image.hasPrefix("http") {
+            return URL(string: banner.image)
+        } else {
+            return URL(string: Secrets.baseURL + "/" + banner.image)
+        }
     }
 }
 
