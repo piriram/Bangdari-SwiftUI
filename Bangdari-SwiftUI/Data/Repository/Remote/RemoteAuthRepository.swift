@@ -64,7 +64,12 @@ final class RemoteAuthRepository: AuthRepository {
     }
 
     func logout() async throws {
-        try await network.requestWithoutResponse(.logout)
+        // 서버 로그아웃은 best-effort: 실패해도 로컬 토큰 삭제 진행
+        do {
+            try await network.requestWithoutResponse(.logout)
+        } catch {
+            print("⚠️ [Logout] 서버 로그아웃 실패 (로컬 토큰은 삭제됨): \(error)")
+        }
         keychain.clearTokens()
     }
 }
