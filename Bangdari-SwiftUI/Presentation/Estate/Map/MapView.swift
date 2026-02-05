@@ -43,7 +43,6 @@ struct MapFilterState {
     var isDepositActive: Bool = false
     var isMonthlyRentActive: Bool = false
     var isAreaActive: Bool = false
-    var isImmediateActive: Bool = false
 }
 
 // MARK: - Navigation Data
@@ -119,40 +118,9 @@ struct EstateMapView: View {
     }
 
     var body: some View {
-        ZStack {
-            // Z1: Background
-            Color.gray15.ignoresSafeArea()
-
-            // Z2: Map
-            mapContent
-                .ignoresSafeArea()
-
-            // Z3: Floating UI
-            floatingUI
-
-            // Z4: 로딩 인디케이터 (화면 중앙) - 스켈레톤이 없을 때만 표시
-            if intent.state.isLoading && intent.state.skeletonClusters.isEmpty {
-                ProgressView()
-                    .scaleEffect(1.2)
-                    .frame(width: 60, height: 60)
-                    .background(Color.gray0.opacity(0.9))
-                    .cornerRadius(12)
-                    .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
-            }
-        }
-        .searchable(
-            text: Binding(
-                get: { intent.state.searchQuery },
-                set: { intent.updateSearchQuery($0) }
-            ),
-            placement: .navigationBarDrawer(displayMode: .always),
-            prompt: "지역 또는 매물을 검색하세요"
-        )
-        .onSubmit(of: .search) {
-            Task { await intent.searchEstates() }
-        }
-        .toolbar {
-            ToolbarItem(placement: .principal) {
+        VStack(spacing: 0) {
+            // 네비게이션 바
+            CustomNavigationBar(onBack: { dismiss() }) {
                 Button {
                     // TODO: 위치 선택 모달
                 } label: {
@@ -166,9 +134,7 @@ struct EstateMapView: View {
                             .foregroundColor(.gray90)
                     }
                 }
-            }
-
-            ToolbarItem(placement: .topBarTrailing) {
+            } trailing: {
                 Button {
                     navigateToList = true
                 } label: {
@@ -178,18 +144,34 @@ struct EstateMapView: View {
                         .foregroundColor(.gray90)
                 }
             }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .onAppear {
-            // 초기 카테고리 및 좌표 설정
-            intent.initializeWithCategory(initialCategory, at: initialCoordinate)
 
-            // 초기 좌표가 없으면 사용자 현재 위치로 초기화
+            // 검색바
+            mapSearchBar
+
+            // 지도 영역
+            ZStack {
+                Color.gray15
+                mapContent
+                floatingUI
+
+                if intent.state.isLoading && intent.state.skeletonClusters.isEmpty {
+                    ProgressView()
+                        .scaleEffect(1.2)
+                        .frame(width: 60, height: 60)
+                        .background(Color.gray0.opacity(0.9))
+                        .cornerRadius(12)
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+                }
+            }
+            .frame(maxHeight: .infinity)
+        }
+        .ignoresSafeArea(.container, edges: .bottom)
+        .navigationBarHidden(true)
+        .onAppear {
+            intent.initializeWithCategory(initialCategory, at: initialCoordinate)
             if initialCoordinate == nil {
                 intent.initializeLocation()
             } else {
-                // 초기 좌표가 있으면 해당 위치 로드
                 intent.requestLocationPermission()
                 Task { await intent.loadEstatesInCurrentRegion() }
             }
@@ -211,13 +193,67 @@ struct EstateMapView: View {
         }
     }
 
+    // MARK: - Search Bar
+
+    private var mapSearchBar: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 8) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 14))
+                    .foregroundColor(.gray60)
+
+                TextField(
+                    "",
+                    text: Binding(
+                        get: { intent.state.searchQuery },
+                        set: { intent.updateSearchQuery($0) }
+                    ),
+                    prompt: Text("지역명을 입력해주세요 (예: 강남구, 문래동)").foregroundColor(.gray60)
+                )
+                .font(.pretendardBody2)
+                .foregroundColor(.gray90)
+                .submitLabel(.search)
+                .onSubmit {
+                    Task {
+                        // 검색 실행 후 좌표 받기
+                        if let coordinate = await intent.searchEstates() {
+                            // 지도 position 업데이트 (애니메이션과 함께)
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                position = .region(MKCoordinateRegion(
+                                    center: coordinate,
+                                    span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+                                ))
+                            }
+                        }
+                    }
+                }
+
+                if !intent.state.searchQuery.isEmpty {
+                    Button {
+                        intent.updateSearchQuery("")
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(.gray60)
+                    }
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Color.gray15)
+            .cornerRadius(10)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+
+            Divider()
+        }
+        .background(Color.gray0)
+    }
+
     // MARK: - Z3: Floating UI
 
     private var floatingUI: some View {
         VStack(spacing: 0) {
-            // iOS 26 네비바 + 검색창 높이만큼 spacing
-            Spacer().frame(height: 96)
-
             // 필터 버튼 그룹 (S4가 아닐 때만 표시)
             if !isFilterAdjusting {
                 filterButtonGroup
@@ -312,8 +348,8 @@ struct EstateMapView: View {
         Button {
             handleClusterTap(cluster)
         } label: {
-            if cluster.isSingle, let estate = cluster.firstEstate {
-                // 새로운 EstateMarkerView 사용
+            if cluster.isSingle && intent.state.region.span.latitudeDelta < MapConstants.markerBalloonThreshold, let estate = cluster.firstEstate {
+                // 충분히 확대된 상태에서만 말풍선 마커 표시
                 EstateMarkerView(
                     estate: estate,
                     isSelected: selectedEstate?.estate_id == estate.estate_id
@@ -383,9 +419,26 @@ struct EstateMapView: View {
                 filterChip("평수", isActive: filterState.isAreaActive) {
                     toggleFilter(.area)
                 }
-                filterChip("즉시입주", isActive: filterState.isImmediateActive) {
-                    filterState.isImmediateActive.toggle()
-                    Task { await intent.loadEstatesInCurrentRegion() }
+
+                // 필터 초기화 버튼 (하나라도 활성화되어 있을 때만 표시)
+                if filterState.isDepositActive || filterState.isMonthlyRentActive || filterState.isAreaActive {
+                    Button {
+                        resetFilters()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.counterclockwise")
+                                .font(.system(size: 12))
+                            Text("초기화")
+                                .font(.pretendardCaption1)
+                        }
+                        .foregroundColor(.gray75)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(Color.gray15)
+                        .cornerRadius(16)
+                        .shadow(color: .black.opacity(0.06), radius: 4, x: 0, y: 2)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -705,18 +758,26 @@ struct EstateMapView: View {
         print("🎯 [Cluster Tap] ID: \(cluster.id), 매물 수: \(cluster.count), isSingle: \(cluster.isSingle)")
 
         if cluster.isSingle, let estate = cluster.firstEstate {
-            // 단일 매물 → S3
-            print("🎯 [Cluster Tap] → 단일 매물 선택")
-            if let index = intent.state.estates.firstIndex(where: { $0.estate_id == estate.estate_id }) {
-                withAnimation {
-                    selectedEstateIndex = index
-                    viewState = .estateSelected(index)
-                }
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    position = .region(MKCoordinateRegion(
-                        center: cluster.coordinate,
-                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                    ))
+            let isBalloonMode = intent.state.region.span.latitudeDelta < MapConstants.markerBalloonThreshold
+
+            if isBalloonMode {
+                // 말풍선 탭 → EstateDetailView로 push
+                print("🎯 [Cluster Tap] → 말풍선 탭, 디테일 이동")
+                selectedEstateIdForDetail = estate.estate_id
+            } else {
+                // 클러스터 버튼 탭 → S3 (하단 카드 캐러셀)
+                print("🎯 [Cluster Tap] → 단일 클러스터 버튼 탭, S3 표시")
+                if let index = intent.state.estates.firstIndex(where: { $0.estate_id == estate.estate_id }) {
+                    withAnimation {
+                        selectedEstateIndex = index
+                        viewState = .estateSelected(index)
+                    }
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        position = .region(MKCoordinateRegion(
+                            center: cluster.coordinate,
+                            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                        ))
+                    }
                 }
             }
         } else {
@@ -831,8 +892,34 @@ struct EstateMapView: View {
             filterState.isAreaActive = true
         }
 
+        // 클라이언트 측 필터링 적용
+        intent.applyFilters(
+            depositRange: filterState.depositRange,
+            monthlyRentRange: filterState.monthlyRentRange,
+            areaRange: filterState.areaRange,
+            isDepositActive: filterState.isDepositActive,
+            isMonthlyRentActive: filterState.isMonthlyRentActive,
+            isAreaActive: filterState.isAreaActive
+        )
+
         withAnimation { viewState = .browsing }
-        Task { await intent.loadEstatesInCurrentRegion() }
+    }
+
+    private func resetFilters() {
+        // 모든 필터 비활성화
+        filterState.isDepositActive = false
+        filterState.isMonthlyRentActive = false
+        filterState.isAreaActive = false
+
+        // 필터 범위 초기화
+        filterState.depositRange = 0...100_000_000
+        filterState.monthlyRentRange = 0...3_000_000
+        filterState.areaRange = 0...100
+
+        // 원본 데이터 복원
+        intent.resetFilters()
+
+        withAnimation { viewState = .browsing }
     }
 
     private func selectNextEstate() {

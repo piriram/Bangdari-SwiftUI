@@ -12,6 +12,7 @@
 		21D637812F319AC200ACD9E7 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 21D637802F319AC200ACD9E7 /* KakaoSDKAuth */; };
 		21D637832F319AC200ACD9E7 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 21D637822F319AC200ACD9E7 /* KakaoSDKCommon */; };
 		21D637852F319AC200ACD9E7 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 21D637842F319AC200ACD9E7 /* KakaoSDKUser */; };
+		21D63E582F3473FC00ACD9E7 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A1B2C3D4E5F6A1B2C3D40002 /* SocketIO */; };
 		21E1A4512F214577009CE317 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 21E1A4502F214577009CE317 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21D63E582F3473FC00ACD9E7 /* SocketIO in Frameworks */,
 				21BAEA2C2F2C3261006DCCFF /* iamport-ios in Frameworks */,
 				21E1A4512F214577009CE317 /* Kingfisher in Frameworks */,
 				21D637852F319AC200ACD9E7 /* KakaoSDKUser in Frameworks */,
@@ -133,6 +135,7 @@
 				21E1A44F2F214577009CE317 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */,
 				21D6377D2F319AC200ACD9E7 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				A1B2C3D4E5F6A1B2C3D40001 /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 21E1A3C62F20705B009CE317 /* Products */;
@@ -406,20 +409,20 @@
 				minimumVersion = 8.6.2;
 			};
 		};
+		A1B2C3D4E5F6A1B2C3D40001 /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 16.0.0;
+			};
+		};
 		E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iamport/iamport-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.4.3;
-			};
-		};
-		A1B2C3D4E5F6A1B2C3D40001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -450,15 +453,15 @@
 			package = 21E1A44F2F214577009CE317 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
+		A1B2C3D4E5F6A1B2C3D40002 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3D4E5F6A1B2C3D40001 /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
 		D482F613394B47AD90F94FD3 /* iamport-ios */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E06126D7AF8E4A00AD85A2B5 /* XCRemoteSwiftPackageReference "iamport-ios" */;
 			productName = "iamport-ios";
-		};
-		A1B2C3D4E5F6A1B2C3D40002 /* SocketIO */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A1B2C3D4E5F6A1B2C3D40001 /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
-			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

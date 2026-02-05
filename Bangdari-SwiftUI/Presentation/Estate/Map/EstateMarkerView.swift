@@ -12,7 +12,7 @@ struct EstateMarkerView: View {
             VStack(spacing: 6) {
                 // 매물 이미지
                 if let imageUrl = estate.files.first {
-                    KFImage(URL(string: imageUrl))
+                    KFImage.auth(url: URL(string: Secrets.baseURL + "/" + imageUrl))
                         .placeholder {
                             Rectangle()
                                 .fill(Color.gray30)

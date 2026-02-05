@@ -22,7 +22,8 @@ struct MapCluster: Identifiable, Equatable {
 // MARK: - Map State
 
 struct MapState {
-    var estates: [EstateSummaryResponse] = []
+    var estates: [EstateSummaryResponse] = []  // 필터링된 결과
+    var allEstates: [EstateSummaryResponse] = []  // 원본 (필터 초기화용)
     var clusters: [MapCluster] = []
     var region: MKCoordinateRegion = .defaultRegion
     var isLoading: Bool = false
@@ -65,6 +66,10 @@ enum MapConstants {
     /// 이 값 이하로 확대하면 클러스터링 없이 개별 마커 표시
     /// 값이 작을수록 더 확대해야 개별 마커가 보임
     static let clusteringDisableThreshold: Double = 0.008
+
+    /// 단일 클러스터가 말풍선으로 전환되는 줄기준
+    /// span < 이 값 → 말풍선(EstateMarkerView), span >= 이 값 → 클러스터 버튼
+    static let markerBalloonThreshold: Double = 0.02
 
     /// 자동 재조회 트리거 거리 (미터) - 3km로 증가하여 API 호출 빈도 감소
     static let reloadDistanceThreshold: Double = 3000
@@ -257,7 +262,8 @@ final class MapIntent: ObservableObject {
         // 1. 캐시 확인
         if let cached = estateCache.get(for: state.region) {
             print("💾 [loadEstates] ✅ 캐시 히트! 매물 수: \(cached.count)")
-            state.estates = cached
+            state.allEstates = cached  // 원본 저장
+            state.estates = cached     // 표시용
             state.clusters = clusterEstates(cached, in: state.region)
             state.isLoading = false
             state.skeletonClusters = []
@@ -288,7 +294,8 @@ final class MapIntent: ObservableObject {
 
             // 4. 로딩 완료 후 한 번에 업데이트 (깜빡임 방지)
             state.isLoading = false
-            state.estates = newEstates
+            state.allEstates = newEstates  // 원본 저장
+            state.estates = newEstates     // 표시용
             state.skeletonClusters = []
             lastLoadedCenter = center
             updateClusters()
@@ -340,25 +347,58 @@ final class MapIntent: ObservableObject {
         state.searchQuery = query
     }
 
-    func searchEstates() async {
+    func searchEstates() async -> CLLocationCoordinate2D? {
         guard !state.searchQuery.isEmpty else {
             await loadEstatesInCurrentRegion()
-            return
+            return nil
         }
 
         state.isLoading = true
+        state.errorMessage = nil
         print("🔍 [Search] 검색 시작: \(state.searchQuery)")
 
-        if let (coordinate, span) = await geocodeQuery(state.searchQuery) {
-            state.region = MKCoordinateRegion(center: coordinate, span: span)
-            await loadEstates(at: coordinate)
-            await updateLocationText(for: coordinate)
-        } else {
-            print("🔍 [Search] geocoding 실패 → 현재 영역 폴백")
-            await loadEstatesInCurrentRegion()
+        // 검색어 보정: "구"나 "동"으로 끝나면 "서울특별시" 추가
+        var searchQuery = state.searchQuery
+        if searchQuery.hasSuffix("구") || searchQuery.hasSuffix("동") {
+            // "서울" 또는 "서울특별시"가 이미 포함되어 있지 않으면 추가
+            if !searchQuery.contains("서울") {
+                searchQuery = "서울특별시 " + searchQuery
+                print("🔍 [Search] 검색어 보정: \(state.searchQuery) → \(searchQuery)")
+            }
         }
 
-        print("🔍 [Search] 검색 완료")
+        // 지역명으로 Geocoding
+        let geocoder = CLGeocoder()
+
+        do {
+            let placemarks = try await geocoder.geocodeAddressString(searchQuery)
+
+            guard let coordinate = placemarks.first?.location?.coordinate else {
+                state.errorMessage = "검색 결과가 없습니다. 지역명을 확인해주세요."
+                state.isLoading = false
+                print("🔍 [Search] ❌ 검색 결과 없음")
+                return nil
+            }
+
+            // 지역명 검색 성공 → 지도 이동
+            print("🔍 [Search] ✅ 지역명 검색 성공: \(searchQuery) → \(coordinate.latitude), \(coordinate.longitude)")
+
+            state.region = MKCoordinateRegion(
+                center: coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+            )
+
+            // 해당 위치의 매물 조회
+            await loadEstates(at: coordinate)
+
+            print("🔍 [Search] 검색 완료")
+            return coordinate  // 성공 시 좌표 반환
+        } catch {
+            state.errorMessage = "검색 중 오류가 발생했습니다"
+            state.isLoading = false
+            print("🔍 [Search] ❌ Geocoding 실패: \(error.localizedDescription)")
+            return nil
+        }
     }
 
     private func geocodeQuery(_ query: String) async -> (CLLocationCoordinate2D, MKCoordinateSpan)? {
@@ -559,6 +599,56 @@ final class MapIntent: ObservableObject {
     /// 좌표를 텍스트로 포맷 (역지오코딩 실패 시 대체)
     private func formatCoordinate(_ coordinate: CLLocationCoordinate2D) -> String {
         return String(format: "%.4f°, %.4f°", coordinate.latitude, coordinate.longitude)
+    }
+
+    // MARK: - Filter
+
+    /// 필터 적용 (클라이언트 측 필터링)
+    func applyFilters(
+        depositRange: ClosedRange<Double>,
+        monthlyRentRange: ClosedRange<Double>,
+        areaRange: ClosedRange<Double>,
+        isDepositActive: Bool,
+        isMonthlyRentActive: Bool,
+        isAreaActive: Bool
+    ) {
+        print("🔍 [Filter] 필터 적용 시작")
+        print("🔍 [Filter] 원본 매물 수: \(state.allEstates.count)")
+
+        // 원본 데이터에서 필터링
+        let filtered = state.allEstates.filter { estate in
+            var passes = true
+
+            // 보증금 필터
+            if isDepositActive {
+                let deposit = Double(estate.deposit)
+                passes = passes && (deposit >= depositRange.lowerBound && deposit <= depositRange.upperBound)
+            }
+
+            // 월세 필터
+            if isMonthlyRentActive {
+                let rent = Double(estate.monthly_rent)
+                passes = passes && (rent >= monthlyRentRange.lowerBound && rent <= monthlyRentRange.upperBound)
+            }
+
+            // 평수 필터
+            if isAreaActive {
+                passes = passes && (estate.area >= areaRange.lowerBound && estate.area <= areaRange.upperBound)
+            }
+
+            return passes
+        }
+
+        print("🔍 [Filter] 필터링 결과: \(filtered.count)개")
+        state.estates = filtered
+        state.clusters = clusterEstates(filtered, in: state.region)
+    }
+
+    /// 필터 초기화
+    func resetFilters() {
+        print("🔍 [Filter] 필터 초기화")
+        state.estates = state.allEstates
+        updateClusters()
     }
 }
 
