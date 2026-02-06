@@ -157,15 +157,37 @@ final class EstateListIntent: ObservableObject {
         state.isBannersLoading = true
         state.bannerLoadError = nil
 
+        print("🎯 [BANNER] API 호출 시작: GET /v1/banners/main")
+
         do {
             let banners = try await estateRepository.fetchMainBanners()
+
+            print("✅ [BANNER] API 성공 - 받은 배너 개수: \(banners.count)")
+
+            // 각 배너의 상세 정보 로깅
+            for (index, banner) in banners.enumerated() {
+                print("📌 [BANNER #\(index + 1)]")
+                print("  - Title: \(banner.title)")
+                print("  - Image: '\(banner.image)' (길이: \(banner.image.count))")
+
+                // URL 구성 테스트
+                let testURL: URL?
+                if banner.image.hasPrefix("http") {
+                    testURL = URL(string: banner.image)
+                } else {
+                    testURL = URL(string: Secrets.baseURL + "/" + banner.image)
+                }
+                print("  - 구성된 URL: \(testURL?.absoluteString ?? "❌ INVALID")")
+            }
+
             state.banners = banners
         } catch {
             // 배너 로드 실패는 조용히 처리 (매물 리스트는 정상 표시)
             state.bannerLoadError = error.localizedDescription
-            print("⚠️ Banner load failed: \(error.localizedDescription)")
+            print("❌ [BANNER] API 실패: \(error)")
         }
 
         state.isBannersLoading = false
+        print("🏁 [BANNER] 로딩 완료 - state.banners.count: \(state.banners.count)")
     }
 }
