@@ -11,7 +11,10 @@ struct MainView: View {
     @State private var showBannerWebView = false
     @State private var bannerWebURL: URL? = nil
     @State private var scrollOffset: CGFloat = 0
-    @State private var showSearchSheet = false
+    @State private var searchQuery = ""
+    @State private var isSearching = false
+    @State private var searchError: String?
+    @FocusState private var isSearchFocused: Bool
 
     private var blurProgress: CGFloat {
         let threshold: CGFloat = 100
@@ -75,11 +78,33 @@ struct MainView: View {
                     .ignoresSafeArea(edges: .top)
                     .background(Color.gray15)
 
-                    HomeSearchBar(blurProgress: blurProgress) {
-                        showSearchSheet = true
-                    }
+                    HomeSearchBar(
+                        query: $searchQuery,
+                        isSearching: isSearching,
+                        blurProgress: blurProgress,
+                        isFocused: $isSearchFocused
+                    )
                     .padding(.top, 3)
                     .padding(.horizontal, 20)
+                    .onSubmit {
+                        Task { await performSearch() }
+                    }
+
+                    // 검색 오버레이
+                    if isSearchFocused || isSearching {
+                        Color.black.opacity(0.3)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                isSearchFocused = false
+                                searchQuery = ""
+                                searchError = nil
+                            }
+                            .overlay(alignment: .top) {
+                                searchOverlay
+                                    .padding(.top, 60)
+                                    .padding(.horizontal, 20)
+                            }
+                    }
                 }
             }
             .refreshable {
@@ -107,18 +132,6 @@ struct MainView: View {
         }
         .task {
             await intent.loadHomeData()
-        }
-        .sheet(isPresented: $showSearchSheet) {
-            HomeSearchSheetView { coordinate, span in
-                showSearchSheet = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    navigationPath.append(MapNavigationData(
-                        category: nil,
-                        initialCoordinate: coordinate,
-                        coordinateSpan: span
-                    ))
-                }
-            }
         }
     }
 
@@ -148,6 +161,83 @@ struct MainView: View {
         navigationPath.append(navData)
 
         print("🏠 [MainView] 지도 뷰로 이동")
+    }
+
+    private func performSearch() async {
+        let trimmedQuery = searchQuery.trimmingCharacters(in: .whitespaces)
+        guard !trimmedQuery.isEmpty else {
+            searchError = "검색어를 입력해주세요"
+            return
+        }
+
+        isSearching = true
+        searchError = nil
+
+        let geocoder = CLGeocoder()
+        let seoulRegion = CLCircularRegion(
+            center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780),
+            radius: 30_000,
+            identifier: "seoul"
+        )
+
+        do {
+            let placemarks = try await geocoder.geocodeAddressString(trimmedQuery, in: seoulRegion)
+
+            guard let placemark = placemarks.first, let location = placemark.location else {
+                isSearching = false
+                searchError = "검색 결과가 없습니다"
+                return
+            }
+
+            let coordinate = location.coordinate
+            let latDelta: Double = placemark.subLocality != nil ? 0.015 : 0.04
+            let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: latDelta)
+
+            isSearching = false
+            isSearchFocused = false
+            searchQuery = ""
+
+            navigationPath.append(MapNavigationData(
+                category: nil,
+                initialCoordinate: coordinate,
+                coordinateSpan: span
+            ))
+        } catch {
+            isSearching = false
+            searchError = "검색 결과가 없습니다"
+        }
+    }
+
+    // MARK: - Search Overlay
+
+    private var searchOverlay: some View {
+        VStack(spacing: 16) {
+            if isSearching {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                        .tint(.white)
+                    Text("검색 중...")
+                        .font(.pretendardBody2)
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(12)
+            } else if let error = searchError {
+                HStack {
+                    Spacer()
+                    Text(error)
+                        .font(.pretendardBody2)
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(12)
+            }
+        }
     }
 
     // MARK: - Today Estates Section
@@ -299,48 +389,57 @@ enum EstateListNavigationData: Hashable {
 // MARK: - Home Search Bar
 
 private struct HomeSearchBar: View {
+    @Binding var query: String
+    var isSearching: Bool
     var blurProgress: CGFloat
-    var action: () -> Void
+    var isFocused: FocusState<Bool>.Binding
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 8) {
-                Image(dsIcon: .search)
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(.gray60)
+        HStack(spacing: 8) {
+            Image(dsIcon: .search)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .foregroundColor(isFocused.wrappedValue ? .deepCoast : .gray60)
 
-                Text("검색어를 입력해주세요.")
-                    .font(.pretendard(.body2))
-                    .foregroundColor(.gray60)
+            TextField("검색어를 입력해주세요.", text: $query)
+                .font(.pretendard(.body2))
+                .foregroundColor(.gray90)
+                .focused(isFocused)
+                .submitLabel(.search)
+                .disabled(isSearching)
 
-                Spacer()
-            }
-            .padding(.horizontal, 12)
-            .frame(height: 40)
-            .background(
-                ZStack {
-                    // Base: 원래 배경 (점점 투명해짐)
-                    Color.gray0
-                        .opacity(1.0 - blurProgress * 0.2)
-
-                    // Blur: Material 레이어 (점점 진해짐)
-                    Color.clear
-                        .background(.ultraThinMaterial)
-                        .opacity(blurProgress)
+            if !query.isEmpty {
+                Button {
+                    query = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.gray45)
+                        .font(.system(size: 16))
                 }
-            )
-            .proportionalCornerRadius(
-                baseWidth: 350,
-                baseRadius: 20,
-                strokeColor: Color.gray30.opacity(1.0 - blurProgress * 0.5),
-                lineWidth: 1
-            )
+            }
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 12)
         .frame(height: 40)
+        .background(
+            ZStack {
+                // Base: 원래 배경 (점점 투명해짐)
+                Color.gray0
+                    .opacity(1.0 - blurProgress * 0.2)
+
+                // Blur: Material 레이어 (점점 진해짐)
+                Color.clear
+                    .background(.ultraThinMaterial)
+                    .opacity(blurProgress)
+            }
+        )
+        .proportionalCornerRadius(
+            baseWidth: 350,
+            baseRadius: 20,
+            strokeColor: isFocused.wrappedValue ? Color.deepCoast : Color.gray30.opacity(1.0 - blurProgress * 0.5),
+            lineWidth: isFocused.wrappedValue ? 2 : 1
+        )
     }
 }
 
