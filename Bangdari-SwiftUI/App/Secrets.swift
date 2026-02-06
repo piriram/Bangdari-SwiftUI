@@ -5,7 +5,7 @@ import Foundation
 enum Secrets {
     static let baseURL = "http://estate.sesac.kr:42449"
     static let sesacKey = "mR7pD3jE0xG9qZ4hC1yV5fT8sN6uL2oKwBPaFi"
-    static let impCode = "imp10391932"  // 포트원 공식 테스트 가맹점 코드
+    static let impCode = "imp14511373"  // LSLP 앱 전용 가맹점 코드
     static let kakaoAppKey = "d8d86395b711a71670debadcf4ee2c55"  // 카카오 네이티브 앱 키
 }
 
