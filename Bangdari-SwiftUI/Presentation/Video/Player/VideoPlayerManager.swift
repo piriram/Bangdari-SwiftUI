@@ -244,6 +244,14 @@ final class VideoPlayerManager: NSObject, ObservableObject {
                 for (key, value) in httpResponse.allHeaderFields {
                     print("   - \(key): \(value)")
                 }
+
+                // 응답 본문 출력 (에러 메시지 확인)
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("📄 [RESOURCE] Response Body:")
+                    print("   \(responseString)")
+                } else {
+                    print("📄 [RESOURCE] Response Body: (non-UTF8 data)")
+                }
             }
 
             // 응답 헤더 전달 (Content-Type, Content-Length 등)
