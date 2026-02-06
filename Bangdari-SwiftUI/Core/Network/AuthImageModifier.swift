@@ -25,16 +25,26 @@ struct AuthImageModifier: ImageDownloadRequestModifier {
 
     private func normalizedImageURL(_ url: URL) -> URL {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            print("⚠️ [IMG-NORMALIZE] URLComponents 파싱 실패")
             return url
         }
 
+        let originalPath = components.path
         var path = components.path
+
+        // 이중 슬래시 제거
         while path.contains("//") {
             path = path.replacingOccurrences(of: "//", with: "/")
         }
 
+        // /data/ 경로 → /v1/data/ 변환
         if path.hasPrefix("/data/") {
             components.path = "/v1" + path
+            print("🔧 [IMG-NORMALIZE] /data/ 경로 변환")
+            print("  - Original: \(url.absoluteString)")
+            print("  - Path Before: \(originalPath)")
+            print("  - Path After: \(components.path)")
+            print("  - Final URL: \(components.url?.absoluteString ?? "nil")")
         } else {
             components.path = path
         }
