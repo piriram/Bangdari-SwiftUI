@@ -100,8 +100,7 @@ struct MainTabView: View {
             .tag(MainTab.community)
 
             NavigationStack {
-                Text("비디오 탭 (구현 예정)")
-                    .navigationTitle("비디오")
+                VideoListView()
             }
             .tabItem {
                 Image(systemName: selectedTab == .video ? "play.rectangle.fill" : "play.rectangle")
@@ -129,6 +128,11 @@ struct MainTabView: View {
                 Text("설정")
             }
             .tag(MainTab.my)
+        }
+        .onChange(of: selectedTab) { _, newTab in
+            if newTab != .video {
+                VideoPlayerManager.shared.pause()
+            }
         }
     }
 
