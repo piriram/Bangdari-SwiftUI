@@ -6,34 +6,52 @@ import SwiftUI
 struct CommunityListView: View {
     @StateObject private var intent = CommunityListIntent()
     @State private var showCreatePost = false
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        Group {
-            if intent.state.isLoading && intent.state.posts.isEmpty {
-                ProgressView()
-            } else if let error = intent.state.errorMessage, intent.state.posts.isEmpty {
-                errorView(error)
-            } else {
-                postList
-            }
-        }
-        .searchable(text: Binding(
-            get: { intent.state.searchQuery },
-            set: { intent.updateSearchQuery($0) }
-        ), prompt: "게시글 검색")
-        .onSubmit(of: .search) {
-            Task { await intent.searchPosts() }
-        }
-        .standardNavigationBar(title: "커뮤니티")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+        VStack(spacing: 0) {
+            // 네비게이션 바
+            CustomNavigationBar(onBack: { dismiss() }) {
+                Text("커뮤니티")
+                    .font(.pretendardBody1Bold)
+                    .foregroundColor(.gray90)
+            } trailing: {
                 Button {
                     showCreatePost = true
                 } label: {
                     Image(systemName: "square.and.pencil")
+                        .font(.system(size: 20))
+                        .foregroundColor(.gray90)
+                }
+            }
+
+            // 검색바
+            SearchBar(
+                text: Binding(
+                    get: { intent.state.searchQuery },
+                    set: { intent.updateSearchQuery($0) }
+                ),
+                placeholder: "게시글 검색",
+                onSubmit: {
+                    Task { await intent.searchPosts() }
+                }
+            )
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.gray0)
+
+            // 콘텐츠
+            Group {
+                if intent.state.isLoading && intent.state.posts.isEmpty {
+                    PostListSkeleton()
+                } else if let error = intent.state.errorMessage, intent.state.posts.isEmpty {
+                    errorView(error)
+                } else {
+                    postList
                 }
             }
         }
+        .navigationBarHidden(true)
         .sheet(isPresented: $showCreatePost) {
             NavigationStack {
                 PostCreateView {
@@ -74,34 +92,28 @@ struct CommunityListView: View {
     // MARK: - Post Row
 
     private func postRow(_ post: PostSummaryResponse) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             // 카테고리 + 작성자
             HStack {
-                Text(post.category)
-                    .font(.caption2)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.blue.opacity(0.1))
-                    .foregroundColor(.blue)
-                    .cornerRadius(4)
+                Badge(text: post.category, style: badgeStyle(for: post.category))
 
                 Spacer()
 
                 Text(post.creator.nick)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.pretendardCaption1)
+                    .foregroundColor(.gray60)
             }
 
             // 제목
             Text(post.title)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.pretendardBody2Bold)
+                .foregroundColor(.gray90)
                 .lineLimit(1)
 
             // 내용 미리보기
             Text(post.content)
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(.pretendardBody3)
+                .foregroundColor(.gray75)
                 .lineLimit(2)
 
             // 하단 정보
@@ -111,10 +123,10 @@ struct CommunityListView: View {
                     KFImage.auth(url: URL(string: Secrets.baseURL + "/" + firstFile))
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 40, height: 40)
-                        .background(Color.gray.opacity(0.2))
+                        .frame(width: 60, height: 60)
+                        .background(Color.gray30)
                         .clipped()
-                        .cornerRadius(4)
+                        .cornerRadius(8)
                 }
 
                 Spacer()
@@ -122,16 +134,16 @@ struct CommunityListView: View {
                 // 좋아요 + 날짜
                 HStack(spacing: 12) {
                     Label("\(post.like_count)", systemImage: post.is_like ? "heart.fill" : "heart")
-                        .font(.caption)
-                        .foregroundColor(post.is_like ? .red : .secondary)
+                        .font(.pretendardCaption1)
+                        .foregroundColor(post.is_like ? .red : .gray60)
 
                     Text(formatDate(post.createdAt))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(.pretendardCaption1)
+                        .foregroundColor(.gray60)
                 }
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
     }
 
     // MARK: - Error View
@@ -159,6 +171,21 @@ struct CommunityListView: View {
 
     private func formatDate(_ dateString: String) -> String {
         String(dateString.prefix(10))
+    }
+
+    // MARK: - Badge Style Mapping
+
+    private func badgeStyle(for category: String) -> BadgeStyle {
+        switch category {
+        case "공지사항", "중요":
+            return .accent     // DeepWood
+        case "질문", "토론":
+            return .primary    // DeepCoast
+        case "후기", "정보":
+            return .secondary  // BrightCoast
+        default:
+            return .neutral    // Gray45
+        }
     }
 }
 

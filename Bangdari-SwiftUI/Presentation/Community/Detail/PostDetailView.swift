@@ -26,7 +26,15 @@ struct PostDetailView: View {
             // 콘텐츠
             Group {
                 if intent.state.isLoading && intent.state.post == nil {
-                    ProgressView()
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            PostCardSkeleton()
+                            PostCardSkeleton()
+                            PostCardSkeleton()
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 20)
+                    }
                 } else if let post = intent.state.post {
                     detailContent(post)
                 } else if let error = intent.state.errorMessage {
@@ -53,13 +61,7 @@ struct PostDetailView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         // 카테고리
-                        Text(post.category)
-                            .font(.caption)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.blue.opacity(0.1))
-                            .foregroundColor(.blue)
-                            .cornerRadius(4)
+                        Badge(text: post.category, style: badgeStyle(for: post.category))
 
                         // 제목
                         Text(post.title)
@@ -195,7 +197,7 @@ struct PostDetailView: View {
             }
         }
         .padding(10)
-        .background(isReply ? Color(.systemGray6) : Color(.systemGray5))
+        .background(isReply ? Color.gray15 : Color.gray30)
         .cornerRadius(8)
     }
 
@@ -221,7 +223,7 @@ struct PostDetailView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
-                .background(Color(.systemGray6))
+                .background(Color.gray15)
             }
 
             Divider()
@@ -292,6 +294,21 @@ struct PostDetailView: View {
 
     private func formatDate(_ dateString: String) -> String {
         String(dateString.prefix(10))
+    }
+
+    // MARK: - Badge Style Mapping
+
+    private func badgeStyle(for category: String) -> BadgeStyle {
+        switch category {
+        case "공지사항", "중요":
+            return .accent     // DeepWood
+        case "질문", "토론":
+            return .primary    // DeepCoast
+        case "후기", "정보":
+            return .secondary  // BrightCoast
+        default:
+            return .neutral    // Gray45
+        }
     }
 }
 
