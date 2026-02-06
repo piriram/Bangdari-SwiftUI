@@ -72,10 +72,7 @@ struct EstateListView: View {
         CustomNavigationBar(onBack: { dismiss() }) {
             // Center: Location + Text
             HStack(spacing: 6) {
-                Image(dsIcon: .location)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
+                DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
                     .foregroundColor(.deepWood)
 
                 Text(locationText)
@@ -88,10 +85,7 @@ struct EstateListView: View {
                 Button {
                     // TODO: Navigate to map
                 } label: {
-                    Image(dsIcon: .map)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
+                    DSIconView(.map, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
                         .foregroundColor(.gray90)
                 }
             }
@@ -396,7 +390,7 @@ struct EstateListItem: View {
                 .foregroundColor(.gray75)
 
             // 4. Meta (면적·층수)
-            Text("\(Int(estate.area))㎡ · \(estate.floors)층")
+            Text("\(estate.formattedArea()) · \(estate.floors)층")
                 .font(.pretendardCaption2)
                 .foregroundColor(.gray60)
 
@@ -431,11 +425,7 @@ struct EstateListItem: View {
     }
 
     private var priceText: String {
-        if estate.monthly_rent > 0 {
-            return "월세 \(formatPrice(estate.deposit))/\(formatPrice(estate.monthly_rent))"
-        } else {
-            return "전세 \(formatPrice(estate.deposit))"
-        }
+        return estate.formattedPrice()
     }
 
     private func formatPrice(_ price: Int) -> String {
@@ -472,16 +462,14 @@ struct InlinePromoItem: View {
                 onTap(url)
             }
         } label: {
-            // Full-width banner image
+            // Full-width banner image (390×66 design)
             KFImage.auth(url: imageURL)
                 .placeholder {
                     ZStack {
                         Color.gray30
-                        VStack(spacing: 8) {
+                        HStack(spacing: 6) {
                             Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 48, height: 48)
+                                .font(.system(size: 16))
                                 .foregroundColor(.gray60)
 
                             Text(banner.title)
@@ -498,9 +486,9 @@ struct InlinePromoItem: View {
                 }
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(height: 140)
+                .frame(height: 66)
                 .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
     }
