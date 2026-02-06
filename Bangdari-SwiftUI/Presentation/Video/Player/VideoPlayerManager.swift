@@ -5,7 +5,7 @@ import Combine
 // MARK: - Video Player Manager
 
 @MainActor
-final class VideoPlayerManager: ObservableObject {
+final class VideoPlayerManager: NSObject, ObservableObject {
     static let shared = VideoPlayerManager()
 
     @Published private(set) var player: AVPlayer?
@@ -15,8 +15,15 @@ final class VideoPlayerManager: ObservableObject {
     private var timeObserver: Any?
     private var statusObservation: NSKeyValueObservation?
     private var errorObservation: NSKeyValueObservation?
+    private let urlSession: URLSession
+    private let keychain = KeychainManager.shared
 
-    private init() {
+    private override init() {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 30
+        self.urlSession = URLSession(configuration: config)
+
+        super.init()
         setupPlayer()
     }
 
@@ -54,9 +61,22 @@ final class VideoPlayerManager: ObservableObject {
         stop()
         currentVideoId = videoId
 
-        // 문서대로 "별도 인증 없이" 재생 (헤더 제거)
-        print("🎯 [PLAYER] Creating AVPlayerItem without auth headers (token in URL)")
-        let playerItem = AVPlayerItem(url: videoURL)
+        // 커스텀 스킴 URL 생성 (AVAssetResourceLoader를 사용하기 위함)
+        guard let customURL = createCustomSchemeURL(from: videoURL) else {
+            print("❌ [PLAYER] Failed to create custom scheme URL")
+            return
+        }
+
+        print("🎯 [PLAYER] Creating AVAsset with custom resource loader")
+
+        // AVURLAsset 생성 및 ResourceLoader 설정
+        let asset = AVURLAsset(url: customURL)
+        asset.resourceLoader.setDelegate(
+            self,
+            queue: DispatchQueue(label: "com.bangdari.resourceloader")
+        )
+
+        let playerItem = AVPlayerItem(asset: asset)
 
         // AVPlayerItem 상태 모니터링
         statusObservation = playerItem.observe(\.status, options: [.new, .old]) { [weak self] item, change in
@@ -133,5 +153,115 @@ final class VideoPlayerManager: ObservableObject {
     nonisolated deinit {
         // deinit는 main actor에서 실행되지 않으므로 player 직접 접근 불가
         // AVPlayer는 자동으로 정리됨
+    }
+
+    // MARK: - Private Helpers
+
+    /// HTTPS URL을 커스텀 스킴 URL로 변환 (custom-https://)
+    private func createCustomSchemeURL(from url: URL) -> URL? {
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+
+        // https를 custom-https로 변경
+        if components.scheme == "https" {
+            components.scheme = "custom-https"
+        } else if components.scheme == "http" {
+            components.scheme = "custom-http"
+        }
+
+        return components.url
+    }
+
+    /// 커스텀 스킴 URL을 실제 HTTPS URL로 복원
+    private func convertToHTTPSURL(_ customURL: URL) -> URL {
+        guard var components = URLComponents(url: customURL, resolvingAgainstBaseURL: false) else {
+            return customURL
+        }
+
+        components.scheme = components.scheme?.replacingOccurrences(of: "custom-", with: "")
+        return components.url ?? customURL
+    }
+
+    /// AVAssetResourceLoadingRequest 처리 (실제 네트워크 요청)
+    @MainActor
+    private func handleLoadingRequest(_ loadingRequest: AVAssetResourceLoadingRequest) async {
+        guard let url = loadingRequest.request.url else {
+            loadingRequest.finishLoading(with: NSError(
+                domain: "VideoPlayerManager",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]
+            ))
+            return
+        }
+
+        // custom-https를 https로 복원
+        let actualURL = convertToHTTPSURL(url)
+
+        do {
+            // 인증 헤더를 포함한 URLRequest 생성
+            var request = URLRequest(url: actualURL)
+            request.setValue(Secrets.sesacKey, forHTTPHeaderField: "SeSACKey")
+
+            if let token = keychain.accessToken {
+                request.setValue(token, forHTTPHeaderField: "Authorization")
+            }
+
+            print("📡 [RESOURCE] Fetching: \(actualURL.absoluteString)")
+
+            // 데이터 다운로드
+            let (data, response) = try await urlSession.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw NSError(domain: "VideoPlayerManager", code: -2, userInfo: [
+                    NSLocalizedDescriptionKey: "Invalid HTTP response"
+                ])
+            }
+
+            print("✅ [RESOURCE] Response: \(httpResponse.statusCode)")
+
+            // 응답 헤더 전달 (Content-Type, Content-Length 등)
+            if let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type") {
+                loadingRequest.contentInformationRequest?.contentType = contentType
+            }
+            if let contentLength = httpResponse.value(forHTTPHeaderField: "Content-Length"),
+               let length = Int64(contentLength) {
+                loadingRequest.contentInformationRequest?.contentLength = length
+            }
+            loadingRequest.contentInformationRequest?.isByteRangeAccessSupported = true
+
+            // 데이터 전달
+            loadingRequest.dataRequest?.respond(with: data)
+            loadingRequest.finishLoading()
+
+        } catch {
+            print("❌ [RESOURCE] Error: \(error.localizedDescription)")
+            loadingRequest.finishLoading(with: error)
+        }
+    }
+}
+
+// MARK: - AVAssetResourceLoaderDelegate
+
+extension VideoPlayerManager: AVAssetResourceLoaderDelegate {
+
+    nonisolated func resourceLoader(
+        _ resourceLoader: AVAssetResourceLoader,
+        shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
+    ) -> Bool {
+        print("🔄 [RESOURCE] Loading request: \(loadingRequest.request.url?.absoluteString ?? "nil")")
+
+        Task {
+            await handleLoadingRequest(loadingRequest)
+        }
+
+        return true
+    }
+
+    nonisolated func resourceLoader(
+        _ resourceLoader: AVAssetResourceLoader,
+        didCancel loadingRequest: AVAssetResourceLoadingRequest
+    ) {
+        print("❌ [RESOURCE] Request cancelled: \(loadingRequest.request.url?.absoluteString ?? "nil")")
     }
 }
