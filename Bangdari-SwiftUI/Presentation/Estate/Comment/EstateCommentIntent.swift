@@ -49,6 +49,8 @@ final class EstateCommentIntent: ObservableObject {
         do {
             let detail = try await estateRepository.fetchEstateDetail(estateId: estateId)
             state.estate = detail
+        } catch let error as NetworkError {
+            state.errorMessage = error.message
         } catch {
             state.errorMessage = "댓글을 불러오는데 실패했습니다."
         }
@@ -86,6 +88,8 @@ final class EstateCommentIntent: ObservableObject {
 
             // 댓글 새로고침
             await loadComments()
+        } catch let error as NetworkError {
+            state.errorMessage = error.message
         } catch {
             state.errorMessage = "댓글 작성에 실패했습니다."
         }
@@ -124,6 +128,8 @@ final class EstateCommentIntent: ObservableObject {
             state.editingCommentId = nil
             state.editingText = ""
             await loadComments()
+        } catch let error as NetworkError {
+            state.errorMessage = error.message
         } catch {
             state.errorMessage = "댓글 수정에 실패했습니다."
         }
@@ -142,6 +148,8 @@ final class EstateCommentIntent: ObservableObject {
                 commentId: commentId
             )
             await loadComments()
+        } catch let error as NetworkError {
+            state.errorMessage = error.message
         } catch {
             state.errorMessage = "댓글 삭제에 실패했습니다."
         }

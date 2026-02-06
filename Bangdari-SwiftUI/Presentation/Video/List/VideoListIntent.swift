@@ -52,10 +52,12 @@ final class VideoListIntent: ObservableObject {
             }
 
             state.isLoading = false
+        } catch let error as NetworkError {
+            state.errorMessage = error.message
+            state.isLoading = false
         } catch {
             state.errorMessage = "비디오 목록을 불러오는데 실패했습니다."
             state.isLoading = false
-            print("Failed to load videos: \(error)")
         }
     }
 
@@ -76,9 +78,11 @@ final class VideoListIntent: ObservableObject {
             state.nextCursor = response.next_cursor
             state.hasMore = response.hasMore
             state.isLoadingMore = false
+        } catch is NetworkError {
+            state.isLoadingMore = false
+            // 페이지네이션 에러는 조용히 처리 (사용자 경험 방해 안 함)
         } catch {
             state.isLoadingMore = false
-            print("Failed to load more videos: \(error)")
         }
     }
 
