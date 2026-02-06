@@ -32,18 +32,38 @@ struct VideoPlayerView: View {
             )
         }
         .onAppear {
+            print("📺 [VIEW] onAppear - videoId: \(video.video_id)")
+            print("   ▶️  isCurrentVideo: \(isCurrentVideo)")
+            print("   🔗 streamURL: \(streamURL ?? "nil")")
             if isCurrentVideo, let url = streamURL {
                 playerManager.loadAndPlay(url: url, videoId: video.video_id)
+            } else {
+                print("   ⚠️  Not loading: \(isCurrentVideo ? "streamURL is nil" : "not current video")")
             }
         }
         .onChange(of: isCurrentVideo) { _, newValue in
+            print("📺 [VIEW] onChange(isCurrentVideo) - videoId: \(video.video_id)")
+            print("   ▶️  newValue: \(newValue)")
+            print("   🔗 streamURL: \(streamURL ?? "nil")")
             if newValue, let url = streamURL {
                 playerManager.loadAndPlay(url: url, videoId: video.video_id)
             } else {
                 playerManager.pause()
+                if newValue {
+                    print("   ⚠️  streamURL is nil but video became current!")
+                }
+            }
+        }
+        .onChange(of: streamURL) { _, newURL in
+            print("📺 [VIEW] onChange(streamURL) - videoId: \(video.video_id)")
+            print("   🔗 newURL: \(newURL ?? "nil")")
+            if isCurrentVideo, let url = newURL {
+                print("   ▶️  Loading video with new URL")
+                playerManager.loadAndPlay(url: url, videoId: video.video_id)
             }
         }
         .onDisappear {
+            print("📺 [VIEW] onDisappear - videoId: \(video.video_id)")
             playerManager.pause()
         }
     }

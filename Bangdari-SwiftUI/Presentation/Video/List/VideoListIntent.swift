@@ -22,6 +22,7 @@ final class VideoListIntent: ObservableObject {
 
     private let repository: VideoRepository
     private let limit = 10
+    private var prefetchTask: Task<Void, Never>?  // 이전 prefetch 취소용
 
     init(repository: VideoRepository) {
         self.repository = repository
@@ -83,22 +84,34 @@ final class VideoListIntent: ObservableObject {
 
     /// 현재 재생 중인 비디오 인덱스 업데이트
     func updateCurrentIndex(_ newIndex: Int) {
+        print("📍 [INDEX] updateCurrentIndex: \(state.currentIndex) → \(newIndex)")
         state.currentIndex = newIndex
 
-        // Prefetch: 다음 비디오의 스트림 URL 미리 발급
-        let nextIndex = newIndex + 1
-        if nextIndex < state.videos.count {
-            let nextVideoId = state.videos[nextIndex].video_id
-            if state.streamURLCache[nextVideoId] == nil {
-                Task {
+        // 이전 prefetch 작업 취소
+        prefetchTask?.cancel()
+
+        prefetchTask = Task {
+            // Prefetch: 현재 비디오의 스트림 URL 발급 (우선, 재시도 로직 포함)
+            if newIndex < state.videos.count {
+                let currentVideoId = state.videos[newIndex].video_id
+                print("   ⚡ Prefetching CURRENT video: \(currentVideoId)")
+                
+                // 현재 비디오는 토큰 갱신을 위해 새로 요청 (캐시 무시)
+                await prefetchStreamURLWithRetry(for: currentVideoId)
+            }
+
+            // Prefetch: 다음 비디오의 스트림 URL 미리 발급 (백그라운드)
+            let nextIndex = newIndex + 1
+            if nextIndex < state.videos.count {
+                let nextVideoId = state.videos[nextIndex].video_id
+                if state.streamURLCache[nextVideoId] == nil {
+                    print("   ⏭️  Prefetching NEXT video: \(nextVideoId)")
                     await prefetchStreamURL(for: nextVideoId)
                 }
             }
-        }
 
-        // 페이지네이션: 끝에서 2개 남았을 때 자동 로드
-        if newIndex >= state.videos.count - 2 {
-            Task {
+            // 페이지네이션: 끝에서 2개 남았을 때 자동 로드
+            if newIndex >= state.videos.count - 2 {
                 await loadMore()
             }
         }
@@ -118,7 +131,12 @@ final class VideoListIntent: ObservableObject {
 
     /// 스트림 URL 가져오기 (캐시 우선)
     func getStreamURL(for videoId: String) -> String? {
-        return state.streamURLCache[videoId]
+        let url = state.streamURLCache[videoId]
+        print("🔍 [CACHE] getStreamURL for \(videoId): \(url != nil ? "✅ Found" : "❌ Not found")")
+        if let url = url {
+            print("   🔗 URL: \(url)")
+        }
+        return url
     }
 
     // MARK: - Private Methods
@@ -131,9 +149,32 @@ final class VideoListIntent: ObservableObject {
 
         do {
             let response = try await repository.fetchStreamURL(videoId: videoId)
-            state.streamURLCache[videoId] = response.stream_url
+
+            // 🔍 DEBUG: 상대 경로 → 절대 URL 변환
+            let absoluteURL = Secrets.baseURL + response.stream_url
+            print("🎬 [VIDEO] Prefetched stream URL for \(videoId)")
+            print("   📍 Relative: \(response.stream_url)")
+            print("   🌐 Absolute: \(absoluteURL)")
+
+            state.streamURLCache[videoId] = absoluteURL
         } catch {
-            print("Failed to prefetch stream URL for \(videoId): \(error)")
+            print("❌ Failed to prefetch stream URL for \(videoId): \(error)")
+        }
+    }
+
+    /// 스트림 URL Prefetch with Retry (토큰 만료 대비)
+    private func prefetchStreamURLWithRetry(for videoId: String) async {
+        // 현재 비디오는 토큰이 만료될 수 있으므로 항상 새로 요청
+        do {
+            let response = try await repository.fetchStreamURL(videoId: videoId)
+            let absoluteURL = Secrets.baseURL + response.stream_url
+            print("🎬 [VIDEO] Prefetched stream URL for \(videoId) (FRESH TOKEN)")
+            print("   📍 Relative: \(response.stream_url)")
+            print("   🌐 Absolute: \(absoluteURL)")
+
+            state.streamURLCache[videoId] = absoluteURL
+        } catch {
+            print("❌ Failed to prefetch stream URL for \(videoId): \(error)")
         }
     }
 }

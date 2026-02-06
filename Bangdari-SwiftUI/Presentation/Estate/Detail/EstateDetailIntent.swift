@@ -219,6 +219,10 @@ final class EstateDetailIntent: ObservableObject {
     /// 예약 에러 처리
     private func handleReservationError(_ error: NetworkError) {
         switch error {
+        case .badRequest:
+            state.reservationError = "필수값을 채워주세요."
+        case .notFound:
+            state.reservationError = "주문번호를 다시 확인해주세요."
         case .conflict:
             state.reservationError = "이미 예약된 매물입니다."
         case .notParticipant:

@@ -37,6 +37,26 @@ struct MyPageView: View {
                 }
             }
 
+            Section("주문/결제") {
+                NavigationLink {
+                    MyOrderListView()
+                } label: {
+                    HStack {
+                        Image(systemName: "list.clipboard")
+                        Text("내 주문 목록")
+                    }
+                }
+
+                NavigationLink {
+                    PaymentReceiptInputView()
+                } label: {
+                    HStack {
+                        Image(systemName: "doc.text.magnifyingglass")
+                        Text("결제 영수증 조회")
+                    }
+                }
+            }
+
             Section("개발") {
                 NavigationLink {
                     ServerLogView()
