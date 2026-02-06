@@ -59,7 +59,7 @@ enum APIEndpoint {
     case mainBanners
 
     // Video
-    case videos
+    case videos(next: String?, limit: Int?)
     case videoStream(videoId: String)
     case videoLike(videoId: String)
 
@@ -245,6 +245,12 @@ extension APIEndpoint {
             return items.isEmpty ? nil : items
 
         case .myLikedPosts(let next, let limit):
+            var items: [URLQueryItem] = []
+            if let next { items.append(URLQueryItem(name: "next", value: next)) }
+            if let limit { items.append(URLQueryItem(name: "limit", value: String(limit))) }
+            return items.isEmpty ? nil : items
+
+        case .videos(let next, let limit):
             var items: [URLQueryItem] = []
             if let next { items.append(URLQueryItem(name: "next", value: next)) }
             if let limit { items.append(URLQueryItem(name: "limit", value: String(limit))) }

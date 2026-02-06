@@ -168,28 +168,8 @@ struct EstateListView: View {
     private var estateListContent: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 12) {
-                ForEach(Array(displayEstates.enumerated()), id: \.element.estate_id) { index, estate in
-                    Button {
-                        selectedEstateIdForDetail = estate.estate_id
-                    } label: {
-                        EstateListItem(estate: estate)
-                    }
-                    .buttonStyle(.plain)
-
-                    // Dynamic interval banners (all modes)
-                    // 동적 간격으로 배너 표시 (순환 로직)
-                    if index < displayEstates.count - 1,
-                       !intent.state.banners.isEmpty {
-                        if (index + 1) % bannerInterval == 0 {
-                            let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
-                            let banner = intent.state.banners[bannerIndex]
-
-                            InlinePromoItem(banner: banner) { url in
-                                // TODO: BannerWebView 네비게이션 구현
-                                print("🔗 Banner clicked: \(url)")
-                            }
-                        }
-                    }
+                ForEach(displayEstates.indices, id: \.self) { index in
+                    estateRow(at: index)
                 }
 
                 // Load more indicator (liked mode only)
@@ -200,6 +180,38 @@ struct EstateListView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 12)
+        }
+    }
+
+    @ViewBuilder
+    private func estateRow(at index: Int) -> some View {
+        let estate = displayEstates[index]
+
+        Button {
+            selectedEstateIdForDetail = estate.estate_id
+        } label: {
+            EstateListItem(estate: estate)
+        }
+        .buttonStyle(.plain)
+
+        // Dynamic interval banners (all modes)
+        // 동적 간격으로 배너 표시 (순환 로직)
+        if index < displayEstates.count - 1,
+           !intent.state.banners.isEmpty,
+           (index + 1) % bannerInterval == 0 {
+            let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
+            let banner = intent.state.banners[bannerIndex]
+
+            InlinePromoItem(banner: banner) { url in
+                // TODO: BannerWebView 네비게이션 구현
+                print("🔗 Banner clicked: \(url)")
+            }
+            .onAppear {
+                print("🔄 [BANNER-CYCLE] Estate #\(index) 뒤에 배너 표시")
+                print("  - Total Banners: \(intent.state.banners.count)")
+                print("  - Selected Index: \(bannerIndex)")
+                print("  - Banner Title: \(banner.title)")
+            }
         }
     }
 
@@ -242,8 +254,10 @@ struct EstateListView: View {
             displayEstates = intent.state.estates
         case .todayEstates(let estates):
             displayEstates = estates
+            await intent.loadBanners()  // 배너 로드 추가
         case .hotEstates(let estates):
             displayEstates = estates
+            await intent.loadBanners()  // 배너 로드 추가
         }
     }
 
@@ -442,50 +456,54 @@ struct InlinePromoItem: View {
                 onTap(url)
             }
         } label: {
-            HStack(spacing: 0) {
-                // Left: Text Block
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(banner.title)
-                        .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray90)
-                        .lineLimit(2)
+            // Full-width banner image
+            KFImage.auth(url: imageURL)
+                .placeholder {
+                    ZStack {
+                        Color.gray30
+                        VStack(spacing: 8) {
+                            Image(systemName: "photo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 48, height: 48)
+                                .foregroundColor(.gray60)
 
-                    if banner.payload?.type == "WEBVIEW" {
-                        Text("자세히 보기")
-                            .font(.pretendardCaption1)
-                            .foregroundColor(.gray60)
+                            Text(banner.title)
+                                .font(.pretendardCaption1)
+                                .foregroundColor(.gray75)
+                        }
                     }
                 }
-
-                Spacer()
-
-                // Right: Banner Image (64×64px)
-                KFImage.auth(url: imageURL)
-                    .placeholder {
-                        Image(systemName: "star.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 48, height: 48)
-                            .foregroundColor(.brightCream)
-                    }
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 64, height: 64)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .padding(12)
-            .frame(height: 72)
-            .background(Color.gray0)
-            .cornerRadius(20)
+                .onFailure { error in
+                    print("❌ [BANNER-IMG] 로딩 실패")
+                    print("  - Banner: \(banner.title)")
+                    print("  - URL: \(imageURL?.absoluteString ?? "nil")")
+                    print("  - Error: \(error.localizedDescription)")
+                }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(height: 140)
+                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
     }
 
     private var imageURL: URL? {
+        // 빈 문자열 체크
+        guard !banner.image.isEmpty else {
+            print("⚠️ [BANNER-UI] 이미지 경로가 비어있음")
+            return nil
+        }
+
         if banner.image.hasPrefix("http") {
             return URL(string: banner.image)
         } else {
-            return URL(string: Secrets.baseURL + "/" + banner.image)
+            // 이중 슬래시 방지
+            let separator = banner.image.hasPrefix("/") ? "" : "/"
+            let fullPath = Secrets.baseURL + separator + banner.image
+            print("🖼️ [BANNER-UI] URL 구성: '\(fullPath)'")
+            return URL(string: fullPath)
         }
     }
 }
