@@ -6,6 +6,7 @@ import SwiftUI
 struct EstateDetailView: View {
     @StateObject private var intent: EstateDetailIntent
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @State private var currentImageIndex = 0
     @State private var navigateToChatRoom = false
 
@@ -15,6 +16,11 @@ struct EstateDetailView: View {
     private var imageHeight: CGFloat {
         UIScreen.main.bounds.width / imageAspectRatio
     }
+
+    // TODO: API 연동 후 creator.phoneNum 사용
+    // - Estate 상세 API 응답에 중개사 전화번호 필드 추가 필요
+    // - UserInfo 구조체에 phoneNum: String? 필드 추가
+    private let tempPhoneNumber = "010-1234-5678"
 
     init(estateId: String) {
         _intent = StateObject(wrappedValue: EstateDetailIntent(estateId: estateId))
@@ -649,7 +655,11 @@ struct EstateDetailView: View {
                     }
                 }
             } else if icon == .call {
-                // TODO: 전화 걸기 기능
+                // 전화번호에서 하이픈 제거
+                let phoneNumber = tempPhoneNumber.replacingOccurrences(of: "-", with: "")
+                if let url = URL(string: "tel://\(phoneNumber)") {
+                    openURL(url)
+                }
             }
         } label: {
             Image.contactIcon(icon)
