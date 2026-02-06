@@ -26,7 +26,7 @@ struct HeroBannerView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
 
                 // 2️⃣ 하단 딤 (Dim)
-                Image("_Dim View")
+                Image("Dim View")
                     .resizable()
                     .scaledToFill()
                     .allowsHitTesting(false)
@@ -34,9 +34,14 @@ struct HeroBannerView: View {
                 // 3️⃣ 배너 텍스트 (좌측 하단)
                 VStack {
                     Spacer()
-                    estateTextOverlay
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 32)
+                    HStack {
+                        Spacer()
+                            .frame(width:20)
+                        estateTextOverlay
+                        Spacer()
+                    }
+                    .padding(.leading, 20)
+                    .padding(.bottom, 36)
                 }
                 .allowsHitTesting(false)
 
@@ -44,7 +49,7 @@ struct HeroBannerView: View {
                 VStack {
                     Spacer()
                     pageIndicator
-                        .padding(.bottom, 12)
+                        .padding(.bottom, 16)
                 }
                 .allowsHitTesting(false)
         }
@@ -87,10 +92,9 @@ struct HeroBannerView: View {
                     }
                 }
                 .padding(.vertical, 4)
-                .padding(.horizontal, 8)
-                .background(Color.gray60.opacity(0.2))
-//                .cornerRadius(10)
-                .clipShape(Capsule())
+                .padding(.horizontal, 10)
+                .background(Color.gray60.opacity(0.25))
+                .cornerRadius(16)
 
                 VStack(alignment: .leading, spacing: 12){
                     // 메인 타이틀
@@ -98,6 +102,7 @@ struct HeroBannerView: View {
                         .font(.yeongdeokTitle1())
                         .foregroundColor(.gray15)
                         .lineLimit(2)
+                        .padding(.bottom, 2)
 
                     // 설명
                     Text(estate.introduction)
@@ -107,7 +112,6 @@ struct HeroBannerView: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .task(id: currentPage) {
             await loadLocationIfNeeded()
         }
