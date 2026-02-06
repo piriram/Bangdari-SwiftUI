@@ -28,7 +28,6 @@ struct DateDivider: View {
 
     private func formatDate(_ date: Date) -> String {
         let calendar = Calendar.current
-        let now = Date()
 
         if calendar.isDateInToday(date) {
             return "오늘"
