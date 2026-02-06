@@ -113,45 +113,62 @@ struct ChatRoomView: View {
 
     private func messageBubble(_ message: ChatResponse) -> some View {
         let isMe = message.sender.user_id == intent.state.myUserId
+        let prevMessage = previousMessage(for: message)
+        let nextMessage = nextMessage(for: message)
 
-        return HStack(alignment: .bottom, spacing: 8) {
-            if isMe { Spacer(minLength: 60) }
+        // 연속 메시지 판단: 같은 발신자 & 1분 이내
+        let isContinuous = isContinuousMessage(current: message, previous: prevMessage)
+        let isLastInGroup = !isContinuousMessage(current: nextMessage, previous: message)
 
-            // 상대방 프로필 (상대 메시지만)
-            if !isMe {
-                profileImage(message.sender.profileImage)
+        return VStack(spacing: 2) {
+            // 날짜 구분선 (날짜 변경 시)
+            if shouldShowDateDivider(current: message, previous: prevMessage) {
+                DateDivider(date: parseDate(message.createdAt) ?? Date())
             }
 
-            VStack(alignment: isMe ? .trailing : .leading, spacing: 4) {
-                // 닉네임 (상대방만)
-                if !isMe {
-                    Text(message.sender.nick)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+            HStack(alignment: .bottom, spacing: 8) {
+                if isMe { Spacer(minLength: 60) }
+
+                // 상대방 프로필 (연속 메시지가 아닐 때만)
+                if !isMe && !isContinuous {
+                    profileImage(message.sender.profileImage)
+                } else if !isMe {
+                    // 연속 메시지일 때는 빈 공간 유지
+                    Color.clear
+                        .frame(width: 36, height: 36)
                 }
 
-                // 파일이 있으면 이미지 표시
-                if !message.files.isEmpty {
-                    fileContent(message.files)
+                VStack(alignment: isMe ? .trailing : .leading, spacing: 4) {
+                    // 닉네임 (상대방 & 연속 메시지가 아닐 때만)
+                    if !isMe && !isContinuous {
+                        Text(message.sender.nick)
+                            .font(.pretendard(.caption1, .medium))
+                            .foregroundColor(.gray60)
+                    }
+
+                    // 파일이 있으면 이미지 표시
+                    if !message.files.isEmpty {
+                        fileContent(message.files)
+                    }
+
+                    // 메시지 버블 + 시간
+                    HStack(alignment: .bottom, spacing: 6) {
+                        if isMe && isLastInGroup {
+                            timeText(message.createdAt)
+                        }
+
+                        if !message.content.isEmpty {
+                            MessageBubble(content: message.content, isMe: isMe)
+                        }
+
+                        if !isMe && isLastInGroup {
+                            timeText(message.createdAt)
+                        }
+                    }
                 }
 
-                // 텍스트 메시지
-                if !message.content.isEmpty {
-                    Text(message.content)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
-                        .background(isMe ? Color.accentColor : Color(.systemGray5))
-                        .foregroundColor(isMe ? .white : .primary)
-                        .cornerRadius(18)
-                }
-
-                // 시간
-                Text(formatTime(message.createdAt))
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                if !isMe { Spacer(minLength: 60) }
             }
-
-            if !isMe { Spacer(minLength: 60) }
         }
     }
 
@@ -201,6 +218,7 @@ struct ChatRoomView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: 200, maxHeight: 200)
                     .cornerRadius(12)
+                    .shadow(color: .gray90.opacity(0.12), radius: 4, x: 0, y: 2)
             }
         }
     }
@@ -208,86 +226,21 @@ struct ChatRoomView: View {
     // MARK: - Input Bar
 
     private var messageInputBar: some View {
-        VStack(spacing: 0) {
-            // 선택된 이미지 프리뷰
-            if !intent.state.selectedImages.isEmpty {
-                selectedImagesPreview
-            }
-
-            HStack(spacing: 12) {
-                // 파일 첨부 버튼
-                PhotosPicker(
-                    selection: Binding(
-                        get: { intent.state.selectedPhotos },
-                        set: { intent.updateSelectedPhotos($0) }
-                    ),
-                    maxSelectionCount: 5,
-                    matching: .images
-                ) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.secondary)
-                }
-
-                // 텍스트 입력
-                TextField("메시지를 입력하세요", text: Binding(
-                    get: { intent.state.messageText },
-                    set: { intent.updateMessageText($0) }
-                ))
-                .textFieldStyle(.roundedBorder)
-                .focused($isInputFocused)
-                .submitLabel(.send)
-                .onSubmit {
-                    Task { await intent.sendMessage() }
-                }
-
-                // 전송 버튼
-                Button {
-                    Task { await intent.sendMessage() }
-                } label: {
-                    Image(systemName: "paperplane.fill")
-                        .font(.title3)
-                        .foregroundColor(canSend ? .accentColor : .secondary)
-                }
-                .disabled(!canSend)
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-        }
-        .background(Color(.systemBackground))
-        .overlay(alignment: .top) {
-            Divider()
-        }
-    }
-
-    private var selectedImagesPreview: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                ForEach(Array(intent.state.selectedImages.enumerated()), id: \.offset) { index, image in
-                    ZStack(alignment: .topTrailing) {
-                        Image(uiImage: image)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 80, height: 80)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-
-                        // 삭제 버튼
-                        Button {
-                            intent.removeImage(at: index)
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.title3)
-                                .foregroundColor(.white)
-                                .background(Circle().fill(Color.black.opacity(0.5)))
-                        }
-                        .offset(x: 4, y: -4)
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-        }
-        .background(Color(.systemGray6))
+        ChatInputBar(
+            messageText: Binding(
+                get: { intent.state.messageText },
+                set: { intent.updateMessageText($0) }
+            ),
+            selectedPhotos: Binding(
+                get: { intent.state.selectedPhotos },
+                set: { intent.updateSelectedPhotos($0) }
+            ),
+            selectedImages: .constant(intent.state.selectedImages),
+            isFocused: $isInputFocused,
+            canSend: canSend,
+            onSend: { await intent.sendMessage() },
+            onRemoveImage: { intent.removeImage(at: $0) }
+        )
     }
 
     private var canSend: Bool {
@@ -298,24 +251,66 @@ struct ChatRoomView: View {
 
     // MARK: - Helpers
 
-    private func formatTime(_ dateString: String) -> String {
+    // MARK: - Message Grouping
+
+    private func previousMessage(for message: ChatResponse) -> ChatResponse? {
+        guard let index = intent.state.messages.firstIndex(where: { $0.chat_id == message.chat_id }),
+              index > 0 else { return nil }
+        return intent.state.messages[index - 1]
+    }
+
+    private func nextMessage(for message: ChatResponse) -> ChatResponse? {
+        guard let index = intent.state.messages.firstIndex(where: { $0.chat_id == message.chat_id }),
+              index < intent.state.messages.count - 1 else { return nil }
+        return intent.state.messages[index + 1]
+    }
+
+    private func isContinuousMessage(current: ChatResponse?, previous: ChatResponse?) -> Bool {
+        guard let current, let previous else { return false }
+
+        // 같은 발신자인지 확인
+        guard current.sender.user_id == previous.sender.user_id else { return false }
+
+        // 1분 이내인지 확인
+        guard let currentDate = parseDate(current.createdAt),
+              let previousDate = parseDate(previous.createdAt) else { return false }
+
+        return currentDate.timeIntervalSince(previousDate) < 60
+    }
+
+    private func shouldShowDateDivider(current: ChatResponse, previous: ChatResponse?) -> Bool {
+        guard let previous else { return true } // 첫 메시지는 날짜 표시
+
+        guard let currentDate = parseDate(current.createdAt),
+              let previousDate = parseDate(previous.createdAt) else { return false }
+
+        let calendar = Calendar.current
+        return !calendar.isDate(currentDate, inSameDayAs: previousDate)
+    }
+
+    private func parseDate(_ dateString: String) -> Date? {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
-        guard let date = formatter.date(from: dateString) else {
-            formatter.formatOptions = [.withInternetDateTime]
-            guard let date = formatter.date(from: dateString) else {
-                return ""
-            }
-            return formatTimeOnly(date)
+        if let date = formatter.date(from: dateString) {
+            return date
         }
 
-        return formatTimeOnly(date)
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: dateString)
     }
 
-    private func formatTimeOnly(_ date: Date) -> String {
+    private func timeText(_ dateString: String) -> some View {
+        Text(formatTime(dateString))
+            .font(.pretendard(.caption2, .medium))
+            .foregroundColor(.gray60)
+    }
+
+    private func formatTime(_ dateString: String) -> String {
+        guard let date = parseDate(dateString) else { return "" }
+
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "a h:mm"
+        dateFormatter.dateFormat = "HH:mm"
         dateFormatter.locale = Locale(identifier: "ko_KR")
         return dateFormatter.string(from: date)
     }
