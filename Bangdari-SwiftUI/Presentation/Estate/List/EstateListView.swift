@@ -249,6 +249,7 @@ struct EstateListView: View {
         switch mode {
         case .map(_, let estates, _):
             displayEstates = estates
+            await intent.loadBanners()
         case .liked:
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
@@ -294,7 +295,7 @@ struct EstateListView: View {
     /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한)
     private func calculateBannerInterval() -> Int {
         // 상수
-        let estateCardHeight: CGFloat = 140  // EstateListItem 높이
+        let estateCardHeight: CGFloat = 124  // EstateListItem 높이
         let cardSpacing: CGFloat = 12        // LazyVStack spacing
         let itemHeight = estateCardHeight + cardSpacing  // 152pt
 
@@ -360,6 +361,21 @@ struct EstateListItem: View {
                         .foregroundColor(.gray0)
                 }
                 .offset(x: 8, y: 8)
+
+            // Safety Badge (검증된 매물만 표시)
+            if estate.is_safe_estate {
+                Circle()
+                    .fill(Color.brightWood)
+                    .frame(width: 20, height: 20)
+                    .overlay {
+                        Image(dsIcon: .safety)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 14, height: 14)
+                            .foregroundColor(.gray0)
+                    }
+                    .offset(x: 112, y: 8)  // 오른쪽 상단 (140 - 20 - 8 = 112)
+            }
         }
     }
 
@@ -481,7 +497,7 @@ struct InlinePromoItem: View {
                     print("  - Error: \(error.localizedDescription)")
                 }
                 .resizable()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: .fit)
                 .frame(height: 140)
                 .clipped()
                 .clipShape(RoundedRectangle(cornerRadius: 16))
