@@ -81,20 +81,31 @@ struct ChatRoomListView: View {
     private func chatRoomRow(_ room: ChatRoomResponse) -> some View {
         let opponent = room.opponent(myUserId: intent.state.myUserId)
 
+        // API 응답에 unreadCount가 있으면 사용, 없으면 주석 처리
+        // let unreadCount = room.unreadCount ?? 0
+
         return HStack(spacing: 12) {
             // 프로필 이미지
             profileImage(opponent?.profileImage)
 
             // 닉네임 + 마지막 메시지
             VStack(alignment: .leading, spacing: 4) {
-                Text(opponent?.nick ?? "알 수 없음")
-                    .font(.headline)
-                    .lineLimit(1)
+                HStack(spacing: 6) {
+                    Text(opponent?.nick ?? "알 수 없음")
+                        .font(.pretendard(.body1, .semiBold))
+                        .foregroundColor(.gray90)
+                        .lineLimit(1)
+
+                    // 읽지 않은 메시지 배지 (API 지원 시 활성화)
+                    // if unreadCount > 0 {
+                    //     Badge(text: "\(unreadCount)", style: .primary)
+                    // }
+                }
 
                 if let lastChat = room.lastChat {
                     Text(lastChat.content.isEmpty ? "[파일]" : lastChat.content)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .font(.pretendard(.body2, .regular))
+                        .foregroundColor(.gray60)
                         .lineLimit(1)
                 }
             }
@@ -104,8 +115,8 @@ struct ChatRoomListView: View {
             // 시간
             if let lastChat = room.lastChat {
                 Text(formatDate(lastChat.createdAt))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.pretendard(.caption1, .medium))
+                    .foregroundColor(.gray60)
             }
         }
         .padding(.vertical, 4)
