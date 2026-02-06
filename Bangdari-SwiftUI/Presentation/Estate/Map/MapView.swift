@@ -89,6 +89,7 @@ struct EstateMapView: View {
     @State private var selectedEstateIndex: Int = 0
     @State private var selectedEstateIdForDetail: String?
     @State private var navigateToList: Bool = false
+    @State private var showSearchView = false
 
     init(initialCategory: EstateCategory? = nil, initialCoordinate: CLLocationCoordinate2D? = nil, initialSpan: MKCoordinateSpan? = nil) {
         self.initialCategory = initialCategory
@@ -125,9 +126,7 @@ struct EstateMapView: View {
                     // TODO: 위치 선택 모달
                 } label: {
                     HStack(spacing: 4) {
-                        Image(dsIcon: .location)
-                            .renderingMode(.template)
-                            .frame(width: 16, height: 16)
+                        DSIconView(.location, size: 16, renderingMode: .template)
                             .foregroundColor(.deepWood)
                         Text(intent.state.locationText)
                             .font(.pretendardBody2Bold)
@@ -135,18 +134,24 @@ struct EstateMapView: View {
                     }
                 }
             } trailing: {
-                Button {
-                    navigateToList = true
-                } label: {
-                    Image(dsIcon: .list)
-                        .renderingMode(.template)
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.gray90)
+                HStack(spacing: 12) {
+                    // 검색 아이콘 버튼
+                    Button {
+                        showSearchView = true
+                    } label: {
+                        DSIconView(.search, size: 20, renderingMode: .template)
+                            .foregroundColor(.gray90)
+                    }
+
+                    // 리스트 버튼
+                    Button {
+                        navigateToList = true
+                    } label: {
+                        DSIconView(.list, size: 20, renderingMode: .template)
+                            .foregroundColor(.gray90)
+                    }
                 }
             }
-
-            // 검색바
-            mapSearchBar
 
             // 지도 영역
             ZStack {
@@ -192,63 +197,22 @@ struct EstateMapView: View {
                 )
             )
         }
-    }
-
-    // MARK: - Search Bar
-
-    private var mapSearchBar: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 8) {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray60)
-
-                TextField(
-                    "",
-                    text: Binding(
-                        get: { intent.state.searchQuery },
-                        set: { intent.updateSearchQuery($0) }
-                    ),
-                    prompt: Text("지역명을 입력해주세요 (예: 강남구, 문래동)").foregroundColor(.gray60)
-                )
-                .font(.pretendardBody2)
-                .foregroundColor(.gray90)
-                .submitLabel(.search)
-                .onSubmit {
-                    Task {
-                        // 검색 실행 후 좌표 받기
-                        if let coordinate = await intent.searchEstates() {
-                            // 지도 position 업데이트 (애니메이션과 함께)
-                            withAnimation(.easeInOut(duration: 0.5)) {
-                                position = .region(MKCoordinateRegion(
-                                    center: coordinate,
-                                    span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-                                ))
-                            }
-                        }
-                    }
-                }
-
-                if !intent.state.searchQuery.isEmpty {
-                    Button {
-                        intent.updateSearchQuery("")
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 14))
-                            .foregroundColor(.gray60)
-                    }
-                }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(Color.gray15)
-            .cornerRadius(10)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-
-            Divider()
+        .navigationDestination(isPresented: $showSearchView) {
+            SearchView()
         }
-        .background(Color.gray0)
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SearchCompleted"))) { notification in
+            guard let coordinate = notification.userInfo?["coordinate"] as? CLLocationCoordinate2D,
+                  let span = notification.userInfo?["span"] as? MKCoordinateSpan else { return }
+
+            withAnimation(.easeInOut(duration: 0.5)) {
+                position = .region(MKCoordinateRegion(
+                    center: coordinate,
+                    span: span
+                ))
+            }
+
+            showSearchView = false
+        }
     }
 
     // MARK: - Z3: Floating UI
@@ -744,10 +708,7 @@ struct EstateMapView: View {
                 ))
             }
         } label: {
-            Image(dsIcon: .focus)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20, height: 20)
+            DSIconView(.focus, size: 20, renderingMode: .template)
                 .foregroundColor(.gray90)
                 .frame(width: 44, height: 44)
                 .background(Color.gray0)

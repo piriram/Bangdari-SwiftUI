@@ -11,10 +11,7 @@ struct MainView: View {
     @State private var showBannerWebView = false
     @State private var bannerWebURL: URL? = nil
     @State private var scrollOffset: CGFloat = 0
-    @State private var searchQuery = ""
-    @State private var isSearching = false
-    @State private var searchError: String?
-    @FocusState private var isSearchFocused: Bool
+    @State private var showSearchView = false
 
     private var blurProgress: CGFloat {
         let threshold: CGFloat = 100
@@ -78,33 +75,28 @@ struct MainView: View {
                     .ignoresSafeArea(edges: .top)
                     .background(Color.gray15)
 
-                    HomeSearchBar(
-                        query: $searchQuery,
-                        isSearching: isSearching,
-                        blurProgress: blurProgress,
-                        isFocused: $isSearchFocused
-                    )
-                    .padding(.top, 3)
+                    // 검색 아이콘 버튼 (우측 상단)
+                    HStack {
+                        Spacer()
+                        Button {
+                            showSearchView = true
+                        } label: {
+                            DSIconView(.search, size: 20, renderingMode: .template)
+                                .foregroundColor(.gray90)
+                                .frame(width: 44, height: 44)
+                                .background(
+                                    ZStack {
+                                        Color.gray0.opacity(1.0 - blurProgress * 0.2)
+                                        Color.clear.background(.ultraThinMaterial).opacity(blurProgress)
+                                    }
+                                )
+                                .clipShape(Circle())
+                                .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.top, 8)
                     .padding(.horizontal, 20)
-                    .onSubmit {
-                        Task { await performSearch() }
-                    }
-
-                    // 검색 오버레이
-                    if isSearchFocused || isSearching {
-                        Color.black.opacity(0.3)
-                            .ignoresSafeArea()
-                            .onTapGesture {
-                                isSearchFocused = false
-                                searchQuery = ""
-                                searchError = nil
-                            }
-                            .overlay(alignment: .top) {
-                                searchOverlay
-                                    .padding(.top, 60)
-                                    .padding(.horizontal, 20)
-                            }
-                    }
                 }
             }
             .refreshable {
@@ -129,9 +121,22 @@ struct MainView: View {
                     EstateListView(mode: .hotEstates(estates: intent.state.hotEstates))
                 }
             }
+            .navigationDestination(isPresented: $showSearchView) {
+                SearchView()
+            }
         }
         .task {
             await intent.loadHomeData()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SearchCompleted"))) { notification in
+            guard let coordinate = notification.userInfo?["coordinate"] as? CLLocationCoordinate2D,
+                  let span = notification.userInfo?["span"] as? MKCoordinateSpan else { return }
+
+            navigationPath.append(MapNavigationData(
+                category: nil,
+                initialCoordinate: coordinate,
+                coordinateSpan: span
+            ))
         }
     }
 
@@ -161,83 +166,6 @@ struct MainView: View {
         navigationPath.append(navData)
 
         print("🏠 [MainView] 지도 뷰로 이동")
-    }
-
-    private func performSearch() async {
-        let trimmedQuery = searchQuery.trimmingCharacters(in: .whitespaces)
-        guard !trimmedQuery.isEmpty else {
-            searchError = "검색어를 입력해주세요"
-            return
-        }
-
-        isSearching = true
-        searchError = nil
-
-        let geocoder = CLGeocoder()
-        let seoulRegion = CLCircularRegion(
-            center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780),
-            radius: 30_000,
-            identifier: "seoul"
-        )
-
-        do {
-            let placemarks = try await geocoder.geocodeAddressString(trimmedQuery, in: seoulRegion)
-
-            guard let placemark = placemarks.first, let location = placemark.location else {
-                isSearching = false
-                searchError = "검색 결과가 없습니다"
-                return
-            }
-
-            let coordinate = location.coordinate
-            let latDelta: Double = placemark.subLocality != nil ? 0.015 : 0.04
-            let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: latDelta)
-
-            isSearching = false
-            isSearchFocused = false
-            searchQuery = ""
-
-            navigationPath.append(MapNavigationData(
-                category: nil,
-                initialCoordinate: coordinate,
-                coordinateSpan: span
-            ))
-        } catch {
-            isSearching = false
-            searchError = "검색 결과가 없습니다"
-        }
-    }
-
-    // MARK: - Search Overlay
-
-    private var searchOverlay: some View {
-        VStack(spacing: 16) {
-            if isSearching {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                        .tint(.white)
-                    Text("검색 중...")
-                        .font(.pretendardBody2)
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding()
-                .background(.ultraThinMaterial)
-                .cornerRadius(12)
-            } else if let error = searchError {
-                HStack {
-                    Spacer()
-                    Text(error)
-                        .font(.pretendardBody2)
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding()
-                .background(.ultraThinMaterial)
-                .cornerRadius(12)
-            }
-        }
     }
 
     // MARK: - Today Estates Section
