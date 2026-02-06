@@ -456,41 +456,35 @@ struct InlinePromoItem: View {
                 onTap(url)
             }
         } label: {
-            HStack(spacing: 0) {
-                // Left: Text Block
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(banner.title)
-                        .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray90)
-                        .lineLimit(2)
+            // Full-width banner image
+            KFImage.auth(url: imageURL)
+                .placeholder {
+                    ZStack {
+                        Color.gray30
+                        VStack(spacing: 8) {
+                            Image(systemName: "photo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 48, height: 48)
+                                .foregroundColor(.gray60)
 
-                    if banner.payload?.type == "WEBVIEW" {
-                        Text("자세히 보기")
-                            .font(.pretendardCaption1)
-                            .foregroundColor(.gray60)
+                            Text(banner.title)
+                                .font(.pretendardCaption1)
+                                .foregroundColor(.gray75)
+                        }
                     }
                 }
-
-                Spacer()
-
-                // Right: Banner Image (64×64px)
-                KFImage.auth(url: imageURL)
-                    .placeholder {
-                        Image(systemName: "star.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 48, height: 48)
-                            .foregroundColor(.brightCream)
-                    }
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 64, height: 64)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .padding(12)
-            .frame(height: 72)
-            .background(Color.gray0)
-            .cornerRadius(20)
+                .onFailure { error in
+                    print("❌ [BANNER-IMG] 로딩 실패")
+                    print("  - Banner: \(banner.title)")
+                    print("  - URL: \(imageURL?.absoluteString ?? "nil")")
+                    print("  - Error: \(error.localizedDescription)")
+                }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(height: 140)
+                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
     }
