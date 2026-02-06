@@ -125,9 +125,7 @@ struct EstateMapView: View {
                     // TODO: 위치 선택 모달
                 } label: {
                     HStack(spacing: 4) {
-                        Image(dsIcon: .location)
-                            .renderingMode(.template)
-                            .frame(width: 16, height: 16)
+                        DSIconView(.location, size: 16, renderingMode: .template)
                             .foregroundColor(.deepWood)
                         Text(intent.state.locationText)
                             .font(.pretendardBody2Bold)
@@ -138,9 +136,7 @@ struct EstateMapView: View {
                 Button {
                     navigateToList = true
                 } label: {
-                    Image(dsIcon: .list)
-                        .renderingMode(.template)
-                        .frame(width: 20, height: 20)
+                    DSIconView(.list, size: 20, renderingMode: .template)
                         .foregroundColor(.gray90)
                 }
             }
@@ -199,8 +195,7 @@ struct EstateMapView: View {
     private var mapSearchBar: some View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 14))
+                DSIconView(.search, size: 14, renderingMode: .template)
                     .foregroundColor(.gray60)
 
                 TextField(
@@ -744,10 +739,7 @@ struct EstateMapView: View {
                 ))
             }
         } label: {
-            Image(dsIcon: .focus)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20, height: 20)
+            DSIconView(.focus, size: 20, renderingMode: .template)
                 .foregroundColor(.gray90)
                 .frame(width: 44, height: 44)
                 .background(Color.gray0)
