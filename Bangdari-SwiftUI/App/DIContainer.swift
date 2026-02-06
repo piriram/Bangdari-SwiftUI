@@ -72,4 +72,13 @@ final class DIContainer: @unchecked Sendable {
             return RemotePaymentRepository()
         }
     }
+
+    func makeVideoRepository() -> VideoRepository {
+        switch AppEnvironment.current {
+        case .live:
+            return RemoteVideoRepository()
+        case .mock:
+            return RemoteVideoRepository() // TODO: MockVideoRepository
+        }
+    }
 }
