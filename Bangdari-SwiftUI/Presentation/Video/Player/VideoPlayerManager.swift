@@ -202,12 +202,25 @@ final class VideoPlayerManager: NSObject, ObservableObject {
             // 인증 헤더를 포함한 URLRequest 생성
             var request = URLRequest(url: actualURL)
             request.setValue(Secrets.sesacKey, forHTTPHeaderField: "SeSACKey")
+            request.setValue("Bangdari-iOS/1.0", forHTTPHeaderField: "User-Agent")
 
+            // Authorization 헤더 추가
             if let token = keychain.accessToken {
                 request.setValue(token, forHTTPHeaderField: "Authorization")
+                print("🔑 [RESOURCE] Token found: \(token.prefix(20))...")
+            } else {
+                print("⚠️  [RESOURCE] No accessToken in keychain")
             }
 
             print("📡 [RESOURCE] Fetching: \(actualURL.absoluteString)")
+            print("📤 [RESOURCE] Request Headers:")
+            print("   - SeSACKey: \(Secrets.sesacKey.prefix(10))...")
+            print("   - User-Agent: Bangdari-iOS/1.0")
+            if request.value(forHTTPHeaderField: "Authorization") != nil {
+                print("   - Authorization: ✅ Present")
+            } else {
+                print("   - Authorization: ❌ Missing")
+            }
 
             // 데이터 다운로드
             let (data, response) = try await urlSession.data(for: request)
@@ -219,6 +232,19 @@ final class VideoPlayerManager: NSObject, ObservableObject {
             }
 
             print("✅ [RESOURCE] Response: \(httpResponse.statusCode)")
+            print("📥 [RESOURCE] Response Headers:")
+            print("   - Content-Type: \(httpResponse.value(forHTTPHeaderField: "Content-Type") ?? "nil")")
+            print("   - Content-Length: \(httpResponse.value(forHTTPHeaderField: "Content-Length") ?? "nil")")
+            print("📦 [RESOURCE] Data size: \(data.count) bytes")
+
+            // HTTP 444 에러 상세 로깅
+            if httpResponse.statusCode == 444 {
+                print("🚨 [RESOURCE] HTTP 444 detected!")
+                print("   All Response Headers:")
+                for (key, value) in httpResponse.allHeaderFields {
+                    print("   - \(key): \(value)")
+                }
+            }
 
             // 응답 헤더 전달 (Content-Type, Content-Length 등)
             if let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type") {
