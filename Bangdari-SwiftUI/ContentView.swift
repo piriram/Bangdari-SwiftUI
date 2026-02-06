@@ -90,6 +90,27 @@ struct MainTabView: View {
             .tag(MainTab.home)
 
             NavigationStack {
+                CommunityListView()
+            }
+            .tabItem {
+                Image(systemName: selectedTab == .community ? "bubble.left.and.bubble.right.fill" : "bubble.left.and.bubble.right")
+                    .renderingMode(.template)
+                Text("커뮤니티")
+            }
+            .tag(MainTab.community)
+
+            NavigationStack {
+                Text("비디오 탭 (구현 예정)")
+                    .navigationTitle("비디오")
+            }
+            .tabItem {
+                Image(systemName: selectedTab == .video ? "play.rectangle.fill" : "play.rectangle")
+                    .renderingMode(.template)
+                Text("비디오")
+            }
+            .tag(MainTab.video)
+
+            NavigationStack {
                 EstateListView(mode: .liked)
             }
             .tabItem {
@@ -140,6 +161,8 @@ struct MainTabView: View {
 
 private enum MainTab {
     case home
+    case community
+    case video
     case like
     case my
 }
