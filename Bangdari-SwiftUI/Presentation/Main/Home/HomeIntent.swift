@@ -20,13 +20,13 @@ struct HomeState {
     var hotEstates: [EstateSummaryResponse] = []
     var topics: [EstateTopic] = []
 
-    // 스켈레톤 데이터 (로딩 중일 때만 존재)
-    var todayEstateSkeletons: [SkeletonEstate] = []
-    var hotEstateSkeletons: [SkeletonEstate] = []
-    var topicSkeletons: [SkeletonTopic] = []
-    var heroBannerSkeleton: Bool = false
+    // 스켈레톤 데이터 (초기 로딩을 위해 미리 생성)
+    var todayEstateSkeletons: [SkeletonEstate] = (0..<3).map { SkeletonEstate(id: "skeleton-\($0)") }
+    var hotEstateSkeletons: [SkeletonEstate] = (0..<2).map { SkeletonEstate(id: "skeleton-\($0)") }
+    var topicSkeletons: [SkeletonTopic] = (0..<4).map { SkeletonTopic(id: "skeleton-\($0)") }
+    var heroBannerSkeleton: Bool = true
 
-    var isLoading: Bool = false
+    var isLoading: Bool = true
     var errorMessage: String?
 }
 
@@ -77,11 +77,16 @@ final class HomeIntent: ObservableObject {
         do {
             let estates = try await estateRepository.fetchTodayEstates()
             state.todayEstates = estates
+
+            // 이미지 로드 시간 확보를 위한 최소 표시 시간 (1.2초)
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+
             // 개별 완료 시 해당 스켈레톤만 제거
             state.todayEstateSkeletons = []
             state.heroBannerSkeleton = false
         } catch {
-            // 실패해도 스켈레톤 제거 (빈 상태 표시)
+            // 실패해도 최소 시간 후 스켈레톤 제거
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
             state.todayEstateSkeletons = []
             state.heroBannerSkeleton = false
         }
@@ -91,8 +96,13 @@ final class HomeIntent: ObservableObject {
         do {
             let estates = try await estateRepository.fetchHotEstates()
             state.hotEstates = estates
+
+            // 이미지 로드 시간 확보를 위한 최소 표시 시간 (1.2초)
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+
             state.hotEstateSkeletons = []
         } catch {
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
             state.hotEstateSkeletons = []
         }
     }
@@ -101,8 +111,13 @@ final class HomeIntent: ObservableObject {
         do {
             let topics = try await estateRepository.fetchTodayTopic()
             state.topics = topics
+
+            // 최소 표시 시간 (1.2초)
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+
             state.topicSkeletons = []
         } catch {
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
             state.topicSkeletons = []
         }
     }
