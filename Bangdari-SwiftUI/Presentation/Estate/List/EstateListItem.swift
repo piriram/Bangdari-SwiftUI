@@ -5,6 +5,7 @@ import SwiftUI
 
 struct EstateListItem: View {
     let estate: EstateSummaryResponse
+    @State private var address: String?
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -12,9 +13,18 @@ struct EstateListItem: View {
             textStack
         }
         .padding(12)
-        .frame(height: 140)
+        .frame(minHeight: 120)
         .background(Color.gray0)
-        .cornerRadius(20)
+//        .cornerRadius(20)
+        .task {
+            // 역지오코딩으로 주소 가져오기
+            GeolocationManager.shared.fetchFullAddress(
+                latitude: estate.geolocation.latitude,
+                longitude: estate.geolocation.longitude
+            ) { fetchedAddress in
+                address = fetchedAddress
+            }
+        }
     }
 
     private var thumbnail: some View {
@@ -38,23 +48,37 @@ struct EstateListItem: View {
 
     private var textStack: some View {
         VStack(alignment: .leading, spacing: 4) {
-            tagBadge
+            // 1. [카테고리] + 제목
+            HStack(spacing: 4) {
+                tagBadge
 
-            Text(estate.title)
-                .font(.pretendardBody1Bold)
-                .foregroundColor(.gray90)
-                .lineLimit(1)
+                Text(estate.title)
+                    .font(.pretendardBody1Bold)
+                    .foregroundColor(.gray90)
+                    .lineLimit(1)
+            }
 
+            // 2. 가격
             Text(estate.formattedPrice())
                 .font(.pretendardBody2)
                 .foregroundColor(.gray75)
 
+            // 3. 면적 · 층수
             Text("\(estate.formattedArea()) · \(estate.floors)층")
                 .font(.pretendardCaption2)
                 .foregroundColor(.gray60)
 
-            if let distance = estate.distance {
-                Text(distanceText(distance))
+            // 4. 주소 (역지오코딩)
+            if let address = address {
+                Text(address)
+                    .font(.pretendardCaption2)
+                    .foregroundColor(.gray60)
+                    .lineLimit(1)
+            }
+
+            // 5. 소개/특징
+            if !estate.introduction.isEmpty {
+                Text("◇ \(estate.introduction)")
                     .font(.pretendardCaption2)
                     .foregroundColor(.gray60)
                     .lineLimit(1)
@@ -66,14 +90,10 @@ struct EstateListItem: View {
     private var tagBadge: some View {
         Text(estate.category)
             .font(.pretendardCaption1)
-            .foregroundColor(.gray75)
+            .foregroundColor(.gray0)
             .padding(.horizontal, 8)
             .frame(height: 20)
-            .background(Color.gray0)
-            .overlay(
-                Capsule()
-                    .stroke(Color.gray45, lineWidth: 1)
-            )
+            .background(Color.deepWood)
             .clipShape(Capsule())
     }
 
