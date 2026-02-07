@@ -237,16 +237,16 @@ struct EstateMapView: View {
     }
 
     private func handleClusterTap(_ cluster: MapCluster) {
-        print("🎯 [Cluster Tap] ID: \(cluster.id), 매물 수: \(cluster.count), isSingle: \(cluster.isSingle)")
+//        print("🎯 [Cluster Tap] ID: \(cluster.id), 매물 수: \(cluster.count), isSingle: \(cluster.isSingle)")
 
         if cluster.isSingle, let estate = cluster.firstEstate {
             let isBalloonMode = intent.state.region.span.latitudeDelta < MapConstants.markerBalloonThreshold
 
             if isBalloonMode {
-                print("🎯 [Cluster Tap] → 말풍선 탭, 디테일 이동")
+//                print("🎯 [Cluster Tap] → 말풍선 탭, 디테일 이동")
                 selectedEstateIdForDetail = estate.estate_id
             } else {
-                print("🎯 [Cluster Tap] → 단일 클러스터 버튼 탭, S3 표시")
+//                print("🎯 [Cluster Tap] → 단일 클러스터 버튼 탭, S3 표시")
                 if let index = intent.state.estates.firstIndex(where: { $0.estate_id == estate.estate_id }) {
                     withAnimation {
                         selectedEstateIndex = index
@@ -263,7 +263,7 @@ struct EstateMapView: View {
             return
         }
 
-        print("🎯 [Cluster Tap] → 클러스터 확대 시작")
+//        print("🎯 [Cluster Tap] → 클러스터 확대 시작")
         viewState = .clusterFocused(cluster)
 
         let fitRegion = MapViewHelpers.regionToFitCluster(
@@ -271,13 +271,13 @@ struct EstateMapView: View {
             currentSpan: intent.state.region.span
         )
 
-        print("🎯 [Cluster Tap] → 지도 이동 실행")
+//        print("🎯 [Cluster Tap] → 지도 이동 실행")
         withAnimation(.easeInOut(duration: 0.3)) {
             position = .region(fitRegion)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-            print("🎯 [Cluster Tap] → 애니메이션 완료 후 updateClusters")
+//            print("🎯 [Cluster Tap] → 애니메이션 완료 후 updateClusters")
             intent.updateClusters()
         }
     }
@@ -293,15 +293,15 @@ struct EstateMapView: View {
             return
         }
 
-        print("🎠 [Auto Carousel] 조건 충족: span=\(String(format: "%.6f", span)), 매물 수=\(intent.state.estates.count)")
+//        print("🎠 [Auto Carousel] 조건 충족: span=\(String(format: "%.6f", span)), 매물 수=\(intent.state.estates.count)")
 
         let nearest = MapViewHelpers.nearestEstateIndex(
             estates: intent.state.estates,
             to: region.center
         )
 
-        print("🎠 [Auto Carousel] 가장 가까운 매물 인덱스: \(nearest.index)")
-        print("🎠 [Nearest] 최단 거리: \(String(format: "%.0f", nearest.distance))m")
+//        print("🎠 [Auto Carousel] 가장 가까운 매물 인덱스: \(nearest.index)")
+//        print("🎠 [Nearest] 최단 거리: \(String(format: "%.0f", nearest.distance))m")
 
         withAnimation {
             selectedEstateIndex = nearest.index

@@ -49,21 +49,21 @@ enum MapViewHelpers {
     ) -> MKCoordinateRegion {
         let estates = cluster.estates
         guard !estates.isEmpty else {
-            print("🔍 [Cluster Zoom] 빈 클러스터")
+//            print("🔍 [Cluster Zoom] 빈 클러스터")
             return MKCoordinateRegion(
                 center: cluster.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
             )
         }
 
-        print("🔍 [Cluster Zoom] 시작 - 현재 span: \(String(format: "%.6f", currentSpan.latitudeDelta)), 매물 수: \(estates.count)")
-        print("🔍 [Cluster Zoom] threshold: \(MapConstants.clusteringDisableThreshold)")
+//        print("🔍 [Cluster Zoom] 시작 - 현재 span: \(String(format: "%.6f", currentSpan.latitudeDelta)), 매물 수: \(estates.count)")
+//        print("🔍 [Cluster Zoom] threshold: \(MapConstants.clusteringDisableThreshold)")
 
         let nearThreshold = MapConstants.clusteringDisableThreshold * 1.2
         if currentSpan.latitudeDelta <= nearThreshold {
             let targetSpan = MapConstants.clusteringDisableThreshold * 0.6
-            print("🔍 [Cluster Zoom] ✅ 분기1: 이미 충분히 확대됨 (\(String(format: "%.6f", currentSpan.latitudeDelta)) <= \(String(format: "%.6f", nearThreshold)))")
-            print("🔍 [Cluster Zoom] → 강제 확대: \(String(format: "%.6f", targetSpan))")
+//            print("🔍 [Cluster Zoom] ✅ 분기1: 이미 충분히 확대됨 (\(String(format: "%.6f", currentSpan.latitudeDelta)) <= \(String(format: "%.6f", nearThreshold)))")
+//            print("🔍 [Cluster Zoom] → 강제 확대: \(String(format: "%.6f", targetSpan))")
             return MKCoordinateRegion(
                 center: cluster.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: targetSpan, longitudeDelta: targetSpan)
@@ -80,29 +80,29 @@ enum MapViewHelpers {
 
         let rawRangeLat = maxLat - minLat
         let rawRangeLng = maxLng - minLng
-        print("🔍 [Cluster Zoom] 매물 범위 - lat: \(String(format: "%.6f", rawRangeLat)), lng: \(String(format: "%.6f", rawRangeLng))")
+//        print("🔍 [Cluster Zoom] 매물 범위 - lat: \(String(format: "%.6f", rawRangeLat)), lng: \(String(format: "%.6f", rawRangeLng))")
 
         let centerLat = (minLat + maxLat) / 2
         let centerLng = (minLng + maxLng) / 2
 
         let estateRangeLat = max((maxLat - minLat) * 1.4, 0.005)
         let estateRangeLng = max((maxLng - minLng) * 1.4, 0.005)
-        print("🔍 [Cluster Zoom] 매물 범위 (여유 40%): \(String(format: "%.6f", estateRangeLat))")
+//        print("🔍 [Cluster Zoom] 매물 범위 (여유 40%): \(String(format: "%.6f", estateRangeLat))")
 
         let zoomInLat = currentSpan.latitudeDelta / 2
         let zoomInLng = currentSpan.longitudeDelta / 2
-        print("🔍 [Cluster Zoom] 2배 확대: \(String(format: "%.6f", zoomInLat))")
+//        print("🔍 [Cluster Zoom] 2배 확대: \(String(format: "%.6f", zoomInLat))")
 
         var latDelta = min(estateRangeLat, zoomInLat)
         var lngDelta = min(estateRangeLng, zoomInLng)
-        print("🔍 [Cluster Zoom] min(매물범위, 2배확대): \(String(format: "%.6f", latDelta))")
+//        print("🔍 [Cluster Zoom] min(매물범위, 2배확대): \(String(format: "%.6f", latDelta))")
 
         let targetThreshold = MapConstants.clusteringDisableThreshold * 0.8
         latDelta = min(latDelta, targetThreshold)
         lngDelta = min(lngDelta, targetThreshold)
-        print("🔍 [Cluster Zoom] ✅ 분기2: 일반 확대 로직")
-        print("🔍 [Cluster Zoom] → 최종 span: \(String(format: "%.6f", latDelta)) (threshold 강제: \(String(format: "%.6f", targetThreshold)))")
-        print("🔍 [Cluster Zoom] → 변화: \(String(format: "%.6f", currentSpan.latitudeDelta)) → \(String(format: "%.6f", latDelta)) (비율: \(String(format: "%.2f", latDelta / currentSpan.latitudeDelta))x)")
+//        print("🔍 [Cluster Zoom] ✅ 분기2: 일반 확대 로직")
+//        print("🔍 [Cluster Zoom] → 최종 span: \(String(format: "%.6f", latDelta)) (threshold 강제: \(String(format: "%.6f", targetThreshold)))")
+//        print("🔍 [Cluster Zoom] → 변화: \(String(format: "%.6f", currentSpan.latitudeDelta)) → \(String(format: "%.6f", latDelta)) (비율: \(String(format: "%.2f", latDelta / currentSpan.latitudeDelta))x)")
 
         return MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: centerLat, longitude: centerLng),
