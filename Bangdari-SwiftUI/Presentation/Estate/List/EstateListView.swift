@@ -59,7 +59,13 @@ struct EstateListView: View {
     // MARK: - Navigation Bar
 
     private var navigationBar: some View {
-        CustomNavigationBar(onBack: { dismiss() }, backgroundColor: .gray15) {
+        CustomNavigationBar(
+            showDefaultBackButton: shouldShowBackButton,
+            onBack: shouldShowBackButton ? { dismiss() } : nil,
+            backgroundColor: .gray15
+        ) {
+            EmptyView()
+        } center: {
             HStack(spacing: NavBarStyle.centerSpacing) {
                 DSIconView(.location, size: NavBarStyle.iconMedium, renderingMode: .template)
                     .foregroundColor(NavBarStyle.iconColor)
@@ -76,6 +82,14 @@ struct EstateListView: View {
                     .foregroundColor(NavBarStyle.iconColor)
             }
         }
+    }
+
+    private var shouldShowBackButton: Bool {
+        if case .liked = mode {
+            return false
+        }
+
+        return true
     }
 
     private var mapInitialCoordinate: CLLocationCoordinate2D {

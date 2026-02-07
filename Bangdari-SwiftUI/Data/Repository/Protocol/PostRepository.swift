@@ -36,6 +36,9 @@ protocol PostRepository {
     func updatePost(postId: String, request: PostCreateRequest) async throws -> PostDetailResponse
     func deletePost(postId: String) async throws
 
+    // File Upload
+    func uploadFiles(files: [Data]) async throws -> [String]
+
     // Like
     func toggleLike(postId: String, like: Bool) async throws -> Bool
 
