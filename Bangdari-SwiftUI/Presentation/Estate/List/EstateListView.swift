@@ -32,7 +32,7 @@ struct EstateListView: View {
                         .padding(.top, 12)
                 }
 
-                // Z3: Single list sheet (Gray30)
+                // Z3: Single list sheet
                 contentSheet
                     .padding(.top, 12)
             }
@@ -153,7 +153,7 @@ struct EstateListView: View {
                     if index < displayEstates.count - 1 {
                         itemDivider
                             .padding(.horizontal, 20)
-                            .padding(.vertical, 5)
+                            .padding(.vertical, 0)
                     }
                 }
 
@@ -257,7 +257,7 @@ struct EstateListView: View {
 
     /// 화면 높이에 따라 배너 간격을 동적으로 계산
     /// - 한 화면에 배너가 1~2개 보이도록 조정
-    /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한)
+    /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한) -> 2 ~ 4
     private func calculateBannerInterval() -> Int {
         let estateCardHeight: CGFloat = 124  // EstateListItem 높이
         let cardSpacing: CGFloat = 12
@@ -268,7 +268,7 @@ struct EstateListView: View {
         let cardsPerScreen = usableHeight / itemHeight
 
         let calculatedInterval = Int(cardsPerScreen / 2)
-        let interval = max(4, min(10, calculatedInterval))
+        let interval = max(2, min(4, calculatedInterval))
 
         print("📐 Banner interval calculated: \(interval) (screen height: \(screenHeight), cards per screen: \(cardsPerScreen))")
 
