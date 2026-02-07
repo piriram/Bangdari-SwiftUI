@@ -16,6 +16,7 @@ struct EstateListView: View {
     @State private var bannerInterval: Int = 6  // 기본값
     @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
     @State private var navigateToMap: Bool = false
+    @State private var sortAscending: Bool = false  // false: 내림차순, true: 오름차순
 
     var body: some View {
         ZStack {
@@ -26,11 +27,9 @@ struct EstateListView: View {
                 // Z2: Navigation Bar (System UI)
                 navigationBar
 
-                // Filter Chip Row (only for map mode)
-                if case .map = mode {
-                    filterChipRow
-                        .padding(.top, 12)
-                }
+                // Filter Chip Row (all modes)
+                filterChipRow
+                    .padding(.top, 12)
 
                 // Z3: Single list sheet
                 contentSheet
@@ -90,15 +89,33 @@ struct EstateListView: View {
     // MARK: - Filter Chip Row
 
     private var filterChipRow: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 6) {
-                ForEach(FilterType.allCases, id: \.self) { filter in
-                    filterChip(filter.title, isActive: activeFilter == filter) {
-                        toggleFilter(filter)
+        HStack(spacing: 8) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(FilterType.allCases, id: \.self) { filter in
+                        filterChip(filter.title, isActive: activeFilter == filter) {
+                            toggleFilter(filter)
+                        }
                     }
                 }
+                .padding(.leading, 16)
             }
-            .padding(.horizontal, 16)
+
+            // 정렬 방향 토글 버튼
+            Button {
+                sortAscending.toggle()
+                updateDisplayEstates()
+            } label: {
+                DSIconView(
+                    .sort,
+                    size: 24,
+                    renderingMode: .template
+                )
+                .foregroundColor(activeFilter != nil ? .deepCoast : .gray60)
+                .rotationEffect(.degrees(sortAscending ? 180 : 0))
+                .animation(.easeInOut(duration: 0.2), value: sortAscending)
+            }
+            .padding(.trailing, 16)
         }
         .frame(height: 48)
     }
@@ -115,13 +132,12 @@ struct EstateListView: View {
                     Capsule()
                         .stroke(isActive ? Color.deepCoast : Color.gray45, lineWidth: 1)
                 )
+                .clipShape(Capsule())
         }
     }
 
     private func toggleFilter(_ filter: FilterType) {
         activeFilter = activeFilter == filter ? nil : filter
-        // TODO: MapView의 필터 상태와 공유 필요
-        // TODO: 실제 필터 로직 구현 (면적순, 보증금순, 월세순, 신축순)
         updateDisplayEstates()
     }
 
@@ -244,7 +260,43 @@ struct EstateListView: View {
     }
 
     private func updateDisplayEstates() {
-        displayEstates = mode.baseEstates ?? intent.state.estates
+        var estates = mode.baseEstates ?? intent.state.estates
+
+        // 필터 적용
+        if let filter = activeFilter {
+            estates = applySorting(to: estates, filter: filter)
+        }
+
+        displayEstates = estates
+    }
+
+    private func applySorting(to estates: [EstateSummaryResponse], filter: FilterType) -> [EstateSummaryResponse] {
+        let sorted: [EstateSummaryResponse]
+
+        switch filter {
+        case .area:
+            // 면적 순
+            sorted = estates.sorted { sortAscending ? $0.area < $1.area : $0.area > $1.area }
+
+        case .deposit:
+            // 보증금 순
+            sorted = estates.sorted { sortAscending ? $0.deposit < $1.deposit : $0.deposit > $1.deposit }
+
+        case .monthlyRent:
+            // 월세 순
+            sorted = estates.sorted { sortAscending ? $0.monthly_rent < $1.monthly_rent : $0.monthly_rent > $1.monthly_rent }
+
+        case .immediate:
+            // 신축 순
+            sorted = estates.sorted { estate1, estate2 in
+                // built_year가 빈 문자열이면 맨 뒤로
+                if estate1.built_year.isEmpty { return false }
+                if estate2.built_year.isEmpty { return true }
+                return sortAscending ? estate1.built_year < estate2.built_year : estate1.built_year > estate2.built_year
+            }
+        }
+
+        return sorted
     }
 
     private func bannerPayload(after index: Int) -> (index: Int, banner: Banner)? {
