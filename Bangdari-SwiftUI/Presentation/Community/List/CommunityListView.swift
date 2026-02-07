@@ -1,137 +1,155 @@
 import Kingfisher
 import SwiftUI
+import WaterfallGrid
 
 // MARK: - Community List View
 
 struct CommunityListView: View {
     @StateObject private var intent = CommunityListIntent()
-    @State private var showCreatePost = false
+    @State private var selectedCategory: String?
+    @State private var searchText = ""
 
     var body: some View {
-        Group {
-            if intent.state.isLoading && intent.state.posts.isEmpty {
-                ProgressView()
-            } else if let error = intent.state.errorMessage, intent.state.posts.isEmpty {
-                errorView(error)
-            } else {
-                postList
-            }
-        }
-        .searchable(text: Binding(
-            get: { intent.state.searchQuery },
-            set: { intent.updateSearchQuery($0) }
-        ), prompt: "게시글 검색")
-        .onSubmit(of: .search) {
-            Task { await intent.searchPosts() }
-        }
-        .standardNavigationBar(title: "커뮤니티")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showCreatePost = true
-                } label: {
-                    Image(systemName: "square.and.pencil")
-                }
-            }
-        }
-        .sheet(isPresented: $showCreatePost) {
-            NavigationStack {
-                PostCreateView {
+        VStack(spacing: 0) {
+            // 커스텀 네비게이션 바
+            CustomNavigationBar(showDefaultBackButton: false) {
+                EmptyView()
+            } center: {
+                Text("커뮤니티")
+                    .font(NavBarStyle.titleFont)
+                    .foregroundColor(NavBarStyle.titleColor)
+            } trailing: {
+                NavigationLink(destination: PostCreateView {
                     Task { await intent.refresh() }
+                }) {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: NavBarStyle.iconMedium))
+                        .foregroundColor(NavBarStyle.iconColor)
+                }
+            }
+
+            // 콘텐츠
+            Group {
+                if intent.state.isLoading && intent.state.posts.isEmpty {
+                    ProgressView()
+                        .frame(maxHeight: .infinity)
+                } else if let error = intent.state.errorMessage, intent.state.posts.isEmpty {
+                    errorView(error)
+                } else {
+                    waterfallContent
                 }
             }
         }
+        .background(Color.gray15)
+        .navigationBarHidden(true)
         .task {
             await intent.loadPosts()
         }
     }
 
-    // MARK: - Post List
+    // MARK: - Waterfall Content
 
-    private var postList: some View {
-        List {
-            ForEach(intent.state.posts) { post in
-                NavigationLink(destination: PostDetailView(postId: post.post_id)) {
-                    postRow(post)
+    private var waterfallContent: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                // 검색바
+                searchBar
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+
+                // 카테고리 필터
+                categoryFilter
+                    .padding(.top, 12)
+
+                // Waterfall 그리드
+                WaterfallGrid(intent.state.posts, id: \.post_id) { post in
+                    NavigationLink(destination: PostDetailView(postId: post.post_id)) {
+                        PostCard(post: post)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .gridStyle(columns: 2, spacing: 12)
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+
+                // 더 불러오기
+                if intent.state.hasMore && !intent.state.posts.isEmpty {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .onAppear {
+                            Task { await intent.loadMore() }
+                        }
                 }
             }
-
-            // 더 불러오기
-            if intent.state.hasMore && !intent.state.posts.isEmpty {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .onAppear {
-                        Task { await intent.loadMore() }
-                    }
-            }
         }
-        .listStyle(.plain)
         .refreshable {
             await intent.refresh()
         }
     }
 
-    // MARK: - Post Row
+    // MARK: - Search Bar
 
-    private func postRow(_ post: PostSummaryResponse) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // 카테고리 + 작성자
-            HStack {
-                Text(post.category)
-                    .font(.caption2)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.blue.opacity(0.1))
-                    .foregroundColor(.blue)
-                    .cornerRadius(4)
+    private var searchBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 16))
+                .foregroundColor(.gray60)
 
-                Spacer()
-
-                Text(post.creator.nick)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-
-            // 제목
-            Text(post.title)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .lineLimit(1)
-
-            // 내용 미리보기
-            Text(post.content)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .lineLimit(2)
-
-            // 하단 정보
-            HStack {
-                // 썸네일
-                if let firstFile = post.files.first {
-                    KFImage.auth(url: URL(string: Secrets.baseURL + "/" + firstFile))
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 40, height: 40)
-                        .background(Color.gray.opacity(0.2))
-                        .clipped()
-                        .cornerRadius(4)
+            TextField("게시글 검색", text: $searchText)
+                .font(.pretendardBody2)
+                .foregroundColor(.gray90)
+                .onSubmit {
+                    intent.updateSearchQuery(searchText)
+                    Task { await intent.searchPosts() }
                 }
 
-                Spacer()
-
-                // 좋아요 + 날짜
-                HStack(spacing: 12) {
-                    Label("\(post.like_count)", systemImage: post.is_like ? "heart.fill" : "heart")
-                        .font(.caption)
-                        .foregroundColor(post.is_like ? .red : .secondary)
-
-                    Text(formatDate(post.createdAt))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+            if !searchText.isEmpty {
+                Button {
+                    searchText = ""
+                    intent.updateSearchQuery("")
+                    Task { await intent.refresh() }
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.gray60)
                 }
             }
         }
-        .padding(.vertical, 4)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(Color.gray0)
+        .cornerRadius(12)
+    }
+
+    // MARK: - Category Filter
+
+    private var categoryFilter: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                // 전체 버튼
+                FilterChipButton(
+                    title: "전체",
+                    isActive: selectedCategory == nil
+                ) {
+                    selectedCategory = nil
+                    Task { await intent.refresh() }
+                }
+
+                // 카테고리 버튼들
+                ForEach(intent.categories, id: \.self) { category in
+                    FilterChipButton(
+                        title: category,
+                        isActive: selectedCategory == category
+                    ) {
+                        selectedCategory = category
+                        // TODO: 카테고리별 필터링 기능 추가
+                        // intent.filterByCategory(category)
+                    }
+                }
+            }
+            .padding(.horizontal, 16)
+        }
     }
 
     // MARK: - Error View
@@ -154,13 +172,9 @@ struct CommunityListView: View {
         }
         .padding()
     }
-
-    // MARK: - Helpers
-
-    private func formatDate(_ dateString: String) -> String {
-        String(dateString.prefix(10))
-    }
 }
+
+// MARK: - Preview
 
 #Preview {
     NavigationStack {
