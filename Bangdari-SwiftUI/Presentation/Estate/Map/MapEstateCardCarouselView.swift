@@ -53,54 +53,87 @@ struct MapEstateCardCarouselView: View {
 
 private struct MapEstateCardView: View {
     let estate: EstateSummaryResponse
+    @State private var address: String?
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
+            thumbnail
+            textStack
+        }
+        .padding(12)
+        .frame(minHeight: 120)
+        .background(Color.gray0)
+        .cornerRadius(16)
+        .task {
+            GeolocationManager.shared.fetchFullAddress(
+                latitude: estate.geolocation.latitude,
+                longitude: estate.geolocation.longitude
+            ) { fetchedAddress in
+                address = fetchedAddress
+            }
+        }
+    }
+
+    private var thumbnail: some View {
+        ZStack(alignment: .topLeading) {
             KFImage.auth(url: estate.mapImageURL)
+                .placeholder {
+                    Color.gray30
+                }
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 100, height: 100)
-                .background(Color.gray15)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipped()
+                .cornerRadius(10)
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text(estate.category)
-                    .font(.pretendardCaption1)
-                    .foregroundColor(.deepWood)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.brightCream)
-                    .cornerRadius(8)
+            if estate.is_safe_estate {
+                DSIconView(.safety, size: 20, renderingMode: .original)
+                    .offset(x: 8, y: 8)
+            }
+        }
+    }
 
-                Text(estate.title)
-                    .font(.pretendardBody2)
+    private var textStack: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 8) {
+                tagBadge
+
+                Text(estate.formattedPrice())
+                    .font(.pretendard(.body1, .bold))
                     .foregroundColor(.gray90)
                     .lineLimit(1)
-
-                Text(estate.mapCardPriceText)
-                    .font(.pretendardTitle1)
-                    .foregroundColor(.gray90)
-
-                HStack(spacing: 8) {
-                    Text(estate.formattedArea())
-                        .font(.pretendardCaption1)
-                        .foregroundColor(.gray75)
-
-                    Text("·")
-                        .foregroundColor(.gray60)
-
-                    Text("영등포구") // TODO: 실제 주소
-                        .font(.pretendardCaption1)
-                        .foregroundColor(.gray60)
-                        .lineLimit(1)
-                }
             }
 
-            Spacer()
+            Text(estate.title)
+                .font(.pretendard(.caption1, .semiBold))
+                .foregroundColor(.gray75)
+                .lineLimit(2)
+
+            Text("\(estate.formattedArea()) · \(estate.floors)층")
+                .font(.pretendard(.caption1))
+                .foregroundColor(.gray75)
+
+            if !estate.introduction.isEmpty {
+                Text("◇ \(estate.introduction)")
+                    .font(.pretendard(.caption1))
+                    .foregroundColor(.gray60)
+                    .lineLimit(1)
+            }
         }
-        .padding(16)
-        .background(Color.gray0)
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var tagBadge: some View {
+        Text(estate.category)
+            .font(.pretendardCaption1)
+            .foregroundColor(.deepWood)
+            .padding(.horizontal, 8)
+            .frame(height: 20)
+            .background(Color.gray0)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.deepWood, lineWidth: 1)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }

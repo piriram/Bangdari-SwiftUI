@@ -5,7 +5,7 @@ import SwiftUI
 struct EstateMarkerView: View {
     let estate: EstateSummaryResponse
     let isSelected: Bool
-
+    
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 6) {
@@ -28,32 +28,29 @@ struct EstateMarkerView: View {
                                 .foregroundColor(.gray45)
                         )
                 }
-
-                VStack(spacing: 2) {
-                    Text(estate.mapMarkerPriceText)
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(.gray0)
-                        .lineLimit(1)
-
-                    HStack(spacing: 2) {
-                        Text("❤️")
-                            .font(.system(size: 10))
-                        Text("\(estate.like_count)")
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundColor(.gray60)
-                    }
-                }
+                
+                Text("\(estate.formattedPrice())")
+                    .font(.pretendard(.caption1,.semiBold))
+                    .foregroundColor(.gray60)
+                    .minimumScaleFactor(0.5)
+//                VStack(spacing: 2) {
+//                    Text(estate.mapMarkerPriceText)
+//                        .font(.system(size: 12, weight: .bold))
+//                        .foregroundColor(.gray0)
+//                        .lineLimit(1)
+//                   
+//                }
             }
-            .padding(8)
+            .padding(6)
             .background(Color.gray0)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(
                 color: isSelected ? Color.deepCream.opacity(0.4) : Color.black.opacity(0.15),
                 radius: isSelected ? 8 : 4,
                 x: 0,
                 y: isSelected ? 4 : 2
             )
-
+            
             Triangle()
                 .fill(Color.gray0)
                 .frame(width: 12, height: 6)
