@@ -93,7 +93,7 @@ struct EstateListView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 6) {
                     ForEach(FilterType.allCases, id: \.self) { filter in
-                        filterChip(filter.title, isActive: activeFilter == filter) {
+                        FilterChipButton(title: filter.title, isActive: activeFilter == filter) {
                             toggleFilter(filter)
                         }
                     }
@@ -118,22 +118,6 @@ struct EstateListView: View {
             .padding(.trailing, 16)
         }
         .frame(height: 48)
-    }
-
-    private func filterChip(_ title: String, isActive: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(.pretendardBody3)
-                .foregroundColor(isActive ? .deepWood : .gray75)
-                .padding(.horizontal, 12)
-                .frame(height: 32)
-                .background(Color.gray0)
-                .overlay(
-                    Capsule()
-                        .stroke(isActive ? Color.deepWood : Color.gray45, lineWidth: 2)
-                )
-                .clipShape(Capsule())
-        }
     }
 
     private func toggleFilter(_ filter: FilterType) {

@@ -33,7 +33,7 @@ struct MapFilterControlsView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(MapViewState.FilterType.allCases, id: \.self) { type in
-                    filterChip(type.title, isActive: filterState.isActive(type)) {
+                    FilterChipButton(title: type.title, isActive: filterState.isActive(type)) {
                         onToggleFilter(type)
                     }
                 }
@@ -57,20 +57,6 @@ struct MapFilterControlsView: View {
                 }
             }
         }
-    }
-
-    private func filterChip(_ title: String, isActive: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(.pretendardCaption1)
-                .foregroundColor(isActive ? .gray0 : .gray75)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(isActive ? Color.deepWood : Color.gray0)
-                .cornerRadius(16)
-                .shadow(color: .black.opacity(0.06), radius: 4, x: 0, y: 2)
-        }
-        .buttonStyle(.plain)
     }
 
     private func filterPanel(for type: MapViewState.FilterType) -> some View {
