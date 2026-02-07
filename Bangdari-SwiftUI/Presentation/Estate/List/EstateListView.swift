@@ -1,5 +1,6 @@
 import CoreLocation
 import Kingfisher
+import MapKit
 import SwiftUI
 
 // MARK: - Estate List View
@@ -15,6 +16,7 @@ struct EstateListView: View {
     @State private var displayEstates: [EstateSummaryResponse] = []
     @State private var bannerInterval: Int = 6  // 기본값
     @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
+    @State private var navigateToMap: Bool = false
 
     enum ListMode {
         case map(coordinate: CLLocationCoordinate2D, estates: [EstateSummaryResponse], locationText: String)
@@ -57,6 +59,13 @@ struct EstateListView: View {
         .navigationDestination(item: $selectedEstateIdForDetail) { estateId in
             EstateDetailView(estateId: estateId)
         }
+        .navigationDestination(isPresented: $navigateToMap) {
+            EstateMapView(
+                initialCategory: nil,
+                initialCoordinate: mapInitialCoordinate,
+                initialSpan: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+            )
+        }
         .task {
             bannerInterval = calculateBannerInterval()
             await loadInitialData()
@@ -80,14 +89,12 @@ struct EstateListView: View {
                     .foregroundColor(NavBarStyle.titleColor)
             }
         } trailing: {
-            // Trailing: Map Icon (liked mode only)
-            if case .liked = mode {
-                Button {
-                    // TODO: Navigate to map
-                } label: {
-                    DSIconView(.map, size: NavBarStyle.iconMedium, renderingMode: .template)
-                        .foregroundColor(NavBarStyle.iconColor)
-                }
+            // Trailing: Map Icon (all modes)
+            Button {
+                navigateToMap = true
+            } label: {
+                DSIconView(.map, size: NavBarStyle.iconMedium, renderingMode: .template)
+                    .foregroundColor(NavBarStyle.iconColor)
             }
         }
     }
@@ -102,6 +109,24 @@ struct EstateListView: View {
             return "최근검색 매물"
         case .hotEstates:
             return "HOT 매물"
+        }
+    }
+
+    private var mapInitialCoordinate: CLLocationCoordinate2D {
+        switch mode {
+        case .map(let coordinate, _, _):
+            return coordinate
+        case .liked, .todayEstates, .hotEstates:
+            // 첫 번째 매물의 좌표 사용, 없으면 서울 중심 좌표
+            if let firstEstate = displayEstates.first {
+                return CLLocationCoordinate2D(
+                    latitude: firstEstate.geolocation.latitude,
+                    longitude: firstEstate.geolocation.longitude
+                )
+            } else {
+                // 서울 중심 좌표 (기본값)
+                return CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780)
+            }
         }
     }
 
