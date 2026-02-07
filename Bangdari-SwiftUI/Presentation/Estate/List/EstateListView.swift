@@ -198,8 +198,8 @@ struct EstateListView: View {
 
     private var itemDivider: some View {
         Rectangle()
-            .fill(Color.gray60.opacity(0.32))
-            .frame(height: 0.5)
+            .fill(Color.gray30)
+            .frame(height: 1)
     }
 
     // MARK: - Empty View
