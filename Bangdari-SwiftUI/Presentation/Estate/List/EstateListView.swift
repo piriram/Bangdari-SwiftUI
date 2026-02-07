@@ -19,7 +19,7 @@ struct EstateListView: View {
 
     var body: some View {
         ZStack {
-            // Z1: Background
+            // Z1: Full background
             Color.gray15.ignoresSafeArea()
 
             VStack(spacing: 0) {
@@ -32,15 +32,9 @@ struct EstateListView: View {
                         .padding(.top, 12)
                 }
 
-                // Z3: Scrollable Content Flow
-                if intent.state.isLoading && displayEstates.isEmpty {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if displayEstates.isEmpty {
-                    emptyView
-                } else {
-                    estateListContent
-                }
+                // Z3: Single list sheet (Gray30)
+                contentSheet
+                    .padding(.top, 12)
             }
         }
         .navigationBarHidden(true)
@@ -66,7 +60,7 @@ struct EstateListView: View {
     // MARK: - Navigation Bar
 
     private var navigationBar: some View {
-        CustomNavigationBar(onBack: { dismiss() }) {
+        CustomNavigationBar(onBack: { dismiss() }, backgroundColor: .gray15) {
             HStack(spacing: NavBarStyle.centerSpacing) {
                 DSIconView(.location, size: NavBarStyle.iconMedium, renderingMode: .template)
                     .foregroundColor(NavBarStyle.iconColor)
@@ -133,11 +127,34 @@ struct EstateListView: View {
 
     // MARK: - Estate List Content
 
+    private var contentSheet: some View {
+        ZStack {
+            Color.gray0
+
+            if intent.state.isLoading && displayEstates.isEmpty {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if displayEstates.isEmpty {
+                emptyView
+            } else {
+                estateListContent
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .cornerRadius(36, corners: [.topLeft, .topRight])
+    }
+
     private var estateListContent: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: 0) {
                 ForEach(displayEstates.indices, id: \.self) { index in
                     estateRow(at: index)
+
+                    if index < displayEstates.count - 1 {
+                        itemDivider
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 5)
+                    }
                 }
 
                 // Load more indicator (liked mode only)
@@ -147,39 +164,42 @@ struct EstateListView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.top, 12)
+            .padding(.top, 16)
+            .padding(.bottom, 24)
         }
     }
 
     @ViewBuilder
     private func estateRow(at index: Int) -> some View {
         let estate = displayEstates[index]
-
-        Button {
-            selectedEstateIdForDetail = estate.estate_id
-        } label: {
-            EstateListItem(estate: estate)
-        }
-        .buttonStyle(.plain)
-
-        // 동적 간격으로 배너 표시 (순환 로직)
-        if index < displayEstates.count - 1,
-           !intent.state.banners.isEmpty,
-           (index + 1) % bannerInterval == 0 {
-            let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
-            let banner = intent.state.banners[bannerIndex]
-
-            InlinePromoItem(banner: banner) { url in
-                // TODO: BannerWebView 네비게이션 구현
-                print("🔗 Banner clicked: \(url)")
+        VStack(spacing: 12) {
+            Button {
+                selectedEstateIdForDetail = estate.estate_id
+            } label: {
+                EstateListItem(estate: estate)
             }
-            .onAppear {
-                print("🔄 [BANNER-CYCLE] Estate #\(index) 뒤에 배너 표시")
-                print("  - Total Banners: \(intent.state.banners.count)")
-                print("  - Selected Index: \(bannerIndex)")
-                print("  - Banner Title: \(banner.title)")
+            .buttonStyle(.plain)
+
+            // 동적 간격으로 배너 표시 (순환 로직)
+            if let bannerPayload = bannerPayload(after: index) {
+                InlinePromoItem(banner: bannerPayload.banner) { url in
+                    // TODO: BannerWebView 네비게이션 구현
+                    print("🔗 Banner clicked: \(url)")
+                }
+                .onAppear {
+                    print("🔄 [BANNER-CYCLE] Estate #\(index) 뒤에 배너 표시")
+                    print("  - Total Banners: \(intent.state.banners.count)")
+                    print("  - Selected Index: \(bannerPayload.index)")
+                    print("  - Banner Title: \(bannerPayload.banner.title)")
+                }
             }
         }
+    }
+
+    private var itemDivider: some View {
+        Rectangle()
+            .fill(Color.gray60.opacity(0.32))
+            .frame(height: 0.5)
     }
 
     // MARK: - Empty View
@@ -225,6 +245,14 @@ struct EstateListView: View {
 
     private func updateDisplayEstates() {
         displayEstates = mode.baseEstates ?? intent.state.estates
+    }
+
+    private func bannerPayload(after index: Int) -> (index: Int, banner: Banner)? {
+        guard index < displayEstates.count - 1, !intent.state.banners.isEmpty else { return nil }
+        guard (index + 1) % bannerInterval == 0 else { return nil }
+
+        let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
+        return (bannerIndex, intent.state.banners[bannerIndex])
     }
 
     /// 화면 높이에 따라 배너 간격을 동적으로 계산

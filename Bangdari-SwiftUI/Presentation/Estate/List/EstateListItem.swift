@@ -27,32 +27,11 @@ struct EstateListItem: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 140, height: 108)
                 .clipped()
-                .cornerRadius(12)
-
-            Circle()
-                .fill(Color.deepCoast)
-                .frame(width: 20, height: 20)
-                .overlay {
-                    Image(dsIcon: .focus)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 14, height: 14)
-                        .foregroundColor(.gray0)
-                }
-                .offset(x: 8, y: 8)
+                .cornerRadius(8)
 
             if estate.is_safe_estate {
-                Circle()
-                    .fill(Color.brightWood)
-                    .frame(width: 20, height: 20)
-                    .overlay {
-                        Image(dsIcon: .safety)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 14, height: 14)
-                            .foregroundColor(.gray0)
-                    }
-                    .offset(x: 112, y: 8)
+                DSIconView(.safety, size: 20, renderingMode: .original)
+                    .offset(x: 8, y: 8)
             }
         }
     }

@@ -75,6 +75,7 @@ import SwiftUI
 struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
     private let showDefaultBackButton: Bool
     private let onBack: (() -> Void)?
+    private let backgroundColor: Color
     private let leadingContent: () -> Leading
     private let centerContent: () -> Center
     private let trailingContent: () -> Trailing
@@ -86,11 +87,13 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
     ///   - trailing: 우측 영역 (ViewBuilder, 기본값: EmptyView)
     init(
         onBack: @escaping () -> Void,
+        backgroundColor: Color = .gray0,
         @ViewBuilder center: @escaping () -> Center,
         @ViewBuilder trailing: @escaping () -> Trailing = { EmptyView() }
     ) where Leading == EmptyView {
         self.showDefaultBackButton = true
         self.onBack = onBack
+        self.backgroundColor = backgroundColor
         self.leadingContent = { EmptyView() }
         self.centerContent = center
         self.trailingContent = trailing
@@ -106,12 +109,14 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
     init(
         showDefaultBackButton: Bool = true,
         onBack: (() -> Void)? = nil,
+        backgroundColor: Color = .gray0,
         @ViewBuilder leading: @escaping () -> Leading,
         @ViewBuilder center: @escaping () -> Center,
         @ViewBuilder trailing: @escaping () -> Trailing = { EmptyView() }
     ) {
         self.showDefaultBackButton = showDefaultBackButton
         self.onBack = onBack
+        self.backgroundColor = backgroundColor
         self.leadingContent = leading
         self.centerContent = center
         self.trailingContent = trailing
@@ -141,7 +146,7 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
         }
         .padding(.horizontal, 16)
         .frame(height: 56)
-        .background(Color.gray0)
+        .background(backgroundColor)
     }
 }
 
@@ -193,9 +198,10 @@ extension CustomNavigationBar where Leading == EmptyView, Trailing == EmptyView 
     /// 제목만 있는 간단한 네비게이션 바 (기존 호환성)
     init(
         onBack: @escaping () -> Void,
+        backgroundColor: Color = .gray0,
         title: String
     ) where Center == Text {
-        self.init(onBack: onBack) {
+        self.init(onBack: onBack, backgroundColor: backgroundColor) {
             Text(title)
                 .font(NavBarStyle.titleFont)
                 .foregroundColor(NavBarStyle.titleColor)
