@@ -29,11 +29,11 @@ struct EstateListView: View {
 
                 // Filter Chip Row (all modes)
                 filterChipRow
-                    .padding(.top, 12)
+                    .padding(.top, 0)
 
                 // Z3: Single list sheet
                 contentSheet
-                    .padding(.top, 12)
+                    .padding(.top, 4)
             }
         }
         .navigationBarHidden(true)
@@ -111,7 +111,7 @@ struct EstateListView: View {
                     size: 24,
                     renderingMode: .template
                 )
-                .foregroundColor(activeFilter != nil ? .deepCoast : .gray60)
+                .foregroundColor(activeFilter != nil ? .deepWood : .gray60)
                 .rotationEffect(.degrees(sortAscending ? 180 : 0))
                 .animation(.easeInOut(duration: 0.2), value: sortAscending)
             }
@@ -124,13 +124,13 @@ struct EstateListView: View {
         Button(action: action) {
             Text(title)
                 .font(.pretendardBody3)
-                .foregroundColor(isActive ? .deepCoast : .gray75)
+                .foregroundColor(isActive ? .deepWood : .gray75)
                 .padding(.horizontal, 12)
                 .frame(height: 32)
                 .background(Color.gray0)
                 .overlay(
                     Capsule()
-                        .stroke(isActive ? Color.deepCoast : Color.gray45, lineWidth: 1)
+                        .stroke(isActive ? Color.deepWood : Color.gray45, lineWidth: 2)
                 )
                 .clipShape(Capsule())
         }

@@ -49,37 +49,39 @@ struct EstateListItem: View {
     private var textStack: some View {
         VStack(alignment: .leading, spacing: 4) {
             // 1. [카테고리] + 제목
-            HStack(spacing: 4) {
+            HStack(spacing: 8) {
                 tagBadge
-
-                Text(estate.title)
-                    .font(.pretendardBody1Bold)
+                
+                Text(estate.formattedPrice())
+                    .font(.pretendard(.body1,.bold))
                     .foregroundColor(.gray90)
                     .lineLimit(1)
+                
             }
 
-            // 2. 가격
-            Text(estate.formattedPrice())
-                .font(.pretendardBody2)
+            Text(estate.title)
+                .font(.pretendard(.caption1,.semiBold))
                 .foregroundColor(.gray75)
+                .lineLimit(2)
+            
 
             // 3. 면적 · 층수
             Text("\(estate.formattedArea()) · \(estate.floors)층")
-                .font(.pretendardCaption2)
-                .foregroundColor(.gray60)
+                .font(.pretendard(.caption1))
+                .foregroundColor(.gray75)
 
             // 4. 주소 (역지오코딩)
             if let address = address {
                 Text(address)
-                    .font(.pretendardCaption2)
-                    .foregroundColor(.gray60)
+                    .font(.pretendard(.caption1))
+                    .foregroundColor(.gray75)
                     .lineLimit(1)
             }
 
             // 5. 소개/특징
             if !estate.introduction.isEmpty {
                 Text("◇ \(estate.introduction)")
-                    .font(.pretendardCaption2)
+                    .font(.pretendard(.caption1))
                     .foregroundColor(.gray60)
                     .lineLimit(1)
             }
@@ -90,11 +92,15 @@ struct EstateListItem: View {
     private var tagBadge: some View {
         Text(estate.category)
             .font(.pretendardCaption1)
-            .foregroundColor(.gray0)
+            .foregroundColor(.deepWood)
             .padding(.horizontal, 8)
             .frame(height: 20)
-            .background(Color.deepWood)
-            .clipShape(Capsule())
+            .background(Color.gray0)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.deepWood, lineWidth: 1)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 
     private func distanceText(_ meters: Double) -> String {
