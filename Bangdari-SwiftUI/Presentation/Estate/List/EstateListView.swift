@@ -72,10 +72,7 @@ struct EstateListView: View {
         CustomNavigationBar(onBack: { dismiss() }) {
             // Center: Location + Text
             HStack(spacing: 6) {
-                Image(dsIcon: .location)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
+                DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
                     .foregroundColor(.deepWood)
 
                 Text(locationText)
@@ -88,10 +85,7 @@ struct EstateListView: View {
                 Button {
                     // TODO: Navigate to map
                 } label: {
-                    Image(dsIcon: .map)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
+                    DSIconView(.map, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
                         .foregroundColor(.gray90)
                 }
             }
@@ -249,6 +243,7 @@ struct EstateListView: View {
         switch mode {
         case .map(_, let estates, _):
             displayEstates = estates
+            await intent.loadBanners()
         case .liked:
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
@@ -294,7 +289,7 @@ struct EstateListView: View {
     /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한)
     private func calculateBannerInterval() -> Int {
         // 상수
-        let estateCardHeight: CGFloat = 140  // EstateListItem 높이
+        let estateCardHeight: CGFloat = 124  // EstateListItem 높이
         let cardSpacing: CGFloat = 12        // LazyVStack spacing
         let itemHeight = estateCardHeight + cardSpacing  // 152pt
 
@@ -360,6 +355,21 @@ struct EstateListItem: View {
                         .foregroundColor(.gray0)
                 }
                 .offset(x: 8, y: 8)
+
+            // Safety Badge (검증된 매물만 표시)
+            if estate.is_safe_estate {
+                Circle()
+                    .fill(Color.brightWood)
+                    .frame(width: 20, height: 20)
+                    .overlay {
+                        Image(dsIcon: .safety)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 14, height: 14)
+                            .foregroundColor(.gray0)
+                    }
+                    .offset(x: 112, y: 8)  // 오른쪽 상단 (140 - 20 - 8 = 112)
+            }
         }
     }
 
@@ -380,7 +390,7 @@ struct EstateListItem: View {
                 .foregroundColor(.gray75)
 
             // 4. Meta (면적·층수)
-            Text("\(Int(estate.area))㎡ · \(estate.floors)층")
+            Text("\(estate.formattedArea()) · \(estate.floors)층")
                 .font(.pretendardCaption2)
                 .foregroundColor(.gray60)
 
@@ -415,11 +425,7 @@ struct EstateListItem: View {
     }
 
     private var priceText: String {
-        if estate.monthly_rent > 0 {
-            return "월세 \(formatPrice(estate.deposit))/\(formatPrice(estate.monthly_rent))"
-        } else {
-            return "전세 \(formatPrice(estate.deposit))"
-        }
+        return estate.formattedPrice()
     }
 
     private func formatPrice(_ price: Int) -> String {
@@ -456,16 +462,14 @@ struct InlinePromoItem: View {
                 onTap(url)
             }
         } label: {
-            // Full-width banner image
+            // Full-width banner image (390×66 design)
             KFImage.auth(url: imageURL)
                 .placeholder {
                     ZStack {
                         Color.gray30
-                        VStack(spacing: 8) {
+                        HStack(spacing: 6) {
                             Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 48, height: 48)
+                                .font(.system(size: 16))
                                 .foregroundColor(.gray60)
 
                             Text(banner.title)
@@ -481,10 +485,10 @@ struct InlinePromoItem: View {
                     print("  - Error: \(error.localizedDescription)")
                 }
                 .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 140)
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 66)
                 .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
     }

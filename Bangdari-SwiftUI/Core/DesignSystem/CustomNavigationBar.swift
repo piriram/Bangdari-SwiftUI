@@ -33,6 +33,45 @@ import SwiftUI
 ///     Button("완료") { save() }
 /// }
 /// ```
+
+// MARK: - Usage Guidelines
+
+/// ## 네비게이션 바 아이콘 크기 가이드
+///
+/// 모든 네비게이션 바 아이콘은 `DesignSystem.Layout.IconSize` 상수를 사용합니다:
+/// - **보조 아이콘** (위치 등): `IconSize.small` (16pt)
+/// - **주요 버튼** (검색, 리스트, 지도): `IconSize.medium` (20pt)
+/// - **강조 버튼** (찜하기): `IconSize.large` (24pt)
+/// - **뱃지**: `IconSize.xsmall` (14pt)
+///
+/// ## 네비게이션 바 텍스트 크기 가이드
+///
+/// - **네비게이션 바 제목/주요 텍스트**: `.pretendardBody1Bold` (16pt bold)
+/// - **보조 텍스트/위치**: `.pretendardBody2Bold` (14pt semibold)
+///
+/// ## 예시
+/// ```swift
+/// // 위치 + 텍스트
+/// HStack(spacing: 6) {
+///     DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
+///         .foregroundColor(.deepWood)
+///     Text("서울 강남구")
+///         .font(.pretendardBody1Bold)
+///         .foregroundColor(.gray90)
+/// }
+///
+/// // 검색 버튼
+/// Button {
+///     // action
+/// } label: {
+///     DSIconView(.search, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
+///         .foregroundColor(.gray90)
+/// }
+///
+/// // 찜하기 버튼
+/// DSIconView(.likeFill, size: DesignSystem.Layout.IconSize.large, renderingMode: .template)
+///     .foregroundColor(.red)
+/// ```
 struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
     private let showDefaultBackButton: Bool
     private let onBack: (() -> Void)?
@@ -132,22 +171,16 @@ extension CustomNavigationBar where Leading == EmptyView, Trailing == EmptyView 
 #Preview("위치 + 지도 버튼") {
     CustomNavigationBar(onBack: {}) {
         HStack(spacing: 6) {
-            Image(dsIcon: .location)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 16, height: 16)
+            DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
                 .foregroundColor(.deepWood)
 
-            Text("서울시, 중구")
+            Text("서울 강남구")
                 .font(.pretendardBody1Bold)
                 .foregroundColor(.gray90)
         }
     } trailing: {
         Button {} label: {
-            Image(dsIcon: .map)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20, height: 20)
+            DSIconView(.map, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
                 .foregroundColor(.gray90)
         }
     }

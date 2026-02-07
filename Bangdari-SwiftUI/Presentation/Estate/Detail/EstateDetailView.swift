@@ -281,13 +281,13 @@ struct EstateDetailView: View {
                     Text("월세")
                         .font(.pretendard(.body2, .medium))
                         .foregroundColor(.gray60)
-                    Text("\(formatPrice(estate.deposit))")
+                    Text(estate.formattedPriceInBillion(estate.deposit))
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.gray90)
                     Text("/")
                         .font(.pretendard(.title1))
                         .foregroundColor(.gray60)
-                    Text("\(estate.monthly_rent)")
+                    Text(estate.formattedPriceInBillion(estate.monthly_rent))
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.deepCoast)
                 }
@@ -296,7 +296,7 @@ struct EstateDetailView: View {
                     Text("전세")
                         .font(.pretendard(.body2, .medium))
                         .foregroundColor(.gray60)
-                    Text("\(formatPrice(estate.deposit))")
+                    Text(estate.formattedPriceInBillion(estate.deposit))
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.gray90)
                 }
@@ -310,7 +310,7 @@ struct EstateDetailView: View {
                 )
                 infoChip(
                     icon: "square.grid.3x3",
-                    text: "\(String(format: "%.1f", estate.area))m²"
+                    text: estate.formattedArea()
                 )
                 infoChip(
                     icon: "building.2",
@@ -756,15 +756,6 @@ struct EstateDetailView: View {
 
     // MARK: - Helpers
 
-    private func formatPrice(_ price: Int) -> String {
-        if price >= 10000 {
-            let billion = price / 10000
-            let remainder = price % 10000
-            return remainder == 0 ? "\(billion)억" : "\(billion)억 \(remainder)"
-        }
-        return "\(price)"
-    }
-
     private func profileImageURL(_ path: String?) -> URL? {
         guard let path else { return nil }
         return URL(string: APIConfig.baseURL + "/" + path)
@@ -776,10 +767,7 @@ struct EstateDetailView: View {
     }
 
     private func similarPriceText(_ estate: EstateSummaryResponse) -> String {
-        if estate.monthly_rent > 0 {
-            return "월세 \(estate.deposit)/\(estate.monthly_rent)"
-        }
-        return "전세 \(estate.deposit)"
+        return estate.formattedPrice()
     }
 
     @ViewBuilder
