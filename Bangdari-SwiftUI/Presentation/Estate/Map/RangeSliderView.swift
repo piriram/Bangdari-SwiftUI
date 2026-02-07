@@ -129,10 +129,10 @@ struct RangeSliderView: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
                 .background(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 4)
                         .fill(Color.gray0)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 10)
+                            RoundedRectangle(cornerRadius: 4)
                                 .stroke(Color.gray45, lineWidth: 1)
                         )
                 )
@@ -255,9 +255,9 @@ private enum Layout {
     static let totalHeight: CGFloat = 84
     static let pointerHeight: CGFloat = 8
     static let horizontalPadding: CGFloat = 18
-    static let topContentInset: CGFloat = 26
+    static let topContentInset: CGFloat = 5
     static let trackHeight: CGFloat = 6
-    static let thumbSize: CGFloat = 20
+    static let thumbSize: CGFloat = 16
     static let minimumThumbDistance: CGFloat = 22
 }
 
