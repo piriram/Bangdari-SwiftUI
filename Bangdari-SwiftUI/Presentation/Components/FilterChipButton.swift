@@ -14,11 +14,11 @@ struct FilterChipButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.pretendardBody3)
+                .font(.pretendardBody2)
                 .foregroundColor(foregroundColor)
                 .padding(.horizontal, 12)
                 .frame(height: 32)
-                .background(backgroundColor)
+                .background(Color.gray0)
                 .overlay(
                     Capsule()
                         .stroke(strokeColor, lineWidth: 2)
@@ -31,9 +31,9 @@ struct FilterChipButton: View {
     private var foregroundColor: Color {
         switch style {
         case .outlined:
-            return isActive ? .deepWood : .gray75
+            return isActive ? .brightWood : .gray75
         case .filledActive:
-            return isActive ? .gray0 : .gray75
+            return isActive ? .brightWood : .gray75
         }
     }
 
@@ -42,24 +42,17 @@ struct FilterChipButton: View {
         case .outlined:
             return .gray0
         case .filledActive:
-            return isActive ? .deepWood : .gray0
+            return isActive ? .brightWood : .gray0
         }
     }
 
     private var strokeColor: Color {
         switch style {
         case .outlined:
-            return isActive ? .deepWood : .gray45
+            return isActive ? .brightWood : .gray45
         case .filledActive:
-            return isActive ? .deepWood : .gray45
+            return isActive ? .brightWood : .gray45
         }
     }
 }
 
-#Preview {
-    HStack(spacing: 8) {
-        FilterChipButton(title: "보증금 순", isActive: false) {}
-        FilterChipButton(title: "면적 순", isActive: true) {}
-        FilterChipButton(title: "월세", isActive: true, style: .filledActive) {}
-    }
-}

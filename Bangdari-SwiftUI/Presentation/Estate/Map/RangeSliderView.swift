@@ -4,6 +4,7 @@ struct RangeSliderView: View {
     @Binding var lowerValue: Double
     @Binding var upperValue: Double
     let bounds: ClosedRange<Double>
+
     @State private var lowerDragStartValue: Double?
     @State private var upperDragStartValue: Double?
 
@@ -17,67 +18,53 @@ struct RangeSliderView: View {
 
             let lowerX = Layout.horizontalPadding + (sliderWidth * lowerRatio)
             let upperX = Layout.horizontalPadding + (sliderWidth * upperRatio)
-            let trackY = Layout.pointerHeight + Layout.topContentInset + (Layout.trackHeight / 2)
 
             ZStack(alignment: .topLeading) {
-                cardBackground
+                // 카드 배경(단일)
+                RoundedRectangle(cornerRadius: Layout.cardCornerRadius)
+                    .fill(Color.gray0)
+                    .shadow(color: Color.black.opacity(0.10), radius: 10, x: 0, y: 3)
 
+                // 트랙(비활성)
                 trackBackground(width: sliderWidth)
-                    .position(x: Layout.horizontalPadding + sliderWidth / 2, y: trackY)
+                    .position(x: Layout.horizontalPadding + sliderWidth / 2, y: Layout.trackCenterY)
 
-                activeTrack(lowerX: lowerX, upperX: upperX, y: trackY)
+                // 활성 구간(단색)
+                activeTrack(lowerX: lowerX, upperX: upperX, y: Layout.trackCenterY)
 
-                tickMarks(width: sliderWidth, y: trackY - 11)
+                // 틱(눈금)
+                tickMarks(width: sliderWidth, y: Layout.trackCenterY)
 
+                // 썸(좌)
                 thumb(strokeColor: .brightWood)
-                    .position(x: lowerX, y: trackY)
-                    .gesture(
-                        dragGesture(
-                            isLowerThumb: true,
-                            sliderWidth: sliderWidth,
-                            valueRange: range
-                        )
-                    )
+                    .position(x: lowerX, y: Layout.trackCenterY)
+                    .gesture(dragGesture(isLowerThumb: true, sliderWidth: sliderWidth, valueRange: range))
 
+                // 썸(우)
                 thumb(strokeColor: Color.gray90.opacity(0.95))
-                    .position(x: upperX, y: trackY)
-                    .gesture(
-                        dragGesture(
-                            isLowerThumb: false,
-                            sliderWidth: sliderWidth,
-                            valueRange: range
-                        )
-                    )
+                    .position(x: upperX, y: Layout.trackCenterY)
+                    .gesture(dragGesture(isLowerThumb: false, sliderWidth: sliderWidth, valueRange: range))
 
+                // 툴팁(상단)
                 tooltip(text: selectedRangeText)
                     .position(
                         x: tooltipX(lowerX: lowerX, upperX: upperX, width: sliderWidth),
-                        y: trackY - 25
+                        y: Layout.tooltipCenterY
                     )
 
+                // 스케일 라벨(하단)
                 scaleLabels(width: sliderWidth)
                     .position(
                         x: Layout.horizontalPadding + sliderWidth / 2,
-                        y: trackY + 24
+                        y: Layout.labelsCenterY
                     )
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(.horizontal, 0) // GeometryReader 내부에서 직접 패딩 계산하므로 0
         }
         .frame(height: Layout.totalHeight)
     }
 
-    private var cardBackground: some View {
-        VStack(spacing: 0) {
-            TopPointer()
-                .fill(Color.gray0)
-                .frame(width: 16, height: Layout.pointerHeight)
-                .frame(maxWidth: .infinity)
-
-            RoundedRectangle(cornerRadius: 22)
-                .fill(Color.gray0)
-        }
-        .shadow(color: Color.black.opacity(0.08), radius: 12, x: 0, y: 4)
-    }
+    // MARK: - UI Pieces
 
     private func trackBackground(width: CGFloat) -> some View {
         Capsule()
@@ -86,14 +73,10 @@ struct RangeSliderView: View {
     }
 
     private func activeTrack(lowerX: CGFloat, upperX: CGFloat, y: CGFloat) -> some View {
-        LinearGradient(
-            colors: [Color.brightWood, Color.deepWood, Color.gray100.opacity(0.9)],
-            startPoint: .leading,
-            endPoint: .trailing
-        )
-        .clipShape(Capsule())
-        .frame(width: max(upperX - lowerX, 0), height: Layout.trackHeight)
-        .position(x: lowerX + max(upperX - lowerX, 0) / 2, y: y)
+        Capsule()
+            .fill(Color.brightWood) // 이미지처럼 단색
+            .frame(width: max(upperX - lowerX, 0), height: Layout.trackHeight)
+            .position(x: lowerX + max(upperX - lowerX, 0) / 2, y: y)
     }
 
     private func tickMarks(width: CGFloat, y: CGFloat) -> some View {
@@ -101,8 +84,8 @@ struct RangeSliderView: View {
             ForEach(scaleDefinitions.indices, id: \.self) { index in
                 let position = scaleDefinitions[index].position
                 Rectangle()
-                    .fill(Color.gray45.opacity(0.45))
-                    .frame(width: 1, height: 8)
+                    .fill(Color.gray45.opacity(0.35))
+                    .frame(width: 1, height: Layout.tickHeight)
                     .position(x: Layout.horizontalPadding + (width * position), y: y)
             }
         }
@@ -112,8 +95,7 @@ struct RangeSliderView: View {
         Circle()
             .fill(Color.gray0)
             .overlay(
-                Circle()
-                    .stroke(strokeColor, lineWidth: 2)
+                Circle().stroke(strokeColor, lineWidth: 2)
             )
             .frame(width: Layout.thumbSize, height: Layout.thumbSize)
             .shadow(color: Color.black.opacity(0.12), radius: 2, x: 0, y: 1)
@@ -127,49 +109,43 @@ struct RangeSliderView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .padding(.horizontal, 10)
-                .padding(.vertical, 6)
+                .padding(.vertical, 4)
                 .background(
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Color.gray0)
                         .overlay(
                             RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.gray45, lineWidth: 1)
+                                .stroke(Color.gray60, lineWidth: 1)
                         )
                 )
-
-            BottomPointer()
-                .fill(Color.gray0)
-                .frame(width: 10, height: 6)
-                .overlay(
-                    BottomPointer()
-                        .stroke(Color.gray45, lineWidth: 1)
-                )
-                .offset(y: -1)
         }
     }
 
     private func scaleLabels(width: CGFloat) -> some View {
         ZStack {
             ForEach(scaleDefinitions.indices, id: \.self) { index in
-                let definition = scaleDefinitions[index]
-                let x = min(max(width * definition.position, 16), width - 16)
-                Text(definition.title)
+                let def = scaleDefinitions[index]
+                let x = Layout.horizontalPadding + (width * def.position)
+
+                Text(def.title)
                     .font(.pretendardCaption2)
                     .foregroundColor(.gray60)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                    .position(x: x, y: 8)
+                    .position(x: x, y: 7)
             }
         }
-        .frame(width: width, height: 16)
+        .frame(maxWidth: .infinity, maxHeight: 14)
     }
 
     private func tooltipX(lowerX: CGFloat, upperX: CGFloat, width: CGFloat) -> CGFloat {
         let desired = (lowerX + upperX) / 2
-        let minX = Layout.horizontalPadding + 42
-        let maxX = Layout.horizontalPadding + width - 42
+        let minX = Layout.horizontalPadding + Layout.tooltipHorizontalInset
+        let maxX = Layout.horizontalPadding + width - Layout.tooltipHorizontalInset
         return min(max(desired, minX), maxX)
     }
+
+    // MARK: - Drag
 
     private func dragGesture(
         isLowerThumb: Bool,
@@ -182,18 +158,12 @@ struct RangeSliderView: View {
                 let deltaValue = Double(value.translation.width / sliderWidth) * valueRange
 
                 if isLowerThumb {
-                    if lowerDragStartValue == nil {
-                        lowerDragStartValue = lowerValue
-                    }
-
+                    if lowerDragStartValue == nil { lowerDragStartValue = lowerValue }
                     guard let start = lowerDragStartValue else { return }
                     let candidate = start + deltaValue
                     lowerValue = min(max(bounds.lowerBound, candidate), upperValue - minimumGap)
                 } else {
-                    if upperDragStartValue == nil {
-                        upperDragStartValue = upperValue
-                    }
-
+                    if upperDragStartValue == nil { upperDragStartValue = upperValue }
                     guard let start = upperDragStartValue else { return }
                     let candidate = start + deltaValue
                     upperValue = max(min(bounds.upperBound, candidate), lowerValue + minimumGap)
@@ -205,12 +175,13 @@ struct RangeSliderView: View {
             }
     }
 
+    // MARK: - Text / Scale
+
     private var selectedRangeText: String {
         if isCurrencyScale {
-            return "\(formatCurrency(lowerValue)) - \(formatCurrency(upperValue))"
+            return "\(formatCurrency(lowerValue)) ~ \(formatCurrency(upperValue))" // 이미지처럼 물결 표기
         }
-
-        return "\(Int(lowerValue)) - \(Int(upperValue))"
+        return "\(Int(lowerValue)) ~ \(Int(upperValue))"
     }
 
     private var scaleDefinitions: [(position: CGFloat, title: String)] {
@@ -242,35 +213,35 @@ struct RangeSliderView: View {
         ]
     }
 
-    private var isCurrencyScale: Bool {
-        bounds.upperBound >= 1_000_000
-    }
+    private var isCurrencyScale: Bool { bounds.upperBound >= 1_000_000 }
 
     private func formatCurrency(_ value: Double) -> String {
         PriceFormatter.format(value, includeUnit: false)
     }
 }
 
+// MARK: - Layout
+
 private enum Layout {
-    static let totalHeight: CGFloat = 84
-    static let pointerHeight: CGFloat = 8
+    static let totalHeight: CGFloat = 86          // 카드 높이(이미지에 더 근접)
     static let horizontalPadding: CGFloat = 18
-    static let topContentInset: CGFloat = 5
+
+    static let tooltipCenterY: CGFloat = 18       // 툴팁 위쪽
+    static let trackCenterY: CGFloat = 42         // 트랙 중앙
+    static let labelsCenterY: CGFloat = 70        // 라벨 아래
+
+    static let tooltipHorizontalInset: CGFloat = 42
+
+    static let cardCornerRadius: CGFloat = 22
+
     static let trackHeight: CGFloat = 6
-    static let thumbSize: CGFloat = 16
-    static let minimumThumbDistance: CGFloat = 22
+    static let tickHeight: CGFloat = 8
+
+    static let thumbSize: CGFloat = 18
+    static let minimumThumbDistance: CGFloat = 20
 }
 
-private struct TopPointer: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.closeSubpath()
-        return path
-    }
-}
+// MARK: - Pointer
 
 private struct BottomPointer: InsettableShape {
     var insetAmount: CGFloat = 0
