@@ -35,7 +35,7 @@ struct EstateListItem: View {
                 }
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 140, height: 108)
+                .frame(width: 120, height: 90)
                 .clipped()
                 .cornerRadius(8)
 

@@ -139,7 +139,7 @@ struct EstateMapView: View {
                 filterState: $filterState,
                 viewState: viewState,
                 onToggleFilter: toggleFilter,
-                onApplyFilter: applyFilter,
+                onRangeChangedDebounced: applyFilterDebounced,
                 onResetFilters: resetFilters
             )
 
@@ -450,7 +450,7 @@ struct EstateMapView: View {
         }
     }
 
-    private func applyFilter(_ type: MapViewState.FilterType) {
+    private func applyFilterDebounced(_ type: MapViewState.FilterType) {
         filterState.activate(type)
 
         intent.applyFilters(
@@ -461,8 +461,6 @@ struct EstateMapView: View {
             isMonthlyRentActive: filterState.isMonthlyRentActive,
             isAreaActive: filterState.isAreaActive
         )
-
-        withAnimation { viewState = .browsing }
     }
 
     private func resetFilters() {

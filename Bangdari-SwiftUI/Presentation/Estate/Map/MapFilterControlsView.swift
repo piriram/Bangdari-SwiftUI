@@ -4,36 +4,43 @@ struct MapFilterControlsView: View {
     @Binding var filterState: MapFilterState
     let viewState: MapViewState
     let onToggleFilter: (MapViewState.FilterType) -> Void
-    let onApplyFilter: (MapViewState.FilterType) -> Void
+    let onRangeChangedDebounced: (MapViewState.FilterType) -> Void
     let onResetFilters: () -> Void
+    @State private var debounceTask: Task<Void, Never>?
 
     var body: some View {
         VStack(spacing: 0) {
-            if !isFilterAdjusting {
-                filterButtonGroup
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-            }
+            filterButtonGroup
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
 
             if case .filterAdjusting(let type) = viewState {
-                filterPanel(for: type)
+                adjustingRangeControl(for: type)
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
-    }
-
-    private var isFilterAdjusting: Bool {
-        if case .filterAdjusting = viewState { return true }
-        return false
+        .onChange(of: viewState) { _, newState in
+            if case .filterAdjusting = newState {
+                return
+            }
+            debounceTask?.cancel()
+        }
+        .onDisappear {
+            debounceTask?.cancel()
+        }
     }
 
     private var filterButtonGroup: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(MapViewState.FilterType.allCases, id: \.self) { type in
-                    FilterChipButton(title: type.title, isActive: filterState.isActive(type)) {
+                    FilterChipButton(
+                        title: type.title,
+                        isActive: selectedAdjustingType == type,
+                        style: .filledActive
+                    ) {
                         onToggleFilter(type)
                     }
                 }
@@ -59,41 +66,57 @@ struct MapFilterControlsView: View {
         }
     }
 
-    private func filterPanel(for type: MapViewState.FilterType) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text(type.panelTitle)
-                    .font(.pretendardBody2Bold)
-                    .foregroundColor(.gray90)
-
-                Spacer()
-
-                Button("적용") {
-                    onApplyFilter(type)
-                }
-                .font(.pretendardCaption1)
-                .foregroundColor(.deepWood)
-            }
-
-            Text(filterState.rangeText(type))
-                .font(.pretendardBody2)
-                .foregroundColor(.gray75)
-
-            rangeSlider(for: type)
+    private var selectedAdjustingType: MapViewState.FilterType? {
+        if case .filterAdjusting(let type) = viewState {
+            return type
         }
-        .padding(16)
-        .background(Color.gray0)
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 2)
+        return nil
+    }
+
+    private func adjustingRangeControl(for type: MapViewState.FilterType) -> some View {
+        rangeSlider(for: type)
     }
 
     @ViewBuilder
     private func rangeSlider(for type: MapViewState.FilterType) -> some View {
-        RangeSliderView(
-            lowerValue: lowerBinding(for: type),
-            upperValue: upperBinding(for: type),
-            bounds: MapFilterState.bounds(type)
-        )
+        switch type {
+        case .deposit:
+            RangeSliderView(
+                lowerValue: lowerBinding(for: type),
+                upperValue: upperBinding(for: type),
+                bounds: MapFilterState.bounds(type)
+            )
+                .onChange(of: filterState.depositRange) { _ in
+                    notifyRangeChangedDebounced(type)
+                }
+        case .monthlyRent:
+            RangeSliderView(
+                lowerValue: lowerBinding(for: type),
+                upperValue: upperBinding(for: type),
+                bounds: MapFilterState.bounds(type)
+            )
+                .onChange(of: filterState.monthlyRentRange) { _ in
+                    notifyRangeChangedDebounced(type)
+                }
+        case .area:
+            RangeSliderView(
+                lowerValue: lowerBinding(for: type),
+                upperValue: upperBinding(for: type),
+                bounds: MapFilterState.bounds(type)
+            )
+                .onChange(of: filterState.areaRange) { _ in
+                    notifyRangeChangedDebounced(type)
+                }
+        }
+    }
+
+    private func notifyRangeChangedDebounced(_ type: MapViewState.FilterType) {
+        debounceTask?.cancel()
+        debounceTask = Task {
+            try? await Task.sleep(nanoseconds: 350_000_000)
+            guard !Task.isCancelled else { return }
+            onRangeChangedDebounced(type)
+        }
     }
 
     private func lowerBinding(for type: MapViewState.FilterType) -> Binding<Double> {
