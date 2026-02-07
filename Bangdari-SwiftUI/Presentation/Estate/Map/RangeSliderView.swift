@@ -84,7 +84,7 @@ struct RangeSliderView: View {
             ForEach(scaleDefinitions.indices, id: \.self) { index in
                 let position = scaleDefinitions[index].position
                 Rectangle()
-                    .fill(Color.gray45.opacity(0.35))
+                    .fill(Color.gray60)
                     .frame(width: 1, height: Layout.tickHeight)
                     .position(x: Layout.horizontalPadding + (width * position), y: y)
             }
@@ -224,7 +224,7 @@ struct RangeSliderView: View {
 
 private enum Layout {
     static let totalHeight: CGFloat = 86          // 카드 높이(이미지에 더 근접)
-    static let horizontalPadding: CGFloat = 18
+    static let horizontalPadding: CGFloat = 40
 
     static let tooltipCenterY: CGFloat = 18       // 툴팁 위쪽
     static let trackCenterY: CGFloat = 42         // 트랙 중앙
@@ -232,7 +232,7 @@ private enum Layout {
 
     static let tooltipHorizontalInset: CGFloat = 42
 
-    static let cardCornerRadius: CGFloat = 22
+    static let cardCornerRadius: CGFloat = 16
 
     static let trackHeight: CGFloat = 6
     static let tickHeight: CGFloat = 8
