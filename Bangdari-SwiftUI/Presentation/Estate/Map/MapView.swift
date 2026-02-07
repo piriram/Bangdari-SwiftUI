@@ -127,10 +127,10 @@ struct EstateMapView: View {
                 } label: {
                     HStack(spacing: 4) {
                         DSIconView(.location, size: 16, renderingMode: .template)
-                            .foregroundColor(.deepWood)
+                            .foregroundColor(.gray75)
                         Text(intent.state.locationText)
-                            .font(.pretendardBody2Bold)
-                            .foregroundColor(.gray90)
+                            .font(.pretendardBody1Bold)
+                            .foregroundColor(.gray75)
                     }
                 }
             } trailing: {
@@ -139,16 +139,16 @@ struct EstateMapView: View {
                     Button {
                         showSearchView = true
                     } label: {
-                        DSIconView(.search, size: 20, renderingMode: .template)
-                            .foregroundColor(.gray90)
+                        DSIconView(.search, size: 24, renderingMode: .template)
+                            .foregroundColor(.gray75)
                     }
 
                     // 리스트 버튼
                     Button {
                         navigateToList = true
                     } label: {
-                        DSIconView(.list, size: 20, renderingMode: .template)
-                            .foregroundColor(.gray90)
+                        DSIconView(.list, size: 24, renderingMode: .template)
+                            .foregroundColor(.gray75)
                     }
                 }
             }

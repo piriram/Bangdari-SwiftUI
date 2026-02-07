@@ -20,7 +20,7 @@ struct ChatRoomView: View {
                 HStack(spacing: 8) {
                     Text(intent.state.opponent?.nick ?? "채팅")
                         .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray90)
+                        .foregroundColor(.gray75)
 
                     // 연결 상태 표시
                     if intent.state.isConnected {

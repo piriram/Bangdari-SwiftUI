@@ -76,8 +76,8 @@ struct EstateListView: View {
                     .foregroundColor(.deepWood)
 
                 Text(locationText)
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
+                    .font(.pretendard(.body1,.bold))
+                    .foregroundColor(.gray75)
             }
         } trailing: {
             // Trailing: Map Icon (liked mode only)

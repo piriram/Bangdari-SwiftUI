@@ -14,17 +14,17 @@ struct ProfileEditView: View {
             // 네비게이션 바
             CustomNavigationBar(showDefaultBackButton: false) {
                 Button("취소") { dismiss() }
-                    .font(.pretendardBody2)
+                    .font(.pretendardBody1)
                     .foregroundColor(.gray75)
             } center: {
                 Text("프로필 수정")
                     .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
+                    .foregroundColor(.gray75)
             } trailing: {
                 Button("저장") {
                     Task { await intent.saveProfile() }
                 }
-                .font(.pretendardBody2Bold)
+                .font(.pretendardBody1Bold)
                 .foregroundColor(intent.state.isSaveDisabled ? .gray45 : .deepWood)
                 .disabled(intent.state.isSaveDisabled)
             }
