@@ -15,8 +15,8 @@ struct EstateCommentView: View {
             // 네비게이션 바
             CustomNavigationBar(onBack: { dismiss() }) {
                 Text("댓글 \(intent.state.comments.count)")
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray75)
+                    .font(NavBarStyle.titleFont)
+                    .foregroundColor(NavBarStyle.titleColor)
             }
 
             // 콘텐츠

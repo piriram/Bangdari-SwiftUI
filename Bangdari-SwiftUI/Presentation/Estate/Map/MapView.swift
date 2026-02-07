@@ -125,30 +125,28 @@ struct EstateMapView: View {
                 Button {
                     // TODO: 위치 선택 모달
                 } label: {
-                    HStack(spacing: 4) {
-                        DSIconView(.location, size: 16, renderingMode: .template)
-                            .foregroundColor(.gray75)
+                    HStack(spacing: NavBarStyle.centerSpacing) {
+                        DSIconView(.location, size: NavBarStyle.iconMedium, renderingMode: .template)
+                            .foregroundColor(NavBarStyle.iconColor)
                         Text(intent.state.locationText)
-                            .font(.pretendardBody1Bold)
-                            .foregroundColor(.gray75)
+                            .font(NavBarStyle.titleFont)
+                            .foregroundColor(NavBarStyle.iconColor)
                     }
                 }
             } trailing: {
-                HStack(spacing: 12) {
-                    // 검색 아이콘 버튼
+                HStack(spacing: NavBarStyle.trailingSpacing) {
                     Button {
                         showSearchView = true
                     } label: {
-                        DSIconView(.search, size: 24, renderingMode: .template)
-                            .foregroundColor(.gray75)
+                        DSIconView(.search, size: NavBarStyle.iconMedium, renderingMode: .template)
+                            .foregroundColor(NavBarStyle.iconColor)
                     }
 
-                    // 리스트 버튼
                     Button {
                         navigateToList = true
                     } label: {
-                        DSIconView(.list, size: 24, renderingMode: .template)
-                            .foregroundColor(.gray75)
+                        DSIconView(.list, size: NavBarStyle.iconMedium, renderingMode: .template)
+                            .foregroundColor(NavBarStyle.iconColor)
                     }
                 }
             }

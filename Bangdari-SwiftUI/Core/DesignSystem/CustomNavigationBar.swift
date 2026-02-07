@@ -123,9 +123,8 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
             if showDefaultBackButton {
                 // 기본 Back 버튼
                 Button(action: { onBack?() }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.gray90)
+                    DSIconView(.chevron, size: NavBarStyle.iconMedium, renderingMode: .template)
+                        .foregroundColor(NavBarStyle.iconColor)
                 }
             } else {
                 // 커스텀 Leading
@@ -148,16 +147,58 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
 
 // MARK: - Convenience Extensions
 
+// MARK: - Design Tokens
+
+/// 네비게이션 바 디자인 토큰 (MapView 기준)
+///
+/// **사용 예시:**
+/// ```swift
+/// CustomNavigationBar(onBack: { dismiss() }) {
+///     Text("제목")
+///         .font(NavBarStyle.titleFont)
+///         .foregroundColor(NavBarStyle.titleColor)
+/// } trailing: {
+///     DSIconView(.search, size: NavBarStyle.iconLarge, renderingMode: .template)
+///         .foregroundColor(NavBarStyle.iconColor)
+/// }
+/// ```
+struct NavBarStyle {
+    // MARK: - 높이
+    static let height: CGFloat = 56
+
+    // MARK: - 아이콘 크기
+    static let iconSmall: CGFloat = 16   // center 영역용 (location 등)
+    static let iconMedium: CGFloat = 24   // 강조 trailing (search, list, filter 등)
+    static let iconLarge: CGFloat = 32
+    // MARK: - 텍스트
+    static let titleFont = Font.pretendardBody1Bold
+    static let titleColor = Color.gray75
+
+    // MARK: - 아이콘 색상
+    static let iconColor = Color.gray75
+
+    // MARK: - Spacing
+    static let centerSpacing: CGFloat = 6    // center 영역 내부 간격
+    static let trailingSpacing: CGFloat = 12 // trailing 버튼 간 간격
+
+    // MARK: - 버튼 텍스트
+    static let buttonFont = Font.pretendardBody2
+    static let buttonColor = Color.gray75
+    static let buttonColorPrimary = Color.deepWood
+}
+
+// MARK: - Convenience Extensions
+
 extension CustomNavigationBar where Leading == EmptyView, Trailing == EmptyView {
-    /// 제목만 있는 간단한 네비게이션 바
+    /// 제목만 있는 간단한 네비게이션 바 (기존 호환성)
     init(
         onBack: @escaping () -> Void,
         title: String
     ) where Center == Text {
         self.init(onBack: onBack) {
             Text(title)
-                .font(.pretendardBody1Bold)
-                .foregroundColor(.gray90)
+                .font(NavBarStyle.titleFont)
+                .foregroundColor(NavBarStyle.titleColor)
         }
     }
 }

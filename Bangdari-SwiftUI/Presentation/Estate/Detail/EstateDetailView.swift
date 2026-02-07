@@ -32,14 +32,14 @@ struct EstateDetailView: View {
             if let estate = intent.state.estate {
                 CustomNavigationBar(onBack: { dismiss() }) {
                     Text(estate.title)
-                        .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray75)
+                        .font(NavBarStyle.titleFont)
+                        .foregroundColor(NavBarStyle.titleColor)
                         .lineLimit(1)
                 } trailing: {
                     Button {
                         Task { await intent.toggleLike() }
                     } label: {
-                        DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: 32, renderingMode: .template)
+                        DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: NavBarStyle.iconSmall, renderingMode: .template)
                             .foregroundColor(intent.state.isLiked ? .red : .gray60)
                     }
                     .disabled(intent.state.isLikeLoading)
@@ -47,8 +47,8 @@ struct EstateDetailView: View {
             } else {
                 CustomNavigationBar(onBack: { dismiss() }) {
                     Text("매물 상세")
-                        .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray75)
+                        .font(NavBarStyle.titleFont)
+                        .foregroundColor(NavBarStyle.titleColor)
                 }
             }
 

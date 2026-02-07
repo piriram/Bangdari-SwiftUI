@@ -71,13 +71,13 @@ struct EstateListView: View {
     private var navigationBar: some View {
         CustomNavigationBar(onBack: { dismiss() }) {
             // Center: Location + Text
-            HStack(spacing: 6) {
-                DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
-                    .foregroundColor(.deepWood)
+            HStack(spacing: NavBarStyle.centerSpacing) {
+                DSIconView(.location, size: NavBarStyle.iconMedium, renderingMode: .template)
+                    .foregroundColor(NavBarStyle.iconColor)
 
                 Text(locationText)
-                    .font(.pretendard(.body1,.bold))
-                    .foregroundColor(.gray75)
+                    .font(NavBarStyle.titleFont)
+                    .foregroundColor(NavBarStyle.titleColor)
             }
         } trailing: {
             // Trailing: Map Icon (liked mode only)
@@ -85,8 +85,8 @@ struct EstateListView: View {
                 Button {
                     // TODO: Navigate to map
                 } label: {
-                    DSIconView(.map, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
-                        .foregroundColor(.gray90)
+                    DSIconView(.map, size: NavBarStyle.iconMedium, renderingMode: .template)
+                        .foregroundColor(NavBarStyle.iconColor)
                 }
             }
         }

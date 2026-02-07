@@ -14,18 +14,18 @@ struct PostCreateView: View {
                 Button("취소") {
                     dismiss()
                 }
-                .font(.pretendardBody2)
-                .foregroundColor(.gray75)
+                .font(NavBarStyle.buttonFont)
+                .foregroundColor(NavBarStyle.buttonColor)
             } center: {
                 Text("글 작성")
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
+                    .font(NavBarStyle.titleFont)
+                    .foregroundColor(NavBarStyle.titleColor)
             } trailing: {
                 Button("등록") {
                     Task { await intent.submit() }
                 }
-                .font(.pretendardBody2Bold)
-                .foregroundColor(intent.state.canSubmit && !intent.state.isLoading ? .deepWood : .gray60)
+                .font(NavBarStyle.buttonFont)
+                .foregroundColor(intent.state.canSubmit && !intent.state.isLoading ? NavBarStyle.buttonColorPrimary : .gray60)
                 .disabled(!intent.state.canSubmit || intent.state.isLoading)
             }
 
