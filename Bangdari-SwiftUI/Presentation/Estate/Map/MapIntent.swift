@@ -186,7 +186,7 @@ final class MapIntent: ObservableObject {
     func initializeLocation() {
         // 위치 권한이 있으면 즉시 현재 위치로 이동
         if let location = locationManager.location {
-            print("📍 [initializeLocation] 현재 위치로 초기화: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+//            print("📍 [initializeLocation] 현재 위치로 초기화: \(location.coordinate.latitude), \(location.coordinate.longitude)")
             state.region = MKCoordinateRegion(
                 center: location.coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
@@ -197,7 +197,7 @@ final class MapIntent: ObservableObject {
             }
         } else {
             // 위치 권한이 없으면 권한 요청
-            print("📍 [initializeLocation] 위치 권한 없음, 권한 요청")
+//            print("📍 [initializeLocation] 위치 권한 없음, 권한 요청")
             requestLocationPermission()
         }
     }
@@ -225,9 +225,9 @@ final class MapIntent: ObservableObject {
         // 일정 거리 이상 이동했으면 즉시 로딩 표시 (debounce 전에)
         if let lastCenter = lastLoadedCenter {
             let distance = distanceBetween(lastCenter, region.center)
-            print("🌍 [updateRegion] 이동 거리: \(String(format: "%.0f", distance))m (threshold: \(MapConstants.reloadDistanceThreshold)m)")
+//            print("🌍 [updateRegion] 이동 거리: \(String(format: "%.0f", distance))m (threshold: \(MapConstants.reloadDistanceThreshold)m)")
             if distance > MapConstants.reloadDistanceThreshold {
-                print("🌍 [updateRegion] → isLoading = true")
+//                print("🌍 [updateRegion] → isLoading = true")
                 state.isLoading = true
             }
         } else {
@@ -243,17 +243,17 @@ final class MapIntent: ObservableObject {
 
     /// 일정 거리 이상 이동했을 때만 재조회
     private func loadEstatesIfNeeded(at center: CLLocationCoordinate2D) async {
-        print("⏱️ [loadEstatesIfNeeded] debounce 완료")
+//        print("⏱️ [loadEstatesIfNeeded] debounce 완료")
         // 마지막 로드 위치와 비교
         if let lastCenter = lastLoadedCenter {
             let distance = distanceBetween(lastCenter, center)
-            print("⏱️ [loadEstatesIfNeeded] 거리: \(String(format: "%.0f", distance))m (threshold: \(MapConstants.reloadDistanceThreshold)m)")
+//            print("⏱️ [loadEstatesIfNeeded] 거리: \(String(format: "%.0f", distance))m (threshold: \(MapConstants.reloadDistanceThreshold)m)")
             guard distance > MapConstants.reloadDistanceThreshold else {
-                print("⏱️ [loadEstatesIfNeeded] → threshold 미만, updateClusters만 실행")
+//                print("⏱️ [loadEstatesIfNeeded] → threshold 미만, updateClusters만 실행")
                 updateClusters()
                 return
             }
-            print("⏱️ [loadEstatesIfNeeded] → threshold 이상, API 호출")
+//            print("⏱️ [loadEstatesIfNeeded] → threshold 이상, API 호출")
         } else {
             print("⏱️ [loadEstatesIfNeeded] → 첫 로딩, API 호출")
         }
@@ -262,10 +262,10 @@ final class MapIntent: ObservableObject {
     }
 
     func loadEstates(at center: CLLocationCoordinate2D) async {
-        print("💾 [loadEstates] 시작")
+//        print("💾 [loadEstates] 시작")
         // 1. 캐시 확인
         if let cached = estateCache.get(for: state.region) {
-            print("💾 [loadEstates] ✅ 캐시 히트! 매물 수: \(cached.count)")
+//            print("💾 [loadEstates] ✅ 캐시 히트! 매물 수: \(cached.count)")
             state.allEstates = cached  // 원본 저장
             state.estates = cached     // 표시용
             state.clusters = clusterEstates(cached, in: state.region)
@@ -276,11 +276,11 @@ final class MapIntent: ObservableObject {
         }
 
         // 2. 캐시 미스 → 스켈레톤 표시
-        print("💾 [loadEstates] ❌ 캐시 미스, API 호출 시작")
+//        print("💾 [loadEstates] ❌ 캐시 미스, API 호출 시작")
         state.isLoading = true
         state.errorMessage = nil
         state.skeletonClusters = generateSkeletonGrid(for: state.region)
-        print("💾 [loadEstates] 스켈레톤 생성: \(state.skeletonClusters.count)개")
+//        print("💾 [loadEstates] 스켈레톤 생성: \(state.skeletonClusters.count)개")
 
         do {
             let newEstates = try await estateRepository.fetchEstatesByLocation(
@@ -290,11 +290,11 @@ final class MapIntent: ObservableObject {
                 category: state.selectedCategory
             )
 
-            print("💾 [loadEstates] ✅ API 성공! 매물 수: \(newEstates.count)")
+//            print("💾 [loadEstates] ✅ API 성공! 매물 수: \(newEstates.count)")
 
             // 3. 캐시 저장
             estateCache.set(newEstates, for: state.region)
-            print("💾 [loadEstates] 캐시 저장 완료")
+//            print("💾 [loadEstates] 캐시 저장 완료")
 
             // 4. 로딩 완료 후 한 번에 업데이트 (깜빡임 방지)
             state.isLoading = false
@@ -332,7 +332,7 @@ final class MapIntent: ObservableObject {
         // 1. 카테고리 설정
         if let category = category {
             state.selectedCategory = category.rawValue
-            print("🗺️ [MapIntent] 초기 카테고리 설정: \(category.rawValue)")
+//            print("🗺️ [MapIntent] 초기 카테고리 설정: \(category.rawValue)")
         }
 
         // 2. 좌표 설정
@@ -341,7 +341,7 @@ final class MapIntent: ObservableObject {
                 center: coord,
                 span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
             )
-            print("🗺️ [MapIntent] 초기 좌표 설정: \(coord.latitude), \(coord.longitude)")
+//            print("🗺️ [MapIntent] 초기 좌표 설정: \(coord.latitude), \(coord.longitude)")
         }
     }
 
@@ -359,7 +359,7 @@ final class MapIntent: ObservableObject {
 
         state.isLoading = true
         state.errorMessage = nil
-        print("🔍 [Search] 검색 시작: \(state.searchQuery)")
+//        print("🔍 [Search] 검색 시작: \(state.searchQuery)")
 
         // 검색어 보정: "구"나 "동"으로 끝나면 "서울특별시" 추가
         var searchQuery = state.searchQuery
@@ -367,7 +367,7 @@ final class MapIntent: ObservableObject {
             // "서울" 또는 "서울특별시"가 이미 포함되어 있지 않으면 추가
             if !searchQuery.contains("서울") {
                 searchQuery = "서울특별시 " + searchQuery
-                print("🔍 [Search] 검색어 보정: \(state.searchQuery) → \(searchQuery)")
+//                print("🔍 [Search] 검색어 보정: \(state.searchQuery) → \(searchQuery)")
             }
         }
 
@@ -380,12 +380,12 @@ final class MapIntent: ObservableObject {
             guard let coordinate = placemarks.first?.location?.coordinate else {
                 state.errorMessage = "검색 결과가 없습니다. 지역명을 확인해주세요."
                 state.isLoading = false
-                print("🔍 [Search] ❌ 검색 결과 없음")
+//                print("🔍 [Search] ❌ 검색 결과 없음")
                 return nil
             }
 
             // 지역명 검색 성공 → 지도 이동
-            print("🔍 [Search] ✅ 지역명 검색 성공: \(searchQuery) → \(coordinate.latitude), \(coordinate.longitude)")
+//            print("🔍 [Search] ✅ 지역명 검색 성공: \(searchQuery) → \(coordinate.latitude), \(coordinate.longitude)")
 
             state.region = MKCoordinateRegion(
                 center: coordinate,
@@ -395,7 +395,7 @@ final class MapIntent: ObservableObject {
             // 해당 위치의 매물 조회
             await loadEstates(at: coordinate)
 
-            print("🔍 [Search] 검색 완료")
+//            print("🔍 [Search] 검색 완료")
             return coordinate  // 성공 시 좌표 반환
         } catch {
             state.errorMessage = "검색 중 오류가 발생했습니다"
@@ -426,7 +426,7 @@ final class MapIntent: ObservableObject {
             let latDelta: Double = placemark.subLocality != nil ? 0.015 : 0.04
             let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: latDelta)
 
-            print("🔍 [geocodeQuery] '\(query)' → \(coordinate.latitude), \(coordinate.longitude) span: \(latDelta)")
+//            print("🔍 [geocodeQuery] '\(query)' → \(coordinate.latitude), \(coordinate.longitude) span: \(latDelta)")
             return (coordinate, span)
         } catch {
             print("🔍 [geocodeQuery] '\(query)' 실패: \(error.localizedDescription)")
@@ -439,7 +439,7 @@ final class MapIntent: ObservableObject {
     func updateClusters() {
         // 현재 estates 기준으로 클러스터 재계산 (줌 변경 시 즉시 반영)
         let newClusters = clusterEstates(state.estates, in: state.region)
-        print("🔄 [updateClusters] span: \(String(format: "%.6f", state.region.span.latitudeDelta)), estates: \(state.estates.count), 클러스터: \(state.clusters.count) → \(newClusters.count)")
+//        print("🔄 [updateClusters] span: \(String(format: "%.6f", state.region.span.latitudeDelta)), estates: \(state.estates.count), 클러스터: \(state.clusters.count) → \(newClusters.count)")
         state.clusters = newClusters
     }
 
@@ -455,7 +455,7 @@ final class MapIntent: ObservableObject {
 
         if isDetailedZoom {
             // 개별 마커로 표시 (각 매물이 하나의 클러스터)
-            print("📍 [Clustering] 개별 마커 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)) < threshold: \(MapConstants.clusteringDisableThreshold))")
+//            print("📍 [Clustering] 개별 마커 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)) < threshold: \(MapConstants.clusteringDisableThreshold))")
             return estates.map { estate in
                 MapCluster(
                     id: estate.estate_id,
@@ -467,7 +467,7 @@ final class MapIntent: ObservableObject {
 
         // 줌 레벨에 따라 클러스터 거리 임계값 동적 조정 (한 덩어리 효과)
         let clusterDistance = calculateClusterDistance(for: region)
-        print("📍 [Clustering] 거리 기반 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)), distance: \(String(format: "%.0f", clusterDistance))m)")
+//        print("📍 [Clustering] 거리 기반 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)), distance: \(String(format: "%.0f", clusterDistance))m)")
 
         // 거리 기반 클러스터링
         var remainingEstates = estates
@@ -491,7 +491,7 @@ final class MapIntent: ObservableObject {
             clusters.append(currentCluster)
         }
 
-        print("📍 [Clustering] 클러스터 개수: \(clusters.count)")
+//        print("📍 [Clustering] 클러스터 개수: \(clusters.count)")
 
         // MapCluster로 변환
         return clusters.enumerated().map { index, groupedEstates in
@@ -616,8 +616,8 @@ final class MapIntent: ObservableObject {
         isMonthlyRentActive: Bool,
         isAreaActive: Bool
     ) {
-        print("🔍 [Filter] 필터 적용 시작")
-        print("🔍 [Filter] 원본 매물 수: \(state.allEstates.count)")
+//        print("🔍 [Filter] 필터 적용 시작")
+//        print("🔍 [Filter] 원본 매물 수: \(state.allEstates.count)")
 
         // 원본 데이터에서 필터링
         let filtered = state.allEstates.filter { estate in
@@ -643,14 +643,14 @@ final class MapIntent: ObservableObject {
             return passes
         }
 
-        print("🔍 [Filter] 필터링 결과: \(filtered.count)개")
+//        print("🔍 [Filter] 필터링 결과: \(filtered.count)개")
         state.estates = filtered
         state.clusters = clusterEstates(filtered, in: state.region)
     }
 
     /// 필터 초기화
     func resetFilters() {
-        print("🔍 [Filter] 필터 초기화")
+//        print("🔍 [Filter] 필터 초기화")
         state.estates = state.allEstates
         updateClusters()
     }

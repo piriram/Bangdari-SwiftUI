@@ -65,6 +65,76 @@ final class GeolocationManager {
         }
     }
 
+    /// 좌표를 전체 주소로 변환
+    /// - Parameters:
+    ///   - latitude: 위도
+    ///   - longitude: 경도
+    ///   - completion: 전체 주소 또는 nil 반환 (예: "서울 영등포구 선유로9길 30")
+    func fetchFullAddress(
+        latitude: Double,
+        longitude: Double,
+        completion: @escaping (String?) -> Void
+    ) {
+        let cacheKey = "full_\(latitude),\(longitude)"
+
+        // 캐시 확인
+        cacheQueue.sync {
+            if let cachedAddress = cache[cacheKey] {
+                DispatchQueue.main.async {
+                    completion(cachedAddress)
+                }
+                return
+            }
+        }
+
+        // 역지오코딩 수행
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+
+        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
+            guard let self = self,
+                  error == nil,
+                  let placemark = placemarks?.first
+            else {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                return
+            }
+
+            // 전체 주소 조합: "시 구 동 도로명"
+            var components: [String] = []
+
+            if let city = placemark.administrativeArea {
+                components.append(city)  // 서울특별시
+            }
+
+            if let district = placemark.locality {
+                components.append(district)  // 영등포구
+            }
+
+            if let street = placemark.thoroughfare {
+                components.append(street)  // 선유로9길
+            }
+
+            if let number = placemark.subThoroughfare {
+                components.append(number)  // 30
+            }
+
+            let fullAddress = components.isEmpty ? nil : components.joined(separator: " ")
+
+            // 캐시 저장
+            if let address = fullAddress {
+                self.cacheQueue.async {
+                    self.cache[cacheKey] = address
+                }
+            }
+
+            DispatchQueue.main.async {
+                completion(fullAddress)
+            }
+        }
+    }
+
     /// 캐시 초기화
     func clearCache() {
         cacheQueue.async {

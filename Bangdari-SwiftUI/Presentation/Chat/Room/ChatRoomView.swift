@@ -19,8 +19,8 @@ struct ChatRoomView: View {
             CustomNavigationBar(onBack: { dismiss() }) {
                 HStack(spacing: 8) {
                     Text(intent.state.opponent?.nick ?? "채팅")
-                        .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray90)
+                        .font(NavBarStyle.titleFont)
+                        .foregroundColor(NavBarStyle.titleColor)
 
                     // 연결 상태 표시
                     if intent.state.isConnected {
