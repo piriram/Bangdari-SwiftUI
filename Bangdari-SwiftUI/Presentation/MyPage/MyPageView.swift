@@ -101,7 +101,7 @@ struct MyPageView: View {
     private func logout() async {
         do {
             try await authRepository.logout()
-            NotificationCenter.default.post(name: .didLogout, object: nil)
+            NotificationCenter.default.post(name: .didLogout, object: "사용자 수동 로그아웃")
         } catch {
             errorMessage = "로그아웃 중 오류가 발생했습니다."
             showErrorAlert = true

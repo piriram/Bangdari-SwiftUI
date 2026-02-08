@@ -60,6 +60,7 @@ struct EstateCardSmall: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.gray30, lineWidth: 1)
         )
+        .frame(minWidth:190)
         .onAppear {
             fetchLocationName()
         }

@@ -26,12 +26,12 @@ final class NetworkService: @unchecked Sendable {
     ) async throws -> T {
         let data = try await requestData(endpoint, body: body)
 
-        // 🔍 DEBUG: Raw JSON 출력
-        if let jsonString = String(data: data, encoding: .utf8) {
-            print("📦 [RAW] \(endpoint.path)")
-            print(jsonString)
-            print("📦 [RAW END]")
-        }
+//        // 🔍 DEBUG: Raw JSON 출력
+//        if let jsonString = String(data: data, encoding: .utf8) {
+//            print("📦 [RAW] \(endpoint.path)")
+//            print(jsonString)
+//            print("📦 [RAW END]")
+//        }
 
         do {
             let decoded = try JSONDecoder().decode(T.self, from: data)
@@ -284,8 +284,9 @@ final class NetworkService: @unchecked Sendable {
         // 401/403/418: 재로그인 필요
         if [401, 403, 418].contains(httpResponse.statusCode) {
             keychain.clearTokens()
+            let reason = "토큰 재발급 실패(\(httpResponse.statusCode))로 세션 만료"
             await MainActor.run {
-                NotificationCenter.default.post(name: .didLogout, object: nil)
+                NotificationCenter.default.post(name: .didLogout, object: reason)
             }
             throw NetworkError.refreshTokenExpired
         }

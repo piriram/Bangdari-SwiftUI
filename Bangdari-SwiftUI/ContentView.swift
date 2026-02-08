@@ -11,6 +11,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var isPaymentFlowActive = false
     @State private var pendingLogoutAfterPayment = false
+    @State private var pendingLogoutReason: String?
 
     var body: some View {
         Group {
@@ -36,11 +37,14 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: .didLogin)) { _ in
             authState = .loggedIn
         }
-        .onReceive(NotificationCenter.default.publisher(for: .didLogout)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .didLogout)) { notification in
+            let reason = notification.object as? String ?? "원인 정보 없음"
             if isPaymentFlowActive {
                 pendingLogoutAfterPayment = true
+                pendingLogoutReason = reason
+                print("🔒 [AUTH] 결제 진행 중 로그아웃 예약: \(reason)")
             } else {
-                authState = .loggedOut
+                transitionToLoggedOut(reason: reason)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .paymentFlowDidStart)) { _ in
@@ -49,8 +53,10 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: .paymentFlowDidEnd)) { _ in
             isPaymentFlowActive = false
             if pendingLogoutAfterPayment {
-                authState = .loggedOut
+                let deferredReason = pendingLogoutReason ?? "결제 플로우 종료 후 로그아웃 처리"
+                transitionToLoggedOut(reason: "\(deferredReason) (결제 플로우 종료 후 적용)")
                 pendingLogoutAfterPayment = false
+                pendingLogoutReason = nil
             }
         }
     }
@@ -62,7 +68,7 @@ struct ContentView: View {
                 try await NetworkService.shared.validateAndRefreshToken()
                 authState = .loggedIn
             } catch NetworkError.refreshTokenExpired {
-                authState = .loggedOut
+                transitionToLoggedOut(reason: "앱 시작 토큰 검증 실패: refreshTokenExpired")
             } catch {
                 // 네트워크 단절 등 기타 에러 → 기존 토큰으로 진행 (API 시점에서 갱신 재시도)
                 authState = .loggedIn
@@ -76,11 +82,16 @@ struct ContentView: View {
             do {
                 try await NetworkService.shared.validateAndRefreshToken()
             } catch NetworkError.refreshTokenExpired {
-                authState = .loggedOut
+                transitionToLoggedOut(reason: "포그라운드 복귀 토큰 검증 실패: refreshTokenExpired")
             } catch {
                 // 기타 에러는 무시 (다음 API 호출 시 자동 갱신 로직이 처리)
             }
         }
+    }
+
+    private func transitionToLoggedOut(reason: String) {
+        print("🔒 [AUTH] 로그인 화면 전환 원인: \(reason)")
+        authState = .loggedOut
     }
 }
 
