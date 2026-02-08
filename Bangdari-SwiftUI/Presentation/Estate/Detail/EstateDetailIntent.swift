@@ -206,6 +206,13 @@ final class EstateDetailIntent: ObservableObject {
         state.reservationError = "결제가 취소되었습니다."
     }
 
+    /// 결제 실패
+    func failPayment(message: String) {
+        state.showPaymentWebView = false
+        state.createdOrder = nil
+        state.reservationError = message
+    }
+
     /// 예약 완료 모달 닫기
     func closeReservationSuccess() {
         state.showReservationSuccess = false

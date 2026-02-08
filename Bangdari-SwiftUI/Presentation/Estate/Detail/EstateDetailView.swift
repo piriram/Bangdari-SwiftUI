@@ -138,7 +138,10 @@ struct EstateDetailView: View {
                     onSuccess: { impUid in
                         Task { await intent.validatePayment(impUid: impUid) }
                     },
-                    onCancel: { intent.cancelPayment() }
+                    onCancel: { intent.cancelPayment() },
+                    onFailure: { message in
+                        intent.failPayment(message: message)
+                    }
                 )
             }
         }

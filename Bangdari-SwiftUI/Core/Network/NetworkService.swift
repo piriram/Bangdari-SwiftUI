@@ -118,6 +118,9 @@ final class NetworkService: @unchecked Sendable {
             // 기타 에러
             let error = NetworkError.from(statusCode: httpResponse.statusCode)
             print("❌ API Error [\(httpResponse.statusCode)]: \(endpoint.path)")
+            if let body = String(data: data, encoding: .utf8), !body.isEmpty {
+                print("📝 Server: \(body)")
+            }
             throw error
 
         } catch let error as NetworkError {

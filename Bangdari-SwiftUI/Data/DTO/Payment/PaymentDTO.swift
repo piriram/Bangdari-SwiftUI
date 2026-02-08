@@ -10,9 +10,33 @@ struct PaymentValidationRequest: Encodable {
 
 struct PaymentValidationResponse: Decodable {
     let payment_id: String
-    let order_item: OrderResponse
-    let createdAt: String
-    let updatedAt: String
+    let order_item: OrderResponse?
+    let createdAt: String?
+    let updatedAt: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case payment_id, order_item
+        case createdAt, updatedAt
+        case created_at, updated_at
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        payment_id = try container.decode(String.self, forKey: .payment_id)
+        order_item = try? container.decode(OrderResponse.self, forKey: .order_item)
+
+        if let createdAtValue = try container.decodeIfPresent(String.self, forKey: .createdAt) {
+            createdAt = createdAtValue
+        } else {
+            createdAt = try container.decodeIfPresent(String.self, forKey: .created_at)
+        }
+
+        if let updatedAtValue = try container.decodeIfPresent(String.self, forKey: .updatedAt) {
+            updatedAt = updatedAtValue
+        } else {
+            updatedAt = try container.decodeIfPresent(String.self, forKey: .updated_at)
+        }
+    }
 }
 
 // MARK: - Payment Receipt Response
