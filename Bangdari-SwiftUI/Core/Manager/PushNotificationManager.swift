@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import UserNotifications
+import CoreLocation
 
 // MARK: - Push Notification Manager
 
@@ -9,6 +10,7 @@ final class PushNotificationManager: NSObject {
 
     private var userRepository: UserRepository?
     private var deviceToken: String?
+    private let locationManager = CLLocationManager()
 
     private override init() {
         super.init()
@@ -25,7 +27,10 @@ final class PushNotificationManager: NSObject {
     // MARK: - Request Permission
 
     /// 푸시 알림 권한 요청
+    @MainActor
     func requestAuthorization() async {
+        requestLocationAuthorizationIfNeeded()
+
         do {
             let granted = try await UNUserNotificationCenter.current().requestAuthorization(
                 options: [.alert, .sound, .badge]
@@ -40,6 +45,21 @@ final class PushNotificationManager: NSObject {
         } catch {
             print("❌ 푸시 알림 권한 요청 실패: \(error)")
         }
+    }
+
+    /// 위치 권한 요청 (알림 권한 요청 시 함께 트리거)
+    private func requestLocationAuthorizationIfNeeded() {
+        let authorizationStatus: CLAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            authorizationStatus = locationManager.authorizationStatus
+        } else {
+            authorizationStatus = CLLocationManager.authorizationStatus()
+        }
+
+        guard authorizationStatus == .notDetermined else { return }
+
+        locationManager.requestWhenInUseAuthorization()
+        print("📍 위치 권한 요청 시작")
     }
 
     /// 원격 알림 등록 (APNs)

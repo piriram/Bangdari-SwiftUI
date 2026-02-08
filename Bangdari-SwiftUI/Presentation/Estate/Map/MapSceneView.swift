@@ -15,7 +15,7 @@ struct MapSceneView: View {
         Map(position: $position) {
             ForEach(clusters) { cluster in
                 Annotation(
-                    cluster.isSingle ? (cluster.firstEstate?.title ?? "") : "\(cluster.count)개",
+                    "",
                     coordinate: cluster.coordinate
                 ) {
                     clusterMarker(cluster)

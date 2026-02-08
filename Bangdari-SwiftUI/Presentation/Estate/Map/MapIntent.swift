@@ -69,7 +69,7 @@ enum MapConstants {
 
     /// 단일 클러스터가 말풍선으로 전환되는 줄기준
     /// span < 이 값 → 말풍선(EstateMarkerView), span >= 이 값 → 클러스터 버튼
-    static let markerBalloonThreshold: Double = 0.02
+    static let markerBalloonThreshold: Double = 0.03
 
     /// 캐러셀 자동 표시 임계값 (동 단위, 약 5.5km)
     /// span < 이 값 → 자동으로 하단 캐러셀 표시

@@ -18,6 +18,7 @@ struct EstateMapView: View {
     @State private var selectedEstateIdForDetail: String?
     @State private var navigateToList: Bool = false
     @State private var showSearchView = false
+    @State private var lastLoggedZoomLevel: Double?
 
     init(initialCategory: EstateCategory? = nil, initialCoordinate: CLLocationCoordinate2D? = nil, initialSpan: MKCoordinateSpan? = nil) {
         self.initialCategory = initialCategory
@@ -184,7 +185,7 @@ struct EstateMapView: View {
     // MARK: - Map Events
 
     private func handleMapCameraChange(_ region: MKCoordinateRegion) {
-        print("📷 [Camera Change] span: \(String(format: "%.6f", region.span.latitudeDelta))")
+        logZoomLevelIfChanged(for: region)
         intent.updateRegion(region)
         checkAutoCarousel(for: region)
 
@@ -334,6 +335,29 @@ struct EstateMapView: View {
         filterState.reset()
         intent.resetFilters()
         withAnimation { viewState = .browsing }
+    }
+
+    private func logZoomLevelIfChanged(for region: MKCoordinateRegion) {
+        let longitudeDelta = max(region.span.longitudeDelta, 0.000_001)
+        let zoomLevel = log2(360 / longitudeDelta)
+        let span = region.span.latitudeDelta
+
+        if let previous = lastLoggedZoomLevel,
+           abs(previous - zoomLevel) < 0.001 {
+            return
+        }
+
+        lastLoggedZoomLevel = zoomLevel
+        let isDetailedMarkerMode = span < MapConstants.clusteringDisableThreshold
+        let isBalloonMode = span < MapConstants.markerBalloonThreshold
+        let isAutoCarouselMode = span < MapConstants.autoCarouselThreshold
+
+        print(
+            "🔎 [Zoom] level: \(String(format: "%.2f", zoomLevel)), span: \(String(format: "%.6f", span)) "
+            + "| 개별마커: \(isDetailedMarkerMode ? "ON" : "OFF")(<\(MapConstants.clusteringDisableThreshold)) "
+            + "| 말풍선: \(isBalloonMode ? "ON" : "OFF")(<\(MapConstants.markerBalloonThreshold)) "
+            + "| 캐러셀: \(isAutoCarouselMode ? "ON" : "OFF")(<\(MapConstants.autoCarouselThreshold))"
+        )
     }
 
     private func selectNextEstate() {
