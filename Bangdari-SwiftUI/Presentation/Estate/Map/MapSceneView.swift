@@ -4,7 +4,6 @@ import SwiftUI
 struct MapSceneView: View {
     @Binding var position: MapCameraPosition
     let clusters: [MapCluster]
-    let skeletonClusters: [SkeletonCluster]
     let regionSpan: Double
     let selectedEstate: EstateSummaryResponse?
     let onClusterTap: (MapCluster) -> Void
@@ -19,12 +18,6 @@ struct MapSceneView: View {
                     coordinate: cluster.coordinate
                 ) {
                     clusterMarker(cluster)
-                }
-            }
-
-            ForEach(skeletonClusters) { skeleton in
-                Annotation("", coordinate: skeleton.coordinate) {
-                    MapSkeletonMarkerView()
                 }
             }
 
@@ -54,7 +47,10 @@ struct MapSceneView: View {
                     isSelected: selectedEstate?.estate_id == estate.estate_id
                 )
             } else {
-                MapClusterBubbleView(count: cluster.count)
+                MapClusterBubbleView(
+                    count: cluster.count,
+                    regionSpan: regionSpan
+                )
             }
         }
         .buttonStyle(.plain)

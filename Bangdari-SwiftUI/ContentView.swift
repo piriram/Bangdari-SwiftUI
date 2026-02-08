@@ -72,10 +72,7 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @State private var selectedTab: MainTab = .home
-
-    init() {
-        configureTabBarAppearance()
-    }
+    private static var didConfigureTabBarAppearance = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -119,12 +116,25 @@ struct MainTabView: View {
             }
             .tag(MainTab.my)
         }
+        .onAppear {
+            MainTabView.configureTabBarAppearanceIfNeeded()
+        }
         .onChange(of: selectedTab) { _, _ in
             VideoPlayerManager.shared.pause()
         }
     }
 
-    private func configureTabBarAppearance() {
+    private static func configureTabBarAppearanceIfNeeded() {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async {
+                configureTabBarAppearanceIfNeeded()
+            }
+            return
+        }
+
+        guard !didConfigureTabBarAppearance else { return }
+        didConfigureTabBarAppearance = true
+
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(Color.gray0)
@@ -132,12 +142,14 @@ struct MainTabView: View {
         // 비선택 아이템 색상 (gray45)
         let normalItemAppearance = UITabBarItemAppearance()
         normalItemAppearance.normal.iconColor = UIColor(Color.gray45)
+        normalItemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 2)
         normalItemAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor(Color.gray45)
         ]
 
         // 선택 아이템 색상 (gray90)
         normalItemAppearance.selected.iconColor = UIColor(Color.gray90)
+        normalItemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 2)
         normalItemAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor(Color.gray90)
         ]

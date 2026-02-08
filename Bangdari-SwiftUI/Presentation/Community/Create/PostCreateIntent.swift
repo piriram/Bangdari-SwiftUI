@@ -37,7 +37,7 @@ final class PostCreateIntent: ObservableObject {
     private let locationManager = CLLocationManager()
 
     // 카테고리 옵션
-    let categories = ["일상", "정보", "질문", "후기", "기타"]
+    let categories = ["정보", "질문", "후기", "영상" ,"기타"]
 
     init(postRepository: PostRepository? = nil) {
         self.postRepository = postRepository ?? DIContainer.shared.makePostRepository()

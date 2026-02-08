@@ -62,7 +62,6 @@ struct EstateMapView: View {
                 MapSceneView(
                     position: $position,
                     clusters: intent.state.clusters,
-                    skeletonClusters: intent.state.skeletonClusters,
                     regionSpan: intent.state.region.span.latitudeDelta,
                     selectedEstate: selectedEstate,
                     onClusterTap: handleClusterTap,
@@ -95,13 +94,14 @@ struct EstateMapView: View {
                     }
                 )
 
-                if intent.state.isLoading && intent.state.skeletonClusters.isEmpty {
-                    ProgressView()
-                        .scaleEffect(1.2)
-                        .frame(width: 60, height: 60)
-                        .background(Color.gray0.opacity(0.9))
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+                if intent.state.isLoading {
+                    Text("로딩중")
+                        .font(.pretendardBody2Bold)
+                        .foregroundColor(.gray0)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Color.gray90.opacity(0.75))
+                        .cornerRadius(10)
                 }
             }
             .frame(maxHeight: .infinity)
