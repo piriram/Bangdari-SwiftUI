@@ -122,21 +122,17 @@ struct MainView: View {
                 }
             }
             .navigationDestination(isPresented: $showSearchView) {
-                SearchView()
+                SearchView { coordinate, span in
+                    navigationPath.append(MapNavigationData(
+                        category: nil,
+                        initialCoordinate: coordinate,
+                        coordinateSpan: span
+                    ))
+                }
             }
         }
         .task {
             await intent.loadHomeData()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SearchCompleted"))) { notification in
-            guard let coordinate = notification.userInfo?["coordinate"] as? CLLocationCoordinate2D,
-                  let span = notification.userInfo?["span"] as? MKCoordinateSpan else { return }
-
-            navigationPath.append(MapNavigationData(
-                category: nil,
-                initialCoordinate: coordinate,
-                coordinateSpan: span
-            ))
         }
     }
 

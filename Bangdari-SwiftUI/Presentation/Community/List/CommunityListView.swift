@@ -9,11 +9,12 @@ struct CommunityListView: View {
     @StateObject private var videoIntent = VideoListIntent()
     @State private var selectedCategory: String?
     @State private var searchText = ""
+    @State private var currentVideoIndex: Int = 0
 
     var body: some View {
         VStack(spacing: 0) {
             // 커스텀 네비게이션 바
-            CustomNavigationBar(showDefaultBackButton: false) {
+            CustomNavigationBar(showDefaultBackButton: false,backgroundColor: .gray15) {
                 EmptyView()
             } center: {
                 Text("커뮤니티")
@@ -24,7 +25,7 @@ struct CommunityListView: View {
                     Task { await intent.refresh() }
                 }) {
                     Image(systemName: "square.and.pencil")
-                        .font(.system(size: NavBarStyle.iconMedium))
+                        .font(.system(size: 20))
                         .foregroundColor(NavBarStyle.iconColor)
                 }
             }
@@ -58,15 +59,6 @@ struct CommunityListView: View {
     private var waterfallContent: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // 검색바
-                searchBar
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
-
-                // 카테고리 필터
-                categoryFilter
-                    .padding(.top, 12)
-
                 // 비디오 리스트 (썸네일 only)
                 videoListSection
 
@@ -164,10 +156,17 @@ struct CommunityListView: View {
     // MARK: - Video List Section
 
     private var videoListSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("비디오")
-                .font(.pretendardBody2Bold)
-                .foregroundColor(.gray90)
+        VStack(alignment: .leading, spacing: 16) {
+            // Section Header with Action
+            HStack {
+                Spacer()
+
+                NavigationLink(destination: VideoListView()) {
+                    Text("더보기")
+                        .font(.pretendard(.caption1, .semiBold))
+                        .foregroundColor(.deepCoast)
+                }
+            }
 
             if videoIntent.state.isLoading && videoIntent.state.videos.isEmpty {
                 ProgressView()
@@ -193,32 +192,60 @@ struct CommunityListView: View {
                     .font(.pretendardCaption1)
                     .foregroundColor(.gray60)
             } else {
-                LazyVGrid(
-                    columns: [GridItem(.adaptive(minimum: 150), spacing: 10)],
-                    spacing: 10
-                ) {
-                    ForEach(Array(videoIntent.state.videos.enumerated()), id: \.element.id) { index, video in
-                        NavigationLink(destination: VideoDetailView(video: video, intent: videoIntent)) {
-                            CommunityVideoThumbnailCard(
-                                thumbnailURL: thumbnailURL(for: video),
-                                title: video.title
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .onAppear {
-                            Task {
-                                if index >= videoIntent.state.videos.count - 2 {
-                                    await videoIntent.loadMore()
+                // Horizontal Carousel
+                VStack(spacing: 12) {
+                    GeometryReader { geometry in
+                        let cardWidth = max(240, (geometry.size.width - 32 - 12) * 0.75)
+                        let cardHeight = cardWidth / 16 * 9
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(Array(videoIntent.state.videos.enumerated()), id: \.element.id) { index, video in
+                                    NavigationLink(destination: VideoDetailView(video: video, intent: videoIntent)) {
+                                        VideoCarouselCard(
+                                            thumbnailURL: thumbnailURL(for: video),
+                                            title: video.title,
+                                            width: cardWidth,
+                                            height: cardHeight
+                                        )
+                                    }
+                                    // .frame(width: cardWidth, height: cardHeight)
+                                    .buttonStyle(.plain)
+                                    .onAppear {
+                                        currentVideoIndex = index
+                                        Task {
+                                            await videoIntent.ensureStreamURL(for: video.video_id)
+                                            if index >= videoIntent.state.videos.count - 2 {
+                                                await videoIntent.loadMore()
+                                            }
+                                        }
+                                    }
                                 }
+
+                                if videoIntent.state.isLoadingMore {
+                                    ProgressView()
+                                        .frame(width: 60, height: cardHeight)
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                            .scrollTargetLayout()
+                        }
+                        .scrollTargetBehavior(.viewAligned)
+                    }
+                    .frame(height: max(135, (max(240, (UIScreen.main.bounds.width - 32 - 12) * 0.75)) / 16 * 9))
+
+                    // Page Indicator
+                    if videoIntent.state.videos.count > 1 {
+                        HStack(spacing: 6) {
+                            ForEach(0..<min(videoIntent.state.videos.count, 5), id: \.self) { index in
+                                Circle()
+                                    .fill(currentVideoIndex == index ? Color.deepCoast : Color.gray45)
+                                    .frame(width: currentVideoIndex == index ? 10 : 8,
+                                           height: currentVideoIndex == index ? 10 : 8)
+                                    .animation(.spring(response: 0.3), value: currentVideoIndex)
                             }
                         }
                     }
-                }
-
-                if videoIntent.state.isLoadingMore {
-                    ProgressView()
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
                 }
             }
         }
@@ -253,6 +280,54 @@ struct CommunityListView: View {
     }
 }
 
+// MARK: - Video Carousel Card
+
+private struct VideoCarouselCard: View {
+    let thumbnailURL: URL?
+    let title: String
+    let width: CGFloat
+    let height: CGFloat
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            // Thumbnail Image
+            KFImage.auth(url: thumbnailURL)
+                .resizable()
+                .scaledToFill()
+                .frame(width: width, height: height)
+                .clipped()
+                .background(Color.gray30)
+
+            // Gradient Overlay
+            LinearGradient(
+                colors: [.black.opacity(0.0), .black.opacity(0.7)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            // Play Icon
+            Image(systemName: "play.circle.fill")
+                .font(.system(size: 40))
+                .foregroundStyle(.white.opacity(0.9))
+                .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            // Title
+            Text(title)
+                .font(.yeongdeokCaption1())
+                .foregroundColor(.white)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+        }
+        .frame(width: width, height: height)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+    }
+}
+
+// Legacy card for backward compatibility (if needed elsewhere)
 private struct CommunityVideoThumbnailCard: View {
     let thumbnailURL: URL?
     let title: String

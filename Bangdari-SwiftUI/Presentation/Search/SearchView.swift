@@ -5,6 +5,11 @@ struct SearchView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var intent = SearchIntent()
     @FocusState private var isSearchFocused: Bool
+    let onSearchCompleted: ((CLLocationCoordinate2D, MKCoordinateSpan) -> Void)?
+
+    init(onSearchCompleted: ((CLLocationCoordinate2D, MKCoordinateSpan) -> Void)? = nil) {
+        self.onSearchCompleted = onSearchCompleted
+    }
 
     var body: some View {
         if #available(iOS 26, *) {
@@ -207,12 +212,19 @@ struct SearchView: View {
 
         dismiss()
 
-        // MapView로 네비게이션 (부모 View에서 처리)
-        NotificationCenter.default.post(
-            name: Notification.Name("SearchCompleted"),
-            object: nil,
-            userInfo: ["coordinate": coordinate, "span": span]
-        )
+        DispatchQueue.main.async {
+            if let onSearchCompleted {
+                onSearchCompleted(coordinate, span)
+                return
+            }
+
+            // MapView로 네비게이션 (부모 View에서 처리)
+            NotificationCenter.default.post(
+                name: Notification.Name("SearchCompleted"),
+                object: nil,
+                userInfo: ["coordinate": coordinate, "span": span]
+            )
+        }
     }
 }
 

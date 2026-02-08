@@ -134,17 +134,13 @@ struct EstateMapView: View {
             )
         }
         .navigationDestination(isPresented: $showSearchView) {
-            SearchView()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SearchCompleted"))) { notification in
-            guard let coordinate = notification.userInfo?["coordinate"] as? CLLocationCoordinate2D,
-                  let span = notification.userInfo?["span"] as? MKCoordinateSpan else { return }
+            SearchView { coordinate, span in
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    position = .region(MKCoordinateRegion(center: coordinate, span: span))
+                }
 
-            withAnimation(.easeInOut(duration: 0.5)) {
-                position = .region(MKCoordinateRegion(center: coordinate, span: span))
+                showSearchView = false
             }
-
-            showSearchView = false
         }
     }
 
