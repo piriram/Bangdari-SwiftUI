@@ -10,18 +10,23 @@ struct DateDivider: View {
             Rectangle()
                 .fill(Color.gray30)
                 .frame(height: 1)
+                .layoutPriority(0) // lower than text so it shrinks first
 
             Text(formatDate(date))
                 .font(.pretendard(.caption1, .medium))
                 .foregroundColor(.gray60)
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 4)
                 .padding(.vertical, 4)
                 .background(Color.gray15)
                 .cornerRadius(12)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false) // ensure full text width
+                .layoutPriority(1) // text takes priority over side lines
 
             Rectangle()
                 .fill(Color.gray30)
                 .frame(height: 1)
+                .layoutPriority(0) // lower than text so it shrinks first
         }
         .padding(.vertical, 16)
     }
