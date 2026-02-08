@@ -15,6 +15,7 @@ final class VideoPlayerManager: ObservableObject {
     private var timeObserver: Any?
     private var statusObservation: NSKeyValueObservation?
     private var errorObservation: NSKeyValueObservation?
+    private var currentStreamURL: String?
 
     private init() {
         setupPlayer()
@@ -44,8 +45,8 @@ final class VideoPlayerManager: ObservableObject {
 
         print("✅ [PLAYER] URL created successfully: \(videoURL)")
 
-        // 이미 같은 비디오가 재생 중이면 재생만
-        if currentVideoId == videoId {
+        // 같은 비디오 + 같은 URL이면 재생만
+        if currentVideoId == videoId, currentStreamURL == normalizedURL {
             print("♻️  [PLAYER] Same video, resuming play")
             play()
             return
@@ -55,6 +56,7 @@ final class VideoPlayerManager: ObservableObject {
         print("🔄 [PLAYER] Loading new video...")
         stop()
         currentVideoId = videoId
+        currentStreamURL = normalizedURL
 
         // API 문서: "스트리밍 파일(.m3u8, .m4s)은 URL에 토큰이 포함되어 별도 인증 없이 재생 가능"
         print("🎯 [PLAYER] Creating AVPlayerItem with token in URL (no auth headers)")
@@ -139,6 +141,7 @@ final class VideoPlayerManager: ObservableObject {
         player?.pause()
         player?.replaceCurrentItem(with: nil)
         currentVideoId = nil
+        currentStreamURL = nil
         isPlaying = false
     }
 

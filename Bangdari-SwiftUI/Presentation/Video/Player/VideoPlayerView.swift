@@ -62,10 +62,19 @@ struct VideoPlayerView: View {
                 playerManager.loadAndPlay(url: url, videoId: video.video_id)
             }
         }
+        .task(id: playbackTaskKey) {
+            guard isCurrentVideo, let url = streamURL else { return }
+            print("📺 [VIEW] task(playback) - videoId: \(video.video_id)")
+            playerManager.loadAndPlay(url: url, videoId: video.video_id)
+        }
         .onDisappear {
             print("📺 [VIEW] onDisappear - videoId: \(video.video_id)")
             playerManager.pause()
         }
+    }
+
+    private var playbackTaskKey: String {
+        "\(video.video_id)|\(isCurrentVideo)|\(streamURL ?? "nil")"
     }
 }
 

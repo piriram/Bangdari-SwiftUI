@@ -22,6 +22,7 @@ final class VideoListIntent: ObservableObject {
 
     private let repository: VideoRepository
     private let limit = 10
+    private let initialPrefetchCount = 3
     private var prefetchTask: Task<Void, Never>?  // 이전 prefetch 취소용
 
     init(repository: VideoRepository) {
@@ -46,9 +47,16 @@ final class VideoListIntent: ObservableObject {
             state.nextCursor = response.next_cursor
             state.hasMore = response.hasMore
 
-            // 첫 번째 비디오의 스트림 URL 발급
-            if let firstVideo = response.data.first {
-                await prefetchStreamURL(for: firstVideo.video_id)
+            // 초기 진입 시 2~3개를 미리 발급해 다음 영상 전환 지연 최소화
+            let initialVideoIds = response.data.prefix(initialPrefetchCount).map(\.video_id)
+            if let firstVideoId = initialVideoIds.first {
+                await prefetchStreamURL(for: firstVideoId)
+
+                for videoId in initialVideoIds.dropFirst() {
+                    Task { [weak self] in
+                        await self?.prefetchStreamURL(for: videoId)
+                    }
+                }
             }
 
             state.isLoading = false
@@ -153,11 +161,13 @@ final class VideoListIntent: ObservableObject {
 
         do {
             let response = try await repository.fetchStreamURL(videoId: videoId)
+            let selectedStreamPath = preferredStreamPath(from: response)
 
             // 🔍 DEBUG: 상대 경로 → 절대 URL 변환
-            let absoluteURL = Secrets.baseURL + response.stream_url
+            let absoluteURL = Secrets.baseURL + selectedStreamPath
             print("🎬 [VIDEO] Prefetched stream URL for \(videoId)")
-            print("   📍 Relative: \(response.stream_url)")
+            print("   📍 Master: \(response.stream_url)")
+            print("   🎯 Selected: \(selectedStreamPath)")
             print("   🌐 Absolute: \(absoluteURL)")
 
             state.streamURLCache[videoId] = absoluteURL
@@ -171,14 +181,32 @@ final class VideoListIntent: ObservableObject {
         // 현재 비디오는 토큰이 만료될 수 있으므로 항상 새로 요청
         do {
             let response = try await repository.fetchStreamURL(videoId: videoId)
-            let absoluteURL = Secrets.baseURL + response.stream_url
+            let selectedStreamPath = preferredStreamPath(from: response)
+            let absoluteURL = Secrets.baseURL + selectedStreamPath
             print("🎬 [VIDEO] Prefetched stream URL for \(videoId) (FRESH TOKEN)")
-            print("   📍 Relative: \(response.stream_url)")
+            print("   📍 Master: \(response.stream_url)")
+            print("   🎯 Selected: \(selectedStreamPath)")
             print("   🌐 Absolute: \(absoluteURL)")
 
             state.streamURLCache[videoId] = absoluteURL
         } catch {
             print("❌ Failed to prefetch stream URL for \(videoId): \(error)")
         }
+    }
+
+    /// 임시 우회: subtitles가 포함된 master.m3u8 파싱 실패 시 quality m3u8 우선 사용
+    private func preferredStreamPath(from response: VideoStreamResponse) -> String {
+        guard !response.subtitles.isEmpty else {
+            return response.stream_url
+        }
+
+        let qualityPriority = ["720p", "1080p", "480p"]
+        for quality in qualityPriority {
+            if let url = response.qualities.first(where: { $0.quality == quality })?.url {
+                return url
+            }
+        }
+
+        return response.qualities.first?.url ?? response.stream_url
     }
 }
