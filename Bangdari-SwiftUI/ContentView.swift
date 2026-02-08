@@ -100,16 +100,6 @@ struct MainTabView: View {
             .tag(MainTab.community)
 
             NavigationStack {
-                VideoListView()
-            }
-            .tabItem {
-                Image(systemName: selectedTab == .video ? "play.rectangle.fill" : "play.rectangle")
-                    .renderingMode(.template)
-                Text("비디오")
-            }
-            .tag(MainTab.video)
-
-            NavigationStack {
                 EstateListView(mode: .liked)
             }
             .tabItem {
@@ -129,10 +119,8 @@ struct MainTabView: View {
             }
             .tag(MainTab.my)
         }
-        .onChange(of: selectedTab) { _, newTab in
-            if newTab != .video {
-                VideoPlayerManager.shared.pause()
-            }
+        .onChange(of: selectedTab) { _, _ in
+            VideoPlayerManager.shared.pause()
         }
     }
 
@@ -166,7 +154,6 @@ struct MainTabView: View {
 private enum MainTab {
     case home
     case community
-    case video
     case like
     case my
 }
