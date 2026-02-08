@@ -29,6 +29,9 @@ final class CommunityListIntent: ObservableObject {
     private let postRepository: PostRepository
     private let locationManager = CLLocationManager()
 
+    // 카테고리 옵션
+    let categories = ["일상", "정보", "질문", "후기", "기타"]
+
     init(postRepository: PostRepository? = nil) {
         self.postRepository = postRepository ?? DIContainer.shared.makePostRepository()
         setupLocationManager()

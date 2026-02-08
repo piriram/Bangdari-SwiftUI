@@ -56,6 +56,18 @@ final class RemotePostRepository: PostRepository {
         return try await network.request(endpoint, type: PostDetailResponse.self)
     }
 
+    // MARK: - File Upload
+
+    func uploadFiles(files: [Data]) async throws -> [String] {
+        let response = try await network.uploadFiles(
+            .uploadPostFiles,
+            files: files,
+            fieldName: "files",
+            type: PostFileResponse.self
+        )
+        return response.files
+    }
+
     // MARK: - CRUD
 
     func createPost(request: PostCreateRequest) async throws -> PostDetailResponse {

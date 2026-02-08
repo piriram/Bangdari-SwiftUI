@@ -1,5 +1,5 @@
 import CoreLocation
-import Kingfisher
+import MapKit
 import SwiftUI
 
 // MARK: - Estate List View
@@ -15,47 +15,37 @@ struct EstateListView: View {
     @State private var displayEstates: [EstateSummaryResponse] = []
     @State private var bannerInterval: Int = 6  // 기본값
     @State private var screenHeight: CGFloat = UIScreen.main.bounds.height
-
-    enum ListMode {
-        case map(coordinate: CLLocationCoordinate2D, estates: [EstateSummaryResponse], locationText: String)
-        case liked
-        case todayEstates(estates: [EstateSummaryResponse])
-        case hotEstates(estates: [EstateSummaryResponse])
-    }
-
-    enum FilterType {
-        case area, deposit, monthlyRent, immediate
-    }
+    @State private var navigateToMap: Bool = false
+    @State private var sortAscending: Bool = false  // false: 내림차순, true: 오름차순
 
     var body: some View {
         ZStack {
-            // Z1: Background
+            // Z1: Full background
             Color.gray15.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 // Z2: Navigation Bar (System UI)
                 navigationBar
 
-                // Filter Chip Row (only for map mode)
-                if case .map = mode {
-                    filterChipRow
-                        .padding(.top, 12)
-                }
+                // Filter Chip Row (all modes)
+                filterChipRow
+                    .padding(.top, 0)
 
-                // Z3: Scrollable Content Flow
-                if intent.state.isLoading && displayEstates.isEmpty {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if displayEstates.isEmpty {
-                    emptyView
-                } else {
-                    estateListContent
-                }
+                // Z3: Single list sheet
+                contentSheet
+                    .padding(.top, 4)
             }
         }
         .navigationBarHidden(true)
         .navigationDestination(item: $selectedEstateIdForDetail) { estateId in
             EstateDetailView(estateId: estateId)
+        }
+        .navigationDestination(isPresented: $navigateToMap) {
+            EstateMapView(
+                initialCategory: nil,
+                initialCoordinate: mapInitialCoordinate,
+                initialSpan: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+            )
         }
         .task {
             bannerInterval = calculateBannerInterval()
@@ -69,101 +59,116 @@ struct EstateListView: View {
     // MARK: - Navigation Bar
 
     private var navigationBar: some View {
-        CustomNavigationBar(onBack: { dismiss() }) {
-            // Center: Location + Text
-            HStack(spacing: 6) {
-                DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
-                    .foregroundColor(.deepWood)
+        CustomNavigationBar(
+            showDefaultBackButton: shouldShowBackButton,
+            onBack: shouldShowBackButton ? { dismiss() } : nil,
+            backgroundColor: .gray15
+        ) {
+            EmptyView()
+        } center: {
+            HStack(spacing: NavBarStyle.centerSpacing) {
+                DSIconView(.location, size: NavBarStyle.iconMedium, renderingMode: .template)
+                    .foregroundColor(NavBarStyle.iconColor)
 
-                Text(locationText)
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
+                Text(mode.navigationTitle)
+                    .font(NavBarStyle.titleFont)
+                    .foregroundColor(NavBarStyle.titleColor)
             }
         } trailing: {
-            // Trailing: Map Icon (liked mode only)
-            if case .liked = mode {
-                Button {
-                    // TODO: Navigate to map
-                } label: {
-                    DSIconView(.map, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
-                        .foregroundColor(.gray90)
-                }
+            Button {
+                navigateToMap = true
+            } label: {
+                DSIconView(.map, size: NavBarStyle.iconMedium, renderingMode: .template)
+                    .foregroundColor(NavBarStyle.iconColor)
             }
         }
     }
 
-    private var locationText: String {
-        switch mode {
-        case .map(_, _, let text):
-            return text
-        case .liked:
-            return "좋아요한 매물"
-        case .todayEstates:
-            return "최근검색 매물"
-        case .hotEstates:
-            return "HOT 매물"
+    private var shouldShowBackButton: Bool {
+        if case .liked = mode {
+            return false
         }
+
+        return true
+    }
+
+    private var mapInitialCoordinate: CLLocationCoordinate2D {
+        if let coordinate = mode.coordinate {
+            return coordinate
+        }
+
+        return displayEstates.first?.geolocation.coordinate ?? .seoulCenter
     }
 
     // MARK: - Filter Chip Row
 
     private var filterChipRow: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 6) {
-                filterChip("면적 순", isActive: activeFilter == .area) {
-                    toggleFilter(.area)
+        HStack(spacing: 8) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(FilterType.allCases, id: \.self) { filter in
+                        FilterChipButton(title: filter.title, isActive: activeFilter == filter) {
+                            toggleFilter(filter)
+                        }
+                    }
                 }
-
-                filterChip("보증금 순", isActive: activeFilter == .deposit) {
-                    toggleFilter(.deposit)
-                }
-
-                filterChip("월세 순", isActive: activeFilter == .monthlyRent) {
-                    toggleFilter(.monthlyRent)
-                }
-
-                filterChip("신축 순", isActive: activeFilter == .immediate) {
-                    toggleFilter(.immediate)
-                }
+                .padding(.leading, 16)
             }
-            .padding(.horizontal, 16)
+
+            // 정렬 방향 토글 버튼
+            Button {
+                sortAscending.toggle()
+                updateDisplayEstates()
+            } label: {
+                DSIconView(
+                    .sort,
+                    size: 24,
+                    renderingMode: .template
+                )
+                .foregroundColor(activeFilter != nil ? .deepWood : .gray60)
+                .rotationEffect(.degrees(sortAscending ? 180 : 0))
+                .animation(.easeInOut(duration: 0.2), value: sortAscending)
+            }
+            .padding(.trailing, 16)
         }
         .frame(height: 48)
     }
 
-    private func filterChip(_ title: String, isActive: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(.pretendardBody3)
-                .foregroundColor(isActive ? .deepCoast : .gray75)
-                .padding(.horizontal, 12)
-                .frame(height: 32)
-                .background(Color.gray0)
-                .overlay(
-                    Capsule()
-                        .stroke(isActive ? Color.deepCoast : Color.gray45, lineWidth: 1)
-                )
-        }
-    }
-
     private func toggleFilter(_ filter: FilterType) {
-        if activeFilter == filter {
-            activeFilter = nil
-        } else {
-            activeFilter = filter
-        }
-        // TODO: MapView의 필터 상태와 공유 필요
-        // TODO: 실제 필터 로직 구현 (면적순, 보증금순, 월세순, 신축순)
+        activeFilter = activeFilter == filter ? nil : filter
         updateDisplayEstates()
     }
 
     // MARK: - Estate List Content
 
+    private var contentSheet: some View {
+        ZStack {
+            Color.gray0
+
+            if intent.state.isLoading && displayEstates.isEmpty {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if displayEstates.isEmpty {
+                emptyView
+            } else {
+                estateListContent
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .cornerRadius(36, corners: [.topLeft, .topRight])
+    }
+
     private var estateListContent: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: 0) {
                 ForEach(displayEstates.indices, id: \.self) { index in
                     estateRow(at: index)
+
+                    if index < displayEstates.count - 1 {
+                        itemDivider
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 0)
+                    }
                 }
 
                 // Load more indicator (liked mode only)
@@ -173,40 +178,42 @@ struct EstateListView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.top, 12)
+            .padding(.top, 16)
+            .padding(.bottom, 24)
         }
     }
 
     @ViewBuilder
     private func estateRow(at index: Int) -> some View {
         let estate = displayEstates[index]
-
-        Button {
-            selectedEstateIdForDetail = estate.estate_id
-        } label: {
-            EstateListItem(estate: estate)
-        }
-        .buttonStyle(.plain)
-
-        // Dynamic interval banners (all modes)
-        // 동적 간격으로 배너 표시 (순환 로직)
-        if index < displayEstates.count - 1,
-           !intent.state.banners.isEmpty,
-           (index + 1) % bannerInterval == 0 {
-            let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
-            let banner = intent.state.banners[bannerIndex]
-
-            InlinePromoItem(banner: banner) { url in
-                // TODO: BannerWebView 네비게이션 구현
-                print("🔗 Banner clicked: \(url)")
+        VStack(spacing: 12) {
+            Button {
+                selectedEstateIdForDetail = estate.estate_id
+            } label: {
+                EstateListItem(estate: estate)
             }
-            .onAppear {
-                print("🔄 [BANNER-CYCLE] Estate #\(index) 뒤에 배너 표시")
-                print("  - Total Banners: \(intent.state.banners.count)")
-                print("  - Selected Index: \(bannerIndex)")
-                print("  - Banner Title: \(banner.title)")
+            .buttonStyle(.plain)
+
+            // 동적 간격으로 배너 표시 (순환 로직)
+            if let bannerPayload = bannerPayload(after: index) {
+                InlinePromoItem(banner: bannerPayload.banner) { url in
+                    // TODO: BannerWebView 네비게이션 구현
+                    print("🔗 Banner clicked: \(url)")
+                }
+                .onAppear {
+                    print("🔄 [BANNER-CYCLE] Estate #\(index) 뒤에 배너 표시")
+                    print("  - Total Banners: \(intent.state.banners.count)")
+                    print("  - Selected Index: \(bannerPayload.index)")
+                    print("  - Banner Title: \(bannerPayload.banner.title)")
+                }
             }
         }
+    }
+
+    private var itemDivider: some View {
+        Rectangle()
+            .fill(Color.gray30)
+            .frame(height: 1)
     }
 
     // MARK: - Empty View
@@ -217,43 +224,24 @@ struct EstateListView: View {
                 .font(.system(size: 48))
                 .foregroundColor(.gray60)
 
-            Text(emptyMessage)
+            Text(mode.emptyMessage)
                 .font(.pretendardBody2)
                 .foregroundColor(.gray60)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private var emptyMessage: String {
-        switch mode {
-        case .map:
-            return "이 지역에 매물이 없습니다"
-        case .liked:
-            return "좋아요한 매물이 없습니다"
-        case .todayEstates:
-            return "최근검색 매물이 없습니다"
-        case .hotEstates:
-            return "HOT 매물이 없습니다"
-        }
-    }
-
     // MARK: - Helpers
 
     private func loadInitialData() async {
-        switch mode {
-        case .map(_, let estates, _):
-            displayEstates = estates
-            await intent.loadBanners()
-        case .liked:
+        if case .liked = mode {
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
-        case .todayEstates(let estates):
-            displayEstates = estates
-            await intent.loadBanners()  // 배너 로드 추가
-        case .hotEstates(let estates):
-            displayEstates = estates
-            await intent.loadBanners()  // 배너 로드 추가
+            return
         }
+
+        displayEstates = mode.baseEstates ?? []
+        await intent.loadBanners()
     }
 
     private func refresh() async {
@@ -264,251 +252,77 @@ struct EstateListView: View {
         case .liked:
             await intent.loadMyLikedEstates()
             displayEstates = intent.state.estates
-        case .todayEstates(let estates):
-            displayEstates = estates
-        case .hotEstates(let estates):
-            displayEstates = estates
+        case .todayEstates, .hotEstates:
+            displayEstates = mode.baseEstates ?? []
         }
     }
 
     private func updateDisplayEstates() {
-        switch mode {
-        case .map(_, let estates, _):
-            displayEstates = estates // TODO: Apply filter
-        case .liked:
-            displayEstates = intent.state.estates
-        case .todayEstates(let estates):
-            displayEstates = estates
-        case .hotEstates(let estates):
-            displayEstates = estates
+        var estates = mode.baseEstates ?? intent.state.estates
+
+        // 필터 적용
+        if let filter = activeFilter {
+            estates = applySorting(to: estates, filter: filter)
         }
+
+        displayEstates = estates
+    }
+
+    private func applySorting(to estates: [EstateSummaryResponse], filter: FilterType) -> [EstateSummaryResponse] {
+        let sorted: [EstateSummaryResponse]
+
+        switch filter {
+        case .area:
+            // 면적 순
+            sorted = estates.sorted { sortAscending ? $0.area < $1.area : $0.area > $1.area }
+
+        case .deposit:
+            // 보증금 순
+            sorted = estates.sorted { sortAscending ? $0.deposit < $1.deposit : $0.deposit > $1.deposit }
+
+        case .monthlyRent:
+            // 월세 순
+            sorted = estates.sorted { sortAscending ? $0.monthly_rent < $1.monthly_rent : $0.monthly_rent > $1.monthly_rent }
+
+        case .immediate:
+            // 신축 순
+            sorted = estates.sorted { estate1, estate2 in
+                // built_year가 빈 문자열이면 맨 뒤로
+                if estate1.built_year.isEmpty { return false }
+                if estate2.built_year.isEmpty { return true }
+                return sortAscending ? estate1.built_year < estate2.built_year : estate1.built_year > estate2.built_year
+            }
+        }
+
+        return sorted
+    }
+
+    private func bannerPayload(after index: Int) -> (index: Int, banner: Banner)? {
+        guard index < displayEstates.count - 1, !intent.state.banners.isEmpty else { return nil }
+        guard (index + 1) % bannerInterval == 0 else { return nil }
+
+        let bannerIndex = ((index + 1) / bannerInterval) % intent.state.banners.count
+        return (bannerIndex, intent.state.banners[bannerIndex])
     }
 
     /// 화면 높이에 따라 배너 간격을 동적으로 계산
     /// - 한 화면에 배너가 1~2개 보이도록 조정
-    /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한)
+    /// - Returns: 매물 카드 개수 단위 간격 (4~10 사이로 제한) -> 2 ~ 4
     private func calculateBannerInterval() -> Int {
-        // 상수
         let estateCardHeight: CGFloat = 124  // EstateListItem 높이
-        let cardSpacing: CGFloat = 12        // LazyVStack spacing
-        let itemHeight = estateCardHeight + cardSpacing  // 152pt
+        let cardSpacing: CGFloat = 12
+        let itemHeight = estateCardHeight + cardSpacing
 
-        // 네비게이션 바 + 안전 영역 + 필터 칩 영역 (대략적인 추정)
         let navigationAndFilterHeight: CGFloat = 130
-
-        // 사용 가능한 높이 계산
         let usableHeight = screenHeight - navigationAndFilterHeight
-
-        // 화면당 보이는 카드 수
         let cardsPerScreen = usableHeight / itemHeight
 
-        // 배너 간격 = 화면당 카드 수 / 2 (한 화면에 1~2개 배너)
         let calculatedInterval = Int(cardsPerScreen / 2)
-
-        // 4~10 사이로 제한 (너무 촘촘하거나 드문 것 방지)
-        let interval = max(4, min(10, calculatedInterval))
+        let interval = max(2, min(4, calculatedInterval))
 
         print("📐 Banner interval calculated: \(interval) (screen height: \(screenHeight), cards per screen: \(cardsPerScreen))")
 
         return interval
-    }
-}
-
-// MARK: - Estate List Item
-
-struct EstateListItem: View {
-    let estate: EstateSummaryResponse
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            thumbnail
-            textStack
-        }
-        .padding(12)
-        .frame(height: 140)
-        .background(Color.gray0)
-        .cornerRadius(20)
-    }
-
-    private var thumbnail: some View {
-        ZStack(alignment: .topLeading) {
-            // Image
-            KFImage.auth(url: imageURL)
-                .placeholder {
-                    Color.gray30
-                }
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 140, height: 108)
-                .clipped()
-                .cornerRadius(12)
-
-            // Overlay Circle Button (20×20px)
-            Circle()
-                .fill(Color.deepCoast)
-                .frame(width: 20, height: 20)
-                .overlay {
-                    Image(dsIcon: .focus)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 14, height: 14)
-                        .foregroundColor(.gray0)
-                }
-                .offset(x: 8, y: 8)
-
-            // Safety Badge (검증된 매물만 표시)
-            if estate.is_safe_estate {
-                Circle()
-                    .fill(Color.brightWood)
-                    .frame(width: 20, height: 20)
-                    .overlay {
-                        Image(dsIcon: .safety)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 14, height: 14)
-                            .foregroundColor(.gray0)
-                    }
-                    .offset(x: 112, y: 8)  // 오른쪽 상단 (140 - 20 - 8 = 112)
-            }
-        }
-    }
-
-    private var textStack: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            // 1. Tag Badge
-            tagBadge
-
-            // 2. Title
-            Text(estate.title)
-                .font(.pretendardBody1Bold)
-                .foregroundColor(.gray90)
-                .lineLimit(1)
-
-            // 3. Price
-            Text(priceText)
-                .font(.pretendardBody2)
-                .foregroundColor(.gray75)
-
-            // 4. Meta (면적·층수)
-            Text("\(estate.formattedArea()) · \(estate.floors)층")
-                .font(.pretendardCaption2)
-                .foregroundColor(.gray60)
-
-            // 5. Distance (if available)
-            if let distance = estate.distance {
-                Text(distanceText(distance))
-                    .font(.pretendardCaption2)
-                    .foregroundColor(.gray60)
-                    .lineLimit(1)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private var tagBadge: some View {
-        Text(estate.category)
-            .font(.pretendardCaption1)
-            .foregroundColor(.gray75)
-            .padding(.horizontal, 8)
-            .frame(height: 20)
-            .background(Color.gray0)
-            .overlay(
-                Capsule()
-                    .stroke(Color.gray45, lineWidth: 1)
-            )
-            .clipShape(Capsule())
-    }
-
-    private var imageURL: URL? {
-        guard let first = estate.files.first else { return nil }
-        return URL(string: Secrets.baseURL + "/" + first)
-    }
-
-    private var priceText: String {
-        return estate.formattedPrice()
-    }
-
-    private func formatPrice(_ price: Int) -> String {
-        if price >= 10000 {
-            let billion = price / 10000
-            let remainder = price % 10000
-            if remainder == 0 {
-                return "\(billion)억"
-            } else {
-                return "\(billion)억 \(remainder)"
-            }
-        }
-        return "\(price)"
-    }
-
-    private func distanceText(_ meters: Double) -> String {
-        if meters >= 1000 {
-            return String(format: "%.1fkm", meters / 1000)
-        } else {
-            return "\(Int(meters))m"
-        }
-    }
-}
-
-// MARK: - Inline Promo Item
-
-struct InlinePromoItem: View {
-    let banner: Banner
-    let onTap: (String) -> Void
-
-    var body: some View {
-        Button {
-            if let url = banner.actionUrl {
-                onTap(url)
-            }
-        } label: {
-            // Full-width banner image (390×66 design)
-            KFImage.auth(url: imageURL)
-                .placeholder {
-                    ZStack {
-                        Color.gray30
-                        HStack(spacing: 6) {
-                            Image(systemName: "photo")
-                                .font(.system(size: 16))
-                                .foregroundColor(.gray60)
-
-                            Text(banner.title)
-                                .font(.pretendardCaption1)
-                                .foregroundColor(.gray75)
-                        }
-                    }
-                }
-                .onFailure { error in
-                    print("❌ [BANNER-IMG] 로딩 실패")
-                    print("  - Banner: \(banner.title)")
-                    print("  - URL: \(imageURL?.absoluteString ?? "nil")")
-                    print("  - Error: \(error.localizedDescription)")
-                }
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 66)
-                .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var imageURL: URL? {
-        // 빈 문자열 체크
-        guard !banner.image.isEmpty else {
-            print("⚠️ [BANNER-UI] 이미지 경로가 비어있음")
-            return nil
-        }
-
-        if banner.image.hasPrefix("http") {
-            return URL(string: banner.image)
-        } else {
-            // 이중 슬래시 방지
-            let separator = banner.image.hasPrefix("/") ? "" : "/"
-            let fullPath = Secrets.baseURL + separator + banner.image
-            print("🖼️ [BANNER-UI] URL 구성: '\(fullPath)'")
-            return URL(string: fullPath)
-        }
     }
 }
 
