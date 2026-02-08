@@ -9,6 +9,8 @@ struct ContentView: View {
 
     @State private var authState: AuthState = KeychainManager.shared.isLoggedIn ? .loading : .loggedOut
     @Environment(\.scenePhase) private var scenePhase
+    @State private var isPaymentFlowActive = false
+    @State private var pendingLogoutAfterPayment = false
 
     var body: some View {
         Group {
@@ -27,7 +29,7 @@ struct ContentView: View {
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active && authState == .loggedIn {
+            if newPhase == .active && authState == .loggedIn && !isPaymentFlowActive {
                 refreshTokenSilently()
             }
         }
@@ -35,7 +37,21 @@ struct ContentView: View {
             authState = .loggedIn
         }
         .onReceive(NotificationCenter.default.publisher(for: .didLogout)) { _ in
-            authState = .loggedOut
+            if isPaymentFlowActive {
+                pendingLogoutAfterPayment = true
+            } else {
+                authState = .loggedOut
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .paymentFlowDidStart)) { _ in
+            isPaymentFlowActive = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .paymentFlowDidEnd)) { _ in
+            isPaymentFlowActive = false
+            if pendingLogoutAfterPayment {
+                authState = .loggedOut
+                pendingLogoutAfterPayment = false
+            }
         }
     }
 
@@ -175,6 +191,8 @@ private enum MainTab {
 extension Notification.Name {
     static let didLogin = Notification.Name("didLogin")
     static let didLogout = Notification.Name("didLogout")
+    static let paymentFlowDidStart = Notification.Name("paymentFlowDidStart")
+    static let paymentFlowDidEnd = Notification.Name("paymentFlowDidEnd")
 }
 
 #Preview {

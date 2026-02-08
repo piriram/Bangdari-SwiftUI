@@ -25,3 +25,4 @@ build/
 .DS_Store
 *.swp
 Bangdari-SwiftUI.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+Bangdari-SwiftUI/App/Secrets.swift
