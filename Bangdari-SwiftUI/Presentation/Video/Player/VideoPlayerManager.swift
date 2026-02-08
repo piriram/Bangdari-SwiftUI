@@ -31,12 +31,14 @@ final class VideoPlayerManager: ObservableObject {
 
     /// 비디오 로드 및 재생
     func loadAndPlay(url: String, videoId: String) {
+        let normalizedURL = normalizedStreamURL(url)
+
         print("🎬 [PLAYER] loadAndPlay called")
         print("   🆔 videoId: \(videoId)")
-        print("   🔗 url: \(url)")
+        print("   🔗 url: \(normalizedURL)")
 
-        guard let videoURL = URL(string: url) else {
-            print("❌ [PLAYER] Invalid video URL: \(url)")
+        guard let videoURL = URL(string: normalizedURL) else {
+            print("❌ [PLAYER] Invalid video URL: \(normalizedURL)")
             return
         }
 
@@ -101,6 +103,23 @@ final class VideoPlayerManager: ObservableObject {
         player?.replaceCurrentItem(with: playerItem)
         play()
         print("▶️  [PLAYER] Playback started")
+    }
+
+    private func normalizedStreamURL(_ rawURL: String) -> String {
+        guard var components = URLComponents(string: rawURL) else {
+            return rawURL
+        }
+
+        if components.path.hasPrefix("/v1/videos/stream/") {
+            return rawURL
+        }
+
+        if components.path.hasPrefix("/videos/stream/") {
+            components.path = "/v1" + components.path
+            return components.url?.absoluteString ?? rawURL
+        }
+
+        return rawURL
     }
 
     /// 재생
