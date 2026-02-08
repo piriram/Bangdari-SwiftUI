@@ -151,6 +151,18 @@ final class VideoListIntent: ObservableObject {
         return url
     }
 
+    /// 스트림 URL 보장 (캐시 없으면 발급)
+    func ensureStreamURL(for videoId: String) async {
+        if state.streamURLCache[videoId] == nil {
+            await prefetchStreamURL(for: videoId)
+        }
+    }
+
+    /// 스트림 URL 새로 발급 (토큰 갱신)
+    func refreshStreamURL(for videoId: String) async {
+        await prefetchStreamURLWithRetry(for: videoId)
+    }
+
     // MARK: - Private Methods
 
     /// 스트림 URL Prefetch (백그라운드)
