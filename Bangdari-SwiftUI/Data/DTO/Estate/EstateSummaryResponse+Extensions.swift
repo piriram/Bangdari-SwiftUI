@@ -17,11 +17,11 @@ extension EstateFormattable {
             // 월세: "월세 7000/120" 형식 (만원 단위)
             let depositInManwon = deposit / 10000
             let rentInManwon = monthly_rent / 10000
-            return "월세 \(depositInManwon)/\(rentInManwon)"
+            return "월세 \(depositInManwon)/\(rentInManwon)만원"
         } else {
             // 전세: "전세 7000" 형식 (만원 단위)
             let depositInManwon = deposit / 10000
-            return "전세 \(depositInManwon)"
+            return "전세 \(depositInManwon)만원"
         }
     }
 

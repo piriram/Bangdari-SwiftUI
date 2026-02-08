@@ -138,7 +138,10 @@ struct EstateDetailView: View {
                     onSuccess: { impUid in
                         Task { await intent.validatePayment(impUid: impUid) }
                     },
-                    onCancel: { intent.cancelPayment() }
+                    onCancel: { intent.cancelPayment() },
+                    onFailure: { message in
+                        intent.failPayment(message: message)
+                    }
                 )
             }
         }
@@ -242,7 +245,6 @@ struct EstateDetailView: View {
             // 안심매물 배지 (오른쪽)
             if estate.is_safe_estate {
                 HStack(spacing: 4) {
-                    DSIconView(.safety, size: 14, renderingMode: .template)
                     Text("안심매물")
                         .font(.pretendard(.caption1, .medium))
                 }
@@ -281,13 +283,13 @@ struct EstateDetailView: View {
                     Text("월세")
                         .font(.pretendard(.body2, .medium))
                         .foregroundColor(.gray60)
-                    Text(estate.formattedPriceInBillion(estate.deposit))
+                    Text("\(estate.formattedPriceInBillion(estate.deposit))만원")
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.gray90)
                     Text("/")
                         .font(.pretendard(.title1))
                         .foregroundColor(.gray60)
-                    Text(estate.formattedPriceInBillion(estate.monthly_rent))
+                    Text("\(estate.formattedPriceInBillion(estate.monthly_rent))만원")
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.deepCoast)
                 }
@@ -296,7 +298,7 @@ struct EstateDetailView: View {
                     Text("전세")
                         .font(.pretendard(.body2, .medium))
                         .foregroundColor(.gray60)
-                    Text(estate.formattedPriceInBillion(estate.deposit))
+                    Text("\(estate.formattedPriceInBillion(estate.deposit))만원")
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.gray90)
                 }
@@ -306,7 +308,7 @@ struct EstateDetailView: View {
             HStack(spacing: 12) {
                 infoChip(
                     icon: "wonsign.circle",
-                    text: estate.maintenance_fee > 0 ? "\(estate.maintenance_fee)만원" : "별도"
+                    text: estate.maintenance_fee < 0 ? "관리비 \(estate.maintenance_fee.formatted())" : "관리비 별도"
                 )
                 infoChip(
                     icon: "square.grid.3x3",
@@ -418,7 +420,7 @@ struct EstateDetailView: View {
     private func conditionRow(_ estate: EstateDetailResponse) -> some View {
         HStack(spacing: 8) {
             if estate.parking_count > 0 {
-                conditionChip(icon: "IconParking", text: "주차 \(estate.parking_count)대 가능", isHighlight: true)
+                conditionChip(icon: "OptionParking", text: "주차 \(estate.parking_count)대 가능", isHighlight: true)
             }
             // 추가 조건들이 있으면 여기에 추가
         }
@@ -430,6 +432,8 @@ struct EstateDetailView: View {
         HStack(spacing: 6) {
             Image(icon)
                 .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
                 .frame(width: 16, height: 16)
             Text(text)
                 .font(.pretendard(.caption1, .medium))
@@ -663,11 +667,7 @@ struct EstateDetailView: View {
             }
         } label: {
             Image.contactIcon(icon)
-                .frame(width: 18, height: 18)
                 .frame(width: 40, height: 40)
-                .background(Color.deepCream)
-                .cornerRadius(10)
-                .opacity(intent.state.isCreatingChatRoom ? 0.5 : 1.0)
         }
         .disabled(intent.state.isCreatingChatRoom)
     }

@@ -14,6 +14,6 @@ extension Image {
 
     static func contactIcon(_ icon: ContactIcon) -> Image {
         Image(icon.rawValue)
-            .renderingMode(.template)
+            .renderingMode(.original)
     }
 }
