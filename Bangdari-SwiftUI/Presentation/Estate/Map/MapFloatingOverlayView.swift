@@ -9,13 +9,16 @@ struct MapFloatingOverlayView: View {
     let onZoomIn: () -> Void
     let onZoomOut: () -> Void
     let onCurrentLocation: () -> Void
-    let isEstateSelected: Bool
     let estates: [EstateSummaryResponse]
     @Binding var selectedEstateIndex: Int
     let onCardTap: (EstateSummaryResponse) -> Void
     let onSwipeNext: () -> Void
     let onSwipePrevious: () -> Void
     let onSelectionChanged: (EstateSummaryResponse) -> Void
+    
+    private var shouldShowCarousel: Bool {
+        !estates.isEmpty
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -38,9 +41,9 @@ struct MapFloatingOverlayView: View {
                 )
             }
             .padding(.horizontal, 16)
-            .padding(.bottom, isEstateSelected ? 170 : 24)
+            .padding(.bottom, shouldShowCarousel ? 8 : 24)
 
-            if isEstateSelected {
+            if shouldShowCarousel {
                 MapEstateCardCarouselView(
                     estates: estates,
                     selectedEstateIndex: $selectedEstateIndex,

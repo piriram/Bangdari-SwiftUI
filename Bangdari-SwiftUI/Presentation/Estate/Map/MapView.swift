@@ -78,7 +78,6 @@ struct EstateMapView: View {
                     onZoomIn: zoomIn,
                     onZoomOut: zoomOut,
                     onCurrentLocation: moveToCurrentLocation,
-                    isEstateSelected: isEstateSelected,
                     estates: intent.state.estates,
                     selectedEstateIndex: $selectedEstateIndex,
                     onCardTap: { estate in
