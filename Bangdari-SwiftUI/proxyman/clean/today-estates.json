@@ -1,0 +1,78 @@
+{
+  "data": [
+    {
+      "estate_id": "6938d207cd1a3725c019c8d8",
+      "category": "원룸",
+      "title": "깔끔한 풀옵션 원룸",
+      "introduction": "신축급 컨디션, 즉시 입주!",
+      "thumbnails": [
+        "/data/estates/estate_13_1765330871397.jpg",
+        "/data/estates/estate_14_1765330871509.jpg",
+        "/data/estates/estate_15_1765330871511.jpg",
+        "/data/estates/estate_16_1765330871531.jpg"
+      ],
+      "deposit": 5000000,
+      "monthly_rent": 450000,
+      "built_year": "2019-08-20",
+      "area": 19.8,
+      "floors": 4,
+      "geolocation": {
+        "longitude": 126.889557,
+        "latitude": 37.51925
+      },
+      "like_count": 5,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2025-12-10T01:51:03.257Z",
+      "updated_at": "2026-01-22T19:19:53.411Z"
+    },
+    {
+      "estate_id": "6938d1cfcd1a3725c019c8d0",
+      "category": "아파트",
+      "title": "목동 역세권 신축 아파트",
+      "introduction": "지하철 5분 거리, 학군 최고!",
+      "thumbnails": [
+        "/data/estates/estate_1_1765330640365.jpg",
+        "/data/estates/estate_2_1765330640370.jpg",
+        "/data/estates/estate_3_1765330640377.jpg"
+      ],
+      "deposit": 50000000,
+      "monthly_rent": 0,
+      "built_year": "2022-03-15",
+      "area": 84.5,
+      "floors": 15,
+      "geolocation": {
+        "longitude": 126.886557,
+        "latitude": 37.51775
+      },
+      "like_count": 2,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2025-12-10T01:50:07.800Z",
+      "updated_at": "2026-01-28T11:55:49.126Z"
+    },
+    {
+      "estate_id": "6938d269cd1a3725c019c8f4",
+      "category": "빌라",
+      "title": "조용한 주택가 빌라",
+      "introduction": "넓은 베란다, 채광 좋음!",
+      "thumbnails": [
+        "/data/estates/estate_17_1765330922802.jpg"
+      ],
+      "deposit": 10000000,
+      "monthly_rent": 600000,
+      "built_year": "2015-11-25",
+      "area": 52.3,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.8882,
+        "latitude": 37.51475
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2025-12-10T01:52:41.769Z",
+      "updated_at": "2026-01-02T11:02:12.357Z"
+    }
+  ]
+}

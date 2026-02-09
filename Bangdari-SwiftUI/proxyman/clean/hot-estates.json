@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e5553e8a4385e6bbdb46",
+      "category": "아파트",
+      "title": "합리적인 신축매물 강력 추천",
+      "introduction": "제주 전통 돌담이 있는 집",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1018323,
+      "monthly_rent": 102393,
+      "built_year": "1983-10-26",
+      "area": 185.9,
+      "floors": 28,
+      "geolocation": {
+        "longitude": 126.312665,
+        "latitude": 33.459227
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:52:37.165Z",
+      "updated_at": "2026-01-22T08:52:37.165Z"
+    },
+    {
+      "estate_id": "6971ed443e8a4385e6bc4160",
+      "category": "상가",
+      "title": "복층 월동준비 완료 (실용적인)",
+      "introduction": "독채 펜션, 수익형 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1000733,
+      "monthly_rent": 117571,
+      "built_year": "2011-08-12",
+      "area": 486.6,
+      "floors": 18,
+      "geolocation": {
+        "longitude": 126.280113,
+        "latitude": 33.36798
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:26:28.878Z",
+      "updated_at": "2026-01-22T09:26:28.878Z"
+    },
+    {
+      "estate_id": "6971eb673e8a4385e6bc28c1",
+      "category": "빌라",
+      "title": "★제주스러운 귤밭집★ 후회 없는 선택",
+      "introduction": "숲속의 힐링 하우스",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019670,
+      "monthly_rent": 103740,
+      "built_year": "1997-06-10",
+      "area": 41.7,
+      "floors": 25,
+      "geolocation": {
+        "longitude": 126.248851,
+        "latitude": 33.327911
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:18:31.462Z",
+      "updated_at": "2026-01-22T09:18:31.462Z"
+    },
+    {
+      "estate_id": "6960cde23b912a9455c3d45e",
+      "category": "상가",
+      "title": "힐링 플레이스 믿고 보세요",
+      "introduction": "합리적인 가격, 좋은 조건",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1028128,
+      "monthly_rent": 112198,
+      "built_year": "1990-03-03",
+      "area": 1043.2,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.866447,
+        "latitude": 37.527939
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:44:02.576Z",
+      "updated_at": "2026-01-09T09:44:02.576Z"
+    },
+    {
+      "estate_id": "6960cc293b912a9455c3bbd2",
+      "category": "아파트",
+      "title": "홈 가격 협의 (최신식)",
+      "introduction": "헬스장 이용 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1029121,
+      "monthly_rent": 113191,
+      "built_year": "2018-10-14",
+      "area": 546.3,
+      "floors": 57,
+      "geolocation": {
+        "longitude": 126.814568,
+        "latitude": 37.463916
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:36:41.417Z",
+      "updated_at": "2026-01-09T09:36:41.417Z"
+    },
+    {
+      "estate_id": "6960d1523b912a9455c40621",
+      "category": "상가",
+      "title": "★가성비 파크★ 계약금 협의",
+      "introduction": "분리형 원룸, 독립 공간",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1007730,
+      "monthly_rent": 124568,
+      "built_year": "2017-12-08",
+      "area": 29.7,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.897968,
+        "latitude": 37.502342
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:58:42.367Z",
+      "updated_at": "2026-01-09T09:58:42.367Z"
+    },
+    {
+      "estate_id": "6971ef203e8a4385e6bc5a0c",
+      "category": "게스트하우스",
+      "title": "둥지 믿고 보세요 (품격있는)",
+      "introduction": "독채 펜션, 수익형 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1007800,
+      "monthly_rent": 124639,
+      "built_year": "1995-02-22",
+      "area": 99.3,
+      "floors": 6,
+      "geolocation": {
+        "longitude": 126.78658,
+        "latitude": 33.427744
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:34:24.612Z",
+      "updated_at": "2026-01-22T09:34:24.612Z"
+    },
+    {
+      "estate_id": "6971e9093e8a4385e6bc0991",
+      "category": "펜션",
+      "title": "[제주스러운] 돌담집 - 파격 조건",
+      "introduction": "한담해안산책로 근처",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1028183,
+      "monthly_rent": 112254,
+      "built_year": "2000-06-10",
+      "area": 1099.1,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.759551,
+        "latitude": 33.409988
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:08:25.834Z",
+      "updated_at": "2026-01-22T09:08:25.834Z"
+    },
+    {
+      "estate_id": "6971f1773e8a4385e6bc78d4",
+      "category": "상가",
+      "title": "가성비 둥지 문의 환영",
+      "introduction": "바다 도보 5분, 해변가 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1003749,
+      "monthly_rent": 120588,
+      "built_year": "1992-03-07",
+      "area": 521.8,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.77286,
+        "latitude": 33.446484
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:44:23.005Z",
+      "updated_at": "2026-01-22T09:44:23.005Z"
+    },
+    {
+      "estate_id": "6960cdca3b912a9455c3d300",
+      "category": "아파트",
+      "title": "[쾌적한] 안식처 - 특별 할인",
+      "introduction": "CCTV 24시간 운영",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1013878,
+      "monthly_rent": 130716,
+      "built_year": "2001-10-06",
+      "area": 213.3,
+      "floors": 54,
+      "geolocation": {
+        "longitude": 126.836082,
+        "latitude": 37.473856
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:43:38.319Z",
+      "updated_at": "2026-01-09T09:43:38.319Z"
+    }
+  ]
+}

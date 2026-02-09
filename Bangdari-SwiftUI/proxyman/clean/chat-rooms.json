@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "room_id": "697ab0223e8a4385e6be8171",
+      "createdAt": "2026-01-29T00:56:02.988Z",
+      "updatedAt": "2026-01-29T01:39:55.372Z",
+      "participants": [
+        {
+          "user_id": "6938ceb8cd1a3725c019c8b9",
+          "nick": "핀공인중개사",
+          "introduction": "안녕하세요 :)",
+          "profileImage": "/data/profiles/1765331714972.png"
+        },
+        {
+          "user_id": "6970c9913e8a4385e6bbafc7",
+          "nick": "이응",
+          "introduction": "자기소개",
+          "profileImage": "/data/profiles/1770528607777.jpg"
+        }
+      ],
+      "lastChat": {
+        "chat_id": "697aba6b3e8a4385e6be8215",
+        "room_id": "697ab0223e8a4385e6be8171",
+        "content": "이것좀보세요",
+        "createdAt": "2026-01-29T01:39:55.370Z",
+        "updatedAt": "2026-01-29T01:39:55.370Z",
+        "sender": {
+          "user_id": "6970c9913e8a4385e6bbafc7",
+          "nick": "이응",
+          "introduction": "자기소개",
+          "profileImage": "/data/profiles/1770528607777.jpg"
+        },
+        "files": [
+          "/data/chats/file0_1769650795311.jpg"
+        ]
+      }
+    }
+  ]
+}

@@ -26,3 +26,7 @@ build/
 *.swp
 Bangdari-SwiftUI.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 Bangdari-SwiftUI/App/Secrets.swift
+
+# Proxyman - 원본 캡처 파일 제외, clean 폴더만 포함
+Bangdari-SwiftUI/proxyman/*
+!Bangdari-SwiftUI/proxyman/clean/

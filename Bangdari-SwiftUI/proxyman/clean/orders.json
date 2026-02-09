@@ -1,0 +1,58 @@
+{
+  "data": [
+    {
+      "order_id": "698815fc3e8a4385e6bff8e3",
+      "order_code": "OZII204435",
+      "estate": {
+        "id": "6971f2f23e8a4385e6bc8c54",
+        "category": "오피스텔",
+        "title": "올레길근처 플레이스 세컨하우스로 딱!",
+        "introduction": "신축 건물, 깨끗한 인테리어",
+        "thumbnails": [
+          "/data/estates/estate_112_1767944326171.png"
+        ],
+        "deposit": 1027738,
+        "monthly_rent": 111808,
+        "built_year": "2014-08-04",
+        "area": 654.1,
+        "floors": 23,
+        "geolocation": {
+          "longitude": 126.239991,
+          "latitude": 33.364354
+        },
+        "createdAt": "2026-01-22T09:50:42.259Z",
+        "updatedAt": "2026-01-22T09:50:42.259Z"
+      },
+      "paidAt": "2026-02-08T04:50:41.000Z",
+      "createdAt": "2026-02-08T04:50:04.436Z",
+      "updatedAt": "2026-02-08T04:50:42.341Z"
+    },
+    {
+      "order_id": "6988152e3e8a4385e6bff89a",
+      "order_code": "KUCL998526",
+      "estate": {
+        "id": "6971ed003e8a4385e6bc3dd8",
+        "category": "게스트하우스",
+        "title": "타운 한라산이 보여요 (실용적인)",
+        "introduction": "드레스룸 있음",
+        "thumbnails": [
+          "/data/estates/estate_112_1767944326171.png"
+        ],
+        "deposit": 1004512,
+        "monthly_rent": 121351,
+        "built_year": "2019-12-20",
+        "area": 1284.3,
+        "floors": 18,
+        "geolocation": {
+          "longitude": 126.282471,
+          "latitude": 33.371457
+        },
+        "createdAt": "2026-01-22T09:25:20.205Z",
+        "updatedAt": "2026-01-22T09:25:20.205Z"
+      },
+      "paidAt": "2026-02-08T04:46:57.000Z",
+      "createdAt": "2026-02-08T04:46:38.529Z",
+      "updatedAt": "2026-02-08T04:46:58.205Z"
+    }
+  ]
+}
