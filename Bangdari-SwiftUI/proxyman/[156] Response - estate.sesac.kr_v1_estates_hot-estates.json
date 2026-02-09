@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960ca4c3b912a9455c3a232",
+      "category": "오피스텔",
+      "title": "편리한 플레이스 믿고 보세요",
+      "introduction": "현관 중문 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1020527,
+      "monthly_rent": 104598,
+      "built_year": "1980-02-06",
+      "area": 898.6,
+      "floors": 43,
+      "geolocation": {
+        "longitude": 126.878891,
+        "latitude": 37.52863
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:28:44.961Z",
+      "updated_at": "2026-01-09T09:28:44.961Z"
+    },
+    {
+      "estate_id": "6971e8fc3e8a4385e6bc08e1",
+      "category": "게스트하우스",
+      "title": "마운틴뷰 안식처 문의 환영",
+      "introduction": "전망 좋음, 층고 높음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1024392,
+      "monthly_rent": 108463,
+      "built_year": "1981-11-11",
+      "area": 290.3,
+      "floors": 8,
+      "geolocation": {
+        "longitude": 126.81059,
+        "latitude": 33.439684
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:08:12.476Z",
+      "updated_at": "2026-01-22T09:08:12.476Z"
+    },
+    {
+      "estate_id": "6960cd2a3b912a9455c3ca20",
+      "category": "원룸",
+      "title": "포근한 레지던스, 기회를 잡으세요",
+      "introduction": "독서실 있음",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1029002,
+      "monthly_rent": 113072,
+      "built_year": "1991-01-01",
+      "area": 427.8,
+      "floors": 57,
+      "geolocation": {
+        "longitude": 126.881928,
+        "latitude": 37.521091
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:40:58.071Z",
+      "updated_at": "2026-01-09T09:40:58.071Z"
+    },
+    {
+      "estate_id": "6960cf123b912a9455c3e579",
+      "category": "빌라",
+      "title": "★실속형 프라자★ 조건 최고",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1024899,
+      "monthly_rent": 108969,
+      "built_year": "1982-07-27",
+      "area": 797.1,
+      "floors": 35,
+      "geolocation": {
+        "longitude": 126.832333,
+        "latitude": 37.470478
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:49:06.002Z",
+      "updated_at": "2026-01-09T09:49:06.002Z"
+    },
+    {
+      "estate_id": "6971f2973e8a4385e6bc87ac",
+      "category": "빌라",
+      "title": "세련된 하우스, 한라산이 보여요",
+      "introduction": "방 2개, 화장실 2개",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1027262,
+      "monthly_rent": 111332,
+      "built_year": "1998-04-04",
+      "area": 177.5,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.807375,
+        "latitude": 33.438692
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:49:11.683Z",
+      "updated_at": "2026-01-22T09:49:11.683Z"
+    },
+    {
+      "estate_id": "6971ee1f3e8a4385e6bc4ca0",
+      "category": "펜션",
+      "title": "추천매물 특별 할인 (마운틴뷰)",
+      "introduction": "제주 바다가 한눈에 보이는 오션뷰",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1010335,
+      "monthly_rent": 127174,
+      "built_year": "2000-05-09",
+      "area": 1143.5,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.815929,
+        "latitude": 33.441555
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:30:07.667Z",
+      "updated_at": "2026-01-22T09:30:07.667Z"
+    },
+    {
+      "estate_id": "6971e9813e8a4385e6bc0fc9",
+      "category": "빌라",
+      "title": "실용적인 하우스, 월동준비 완료",
+      "introduction": "조용하고 쾌적한 제주 시골마을",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1029846,
+      "monthly_rent": 113917,
+      "built_year": "2007-03-27",
+      "area": 1271.8,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.292967,
+        "latitude": 33.348675
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:10:25.986Z",
+      "updated_at": "2026-01-22T09:10:25.986Z"
+    },
+    {
+      "estate_id": "6960cc4d3b912a9455c3bdc2",
+      "category": "아파트",
+      "title": "따뜻한 테라스 교통 편리",
+      "introduction": "식세기 설치됨",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1016693,
+      "monthly_rent": 100763,
+      "built_year": "2009-08-24",
+      "area": 46.6,
+      "floors": 48,
+      "geolocation": {
+        "longitude": 126.885832,
+        "latitude": 37.49801
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:37:17.494Z",
+      "updated_at": "2026-01-09T09:37:17.494Z"
+    },
+    {
+      "estate_id": "6960c7a43b912a9455c37d74",
+      "category": "아파트",
+      "title": "특가 스튜디오 인증 매물",
+      "introduction": "드레스룸 있음",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1008883,
+      "monthly_rent": 125721,
+      "built_year": "2019-05-25",
+      "area": 1182.3,
+      "floors": 38,
+      "geolocation": {
+        "longitude": 126.853324,
+        "latitude": 37.498171
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:17:24.671Z",
+      "updated_at": "2026-01-09T09:17:24.671Z"
+    },
+    {
+      "estate_id": "6960c9fd3b912a9455c39de6",
+      "category": "빌라",
+      "title": "[깔끔한] 보금자리 - 반려동물 OK",
+      "introduction": "무인택배함 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1015380,
+      "monthly_rent": 132218,
+      "built_year": "1985-05-09",
+      "area": 224.8,
+      "floors": 56,
+      "geolocation": {
+        "longitude": 126.863752,
+        "latitude": 37.47101
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:27:25.441Z",
+      "updated_at": "2026-01-09T09:27:25.441Z"
+    }
+  ]
+}

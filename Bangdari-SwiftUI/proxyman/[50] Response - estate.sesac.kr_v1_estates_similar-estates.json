@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e6243e8a4385e6bbe68a",
+      "category": "빌라",
+      "title": "바다집 위치 최상 (첨단)",
+      "introduction": "제주 바다가 한눈에 보이는 오션뷰",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1024886,
+      "monthly_rent": 108956,
+      "built_year": "2014-08-12",
+      "area": 784.4,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.808268,
+        "latitude": 33.439865
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:56:04.099Z",
+      "updated_at": "2026-01-22T08:56:04.099Z"
+    },
+    {
+      "estate_id": "6971e5d23e8a4385e6bbe1f4",
+      "category": "원룸",
+      "title": "[전망 좋은] 주거공간 - 후회 없는 선택",
+      "introduction": "반려동물과 함께 살기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1008404,
+      "monthly_rent": 125242,
+      "built_year": "2000-06-06",
+      "area": 702.2,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.299476,
+        "latitude": 33.407169
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:54:42.850Z",
+      "updated_at": "2026-01-22T08:54:42.850Z"
+    },
+    {
+      "estate_id": "6960c7e23b912a9455c380ce",
+      "category": "원룸",
+      "title": "[효율적인] 복층 - 즉시 입주",
+      "introduction": "신발장 대용량",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1015189,
+      "monthly_rent": 132027,
+      "built_year": "2023-02-06",
+      "area": 33.4,
+      "floors": 44,
+      "geolocation": {
+        "longitude": 126.853878,
+        "latitude": 37.522034
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:18:26.233Z",
+      "updated_at": "2026-01-09T09:18:26.233Z"
+    },
+    {
+      "estate_id": "6971ee0e3e8a4385e6bc4bc0",
+      "category": "상가",
+      "title": "모던한 신축매물, 교통 편리",
+      "introduction": "테라스 있음, 오션뷰 테라스",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1028757,
+      "monthly_rent": 112827,
+      "built_year": "2021-11-15",
+      "area": 182.7,
+      "floors": 22,
+      "geolocation": {
+        "longitude": 126.294461,
+        "latitude": 33.351083
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:29:50.734Z",
+      "updated_at": "2026-01-22T09:29:50.734Z"
+    },
+    {
+      "estate_id": "6960d0e73b912a9455c40013",
+      "category": "아파트",
+      "title": "홈 가격 협의 (신축)",
+      "introduction": "넓은 공간, 수납공간 충분",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1022841,
+      "monthly_rent": 106911,
+      "built_year": "1994-11-07",
+      "area": 230.6,
+      "floors": 17,
+      "geolocation": {
+        "longitude": 126.823553,
+        "latitude": 37.496407
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:56:55.132Z",
+      "updated_at": "2026-01-09T09:56:55.132Z"
+    },
+    {
+      "estate_id": "6960cb3c3b912a9455c3af1a",
+      "category": "아파트",
+      "title": "정갈한 안식처 특별 할인",
+      "introduction": "신축 건물, 깨끗한 인테리어",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1017198,
+      "monthly_rent": 101268,
+      "built_year": "2008-09-17",
+      "area": 551.2,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.80857,
+        "latitude": 37.476991
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:32:44.746Z",
+      "updated_at": "2026-01-09T09:32:44.746Z"
+    },
+    {
+      "estate_id": "6971e9d83e8a4385e6bc1439",
+      "category": "빌라",
+      "title": "보금자리 위치 최상 (시원한)",
+      "introduction": "이중창 설치, 방음 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1015166,
+      "monthly_rent": 132004,
+      "built_year": "2000-05-17",
+      "area": 10.5,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.241424,
+        "latitude": 33.361766
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:11:52.170Z",
+      "updated_at": "2026-01-22T09:11:52.170Z"
+    },
+    {
+      "estate_id": "6971ed3f3e8a4385e6bc4118",
+      "category": "오피스텔",
+      "title": "[조용한] 추천매물 - 놓치지 마세요!",
+      "introduction": "마당 있는 1층 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1024858,
+      "monthly_rent": 108929,
+      "built_year": "1987-08-12",
+      "area": 756,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.233327,
+        "latitude": 33.338262
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:26:23.404Z",
+      "updated_at": "2026-01-22T09:26:23.404Z"
+    },
+    {
+      "estate_id": "6960cc4b3b912a9455c3bda2",
+      "category": "아파트",
+      "title": "신축 매물 꿀매물",
+      "introduction": "빌트인 가전 완비",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1010023,
+      "monthly_rent": 126861,
+      "built_year": "2010-05-01",
+      "area": 831.4,
+      "floors": 39,
+      "geolocation": {
+        "longitude": 126.838412,
+        "latitude": 37.479147
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:37:15.211Z",
+      "updated_at": "2026-01-09T09:37:15.211Z"
+    },
+    {
+      "estate_id": "6960c9f73b912a9455c39d8e",
+      "category": "오피스텔",
+      "title": "★역세권 파크★ 만족 보장",
+      "introduction": "공원 바로 앞",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1031290,
+      "monthly_rent": 115360,
+      "built_year": "2025-10-10",
+      "area": 1258.9,
+      "floors": 58,
+      "geolocation": {
+        "longitude": 126.810018,
+        "latitude": 37.530225
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:27:19.099Z",
+      "updated_at": "2026-01-09T09:27:19.099Z"
+    }
+  ]
+}

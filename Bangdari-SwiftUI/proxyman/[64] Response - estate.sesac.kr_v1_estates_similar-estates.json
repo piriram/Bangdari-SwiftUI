@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960c8bb3b912a9455c38c8e",
+      "category": "상가",
+      "title": "[가성비] 파크 - 조건 최고",
+      "introduction": "공원 바로 앞",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1005130,
+      "monthly_rent": 121969,
+      "built_year": "1993-12-04",
+      "area": 411.7,
+      "floors": 6,
+      "geolocation": {
+        "longitude": 126.887483,
+        "latitude": 37.508016
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:22:03.661Z",
+      "updated_at": "2026-01-09T09:22:03.661Z"
+    },
+    {
+      "estate_id": "6971f2133e8a4385e6bc80dc",
+      "category": "게스트하우스",
+      "title": "가성비 레지던스 문의 환영",
+      "introduction": "5일장 근처, 생활 편리",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1009168,
+      "monthly_rent": 126006,
+      "built_year": "1982-11-11",
+      "area": 1467.3,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.217329,
+        "latitude": 33.35844
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:46:59.213Z",
+      "updated_at": "2026-01-22T09:46:59.213Z"
+    },
+    {
+      "estate_id": "6960c8003b912a9455c38276",
+      "category": "아파트",
+      "title": "편리한 둥지 특별 할인",
+      "introduction": "중앙 난방, 따뜻함",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1012678,
+      "monthly_rent": 129516,
+      "built_year": "1996-05-21",
+      "area": 503.5,
+      "floors": 53,
+      "geolocation": {
+        "longitude": 126.859682,
+        "latitude": 37.48408
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:18:56.695Z",
+      "updated_at": "2026-01-09T09:18:56.695Z"
+    },
+    {
+      "estate_id": "6971f2373e8a4385e6bc82b4",
+      "category": "아파트",
+      "title": "오션뷰 포레스트, 즉시 입주",
+      "introduction": "협재해수욕장 10분 거리",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1011531,
+      "monthly_rent": 128370,
+      "built_year": "2000-09-25",
+      "area": 848.8,
+      "floors": 17,
+      "geolocation": {
+        "longitude": 126.807752,
+        "latitude": 33.444264
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:47:35.077Z",
+      "updated_at": "2026-01-22T09:47:35.077Z"
+    },
+    {
+      "estate_id": "6971eeb53e8a4385e6bc5484",
+      "category": "원룸",
+      "title": "한라산뷰 스토어, 한정 매물",
+      "introduction": "비자림 숲 인접",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1004228,
+      "monthly_rent": 121067,
+      "built_year": "2011-09-17",
+      "area": 1000.3,
+      "floors": 4,
+      "geolocation": {
+        "longitude": 126.253496,
+        "latitude": 33.327712
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:32:37.521Z",
+      "updated_at": "2026-01-22T09:32:37.521Z"
+    },
+    {
+      "estate_id": "6971eae73e8a4385e6bc2229",
+      "category": "원룸",
+      "title": "깔끔한 한라하우스 특별 할인",
+      "introduction": "마당 있는 1층 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1019108,
+      "monthly_rent": 103178,
+      "built_year": "1987-12-08",
+      "area": 970.7,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.815199,
+        "latitude": 33.440328
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:16:23.186Z",
+      "updated_at": "2026-01-22T09:16:23.186Z"
+    },
+    {
+      "estate_id": "6971ee313e8a4385e6bc4d90",
+      "category": "펜션",
+      "title": "★마운틴뷰 독채★ 위치 최상",
+      "introduction": "신축 건물, 깨끗한 인테리어",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1004287,
+      "monthly_rent": 121125,
+      "built_year": "2024-01-01",
+      "area": 1059,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.258615,
+        "latitude": 33.377127
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:30:25.932Z",
+      "updated_at": "2026-01-22T09:30:25.932Z"
+    },
+    {
+      "estate_id": "6971f0733e8a4385e6bc6b84",
+      "category": "펜션",
+      "title": "실용적인 스튜디오 급매!",
+      "introduction": "인테리어 맞춤 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1024303,
+      "monthly_rent": 108373,
+      "built_year": "1983-05-05",
+      "area": 200.7,
+      "floors": 8,
+      "geolocation": {
+        "longitude": 126.293066,
+        "latitude": 33.352619
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:40:03.934Z",
+      "updated_at": "2026-01-22T09:40:03.934Z"
+    },
+    {
+      "estate_id": "6971f0863e8a4385e6bc6c7c",
+      "category": "아파트",
+      "title": "친환경 섬집 후회 없는 선택",
+      "introduction": "곽지해수욕장 도보권",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1027283,
+      "monthly_rent": 111353,
+      "built_year": "2019-08-24",
+      "area": 198,
+      "floors": 18,
+      "geolocation": {
+        "longitude": 126.329928,
+        "latitude": 33.454211
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:40:22.884Z",
+      "updated_at": "2026-01-22T09:40:22.884Z"
+    },
+    {
+      "estate_id": "6971e8df3e8a4385e6bc0761",
+      "category": "오피스텔",
+      "title": "[세련된] 바다집 - 힐링라이프",
+      "introduction": "세컨하우스로 추천",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1006274,
+      "monthly_rent": 123112,
+      "built_year": "1987-06-18",
+      "area": 64,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.809404,
+        "latitude": 33.437769
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:07:43.643Z",
+      "updated_at": "2026-01-22T09:07:43.643Z"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971f2a13e8a4385e6bc8834",
+      "category": "아파트",
+      "title": "VIP 생활공간 검증 완료",
+      "introduction": "월정리 해변 근처",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019027,
+      "monthly_rent": 103098,
+      "built_year": "1998-01-17",
+      "area": 889.2,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.244441,
+        "latitude": 33.36921
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:49:21.995Z",
+      "updated_at": "2026-01-22T09:49:21.995Z"
+    },
+    {
+      "estate_id": "6971eb9e3e8a4385e6bc2ba8",
+      "category": "게스트하우스",
+      "title": "안식처 세컨하우스로 딱! (가성비)",
+      "introduction": "독채 펜션, 수익형 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1008600,
+      "monthly_rent": 125439,
+      "built_year": "2013-08-16",
+      "area": 899.1,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.771553,
+        "latitude": 33.443402
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:19:26.804Z",
+      "updated_at": "2026-01-22T09:19:26.804Z"
+    },
+    {
+      "estate_id": "6971eeaf3e8a4385e6bc5434",
+      "category": "오피스텔",
+      "title": "★힐링되는 샵★ 만족 보장",
+      "introduction": "오름 트레킹 코스 근처",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1032530,
+      "monthly_rent": 116600,
+      "built_year": "2006-04-24",
+      "area": 1007.3,
+      "floors": 7,
+      "geolocation": {
+        "longitude": 126.33324,
+        "latitude": 33.453448
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:32:31.410Z",
+      "updated_at": "2026-01-22T09:32:31.410Z"
+    },
+    {
+      "estate_id": "6960c9923b912a9455c39826",
+      "category": "상가",
+      "title": "★가성비 주거공간★ 협의 가능",
+      "introduction": "세탁실 분리",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1016630,
+      "monthly_rent": 100700,
+      "built_year": "1993-12-24",
+      "area": 1474.5,
+      "floors": 46,
+      "geolocation": {
+        "longitude": 126.83738,
+        "latitude": 37.527235
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:25:38.735Z",
+      "updated_at": "2026-01-09T09:25:38.735Z"
+    },
+    {
+      "estate_id": "6971e5293e8a4385e6bbd906",
+      "category": "게스트하우스",
+      "title": "★아늑한 홈★ 가격 협의",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1014760,
+      "monthly_rent": 131598,
+      "built_year": "2008-04-28",
+      "area": 1094.9,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.31515,
+        "latitude": 33.461438
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:51:53.583Z",
+      "updated_at": "2026-01-22T08:51:53.583Z"
+    },
+    {
+      "estate_id": "6971f2d33e8a4385e6bc8abc",
+      "category": "오피스텔",
+      "title": "★넉넉한 안식처★ 파격 조건",
+      "introduction": "세컨하우스로 추천",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1001306,
+      "monthly_rent": 118145,
+      "built_year": "1987-07-15",
+      "area": 1060.6,
+      "floors": 22,
+      "geolocation": {
+        "longitude": 126.240717,
+        "latitude": 33.368272
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:50:11.227Z",
+      "updated_at": "2026-01-22T09:50:11.227Z"
+    },
+    {
+      "estate_id": "6960c7753b912a9455c37ada",
+      "category": "상가",
+      "title": "★스마트 신혼집★ 놓치지 마세요!",
+      "introduction": "학교 도보권",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1020305,
+      "monthly_rent": 104375,
+      "built_year": "1988-04-04",
+      "area": 676.2,
+      "floors": 60,
+      "geolocation": {
+        "longitude": 126.883293,
+        "latitude": 37.465701
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:16:37.066Z",
+      "updated_at": "2026-01-09T09:16:37.066Z"
+    },
+    {
+      "estate_id": "6971f0683e8a4385e6bc6aec",
+      "category": "단독주택",
+      "title": "최신식 자취방, 허위 NO",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1004969,
+      "monthly_rent": 121807,
+      "built_year": "2016-01-25",
+      "area": 250.5,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.236214,
+        "latitude": 33.367803
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:39:52.528Z",
+      "updated_at": "2026-01-22T09:39:52.528Z"
+    },
+    {
+      "estate_id": "6971e9793e8a4385e6bc0f59",
+      "category": "게스트하우스",
+      "title": "그린 올레하우스, 즉시 입주",
+      "introduction": "제주 감성 가득한 돌담집",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1021552,
+      "monthly_rent": 105622,
+      "built_year": "1992-07-11",
+      "area": 431.6,
+      "floors": 17,
+      "geolocation": {
+        "longitude": 126.337821,
+        "latitude": 33.418865
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:10:17.545Z",
+      "updated_at": "2026-01-22T09:10:17.545Z"
+    },
+    {
+      "estate_id": "6960c7a03b912a9455c37d3c",
+      "category": "원룸",
+      "title": "넉넉한 존 주차 OK",
+      "introduction": "독서실 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1031462,
+      "monthly_rent": 115533,
+      "built_year": "2013-06-14",
+      "area": 1430.7,
+      "floors": 50,
+      "geolocation": {
+        "longitude": 126.848933,
+        "latitude": 37.492873
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:17:20.696Z",
+      "updated_at": "2026-01-09T09:17:20.696Z"
+    }
+  ]
+}

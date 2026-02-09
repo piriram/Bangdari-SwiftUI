@@ -1,0 +1,49 @@
+{
+  "estate_id": "6938d207cd1a3725c019c8d8",
+  "category": "원룸",
+  "title": "깔끔한 풀옵션 원룸",
+  "introduction": "신축급 컨디션, 즉시 입주!",
+  "reservation_price": 300,
+  "description": "대학생 및 직장인에게 적합한 깔끔한 원룸입니다. 편의점, 카페가 가까우며 조용한 주거환경을 자랑합니다.",
+  "thumbnails": [
+    "/data/estates/estate_13_1765330871397.jpg",
+    "/data/estates/estate_14_1765330871509.jpg",
+    "/data/estates/estate_15_1765330871511.jpg",
+    "/data/estates/estate_16_1765330871531.jpg"
+  ],
+  "deposit": 5000000,
+  "monthly_rent": 450000,
+  "built_year": "2019-08-20",
+  "maintenance_fee": 50000,
+  "area": 19.8,
+  "parking_count": 0,
+  "floors": 4,
+  "options": {
+    "option1": "냉장고",
+    "option2": "세탁기",
+    "option3": "에어컨",
+    "option4": "옷장",
+    "option5": "신발장",
+    "option6": "전자레인지",
+    "option7": "싱크대",
+    "option8": "인덕션"
+  },
+  "geolocation": {
+    "longitude": 126.889557,
+    "latitude": 37.51925
+  },
+  "creator": {
+    "user_id": "6938ceb8cd1a3725c019c8b9",
+    "nick": "핀공인중개사",
+    "introduction": "안녕하세요 :)",
+    "profileImage": "/data/profiles/1765331714972.png"
+  },
+  "like_count": 5,
+  "is_liked": false,
+  "is_reserved": true,
+  "is_safe_estate": true,
+  "is_recommended": false,
+  "comments": [],
+  "created_at": "2025-12-10T01:51:03.257Z",
+  "updated_at": "2026-01-22T19:19:53.411Z"
+}

@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960cbc63b912a9455c3b682",
+      "category": "아파트",
+      "title": "하우스 가격 협의 (역세권)",
+      "introduction": "코너 세대, 채광 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1026640,
+      "monthly_rent": 110711,
+      "built_year": "2021-07-23",
+      "area": 1047,
+      "floors": 36,
+      "geolocation": {
+        "longitude": 126.821459,
+        "latitude": 37.468499
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:35:02.352Z",
+      "updated_at": "2026-01-09T09:35:02.352Z"
+    },
+    {
+      "estate_id": "6971eaea3e8a4385e6bc2251",
+      "category": "단독주택",
+      "title": "★숲속의 복층★ 귀농귀촌 최적",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1016769,
+      "monthly_rent": 100840,
+      "built_year": "1994-12-12",
+      "area": 122.8,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.809234,
+        "latitude": 33.439063
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:16:26.301Z",
+      "updated_at": "2026-01-22T09:16:26.301Z"
+    },
+    {
+      "estate_id": "6971f1073e8a4385e6bc7314",
+      "category": "아파트",
+      "title": "섬마을집 믿고 보세요 (첨단)",
+      "introduction": "제주올레 코스 인접",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1012531,
+      "monthly_rent": 129369,
+      "built_year": "1987-04-28",
+      "area": 357.9,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.295257,
+        "latitude": 33.350903
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:42:31.084Z",
+      "updated_at": "2026-01-22T09:42:31.084Z"
+    },
+    {
+      "estate_id": "6971f23a3e8a4385e6bc82e4",
+      "category": "상가",
+      "title": "넓은 파크, 전입 가능",
+      "introduction": "방 2개, 화장실 2개",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1016461,
+      "monthly_rent": 100532,
+      "built_year": "2008-03-15",
+      "area": 1305.2,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.72823,
+        "latitude": 33.432431
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:47:38.725Z",
+      "updated_at": "2026-01-22T09:47:38.725Z"
+    },
+    {
+      "estate_id": "6971ec0f3e8a4385e6bc3170",
+      "category": "게스트하우스",
+      "title": "펜션 지금 바로! (프라임)",
+      "introduction": "조용하고 쾌적한 제주 시골마을",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1012096,
+      "monthly_rent": 128934,
+      "built_year": "2013-04-16",
+      "area": 1413.5,
+      "floors": 11,
+      "geolocation": {
+        "longitude": 126.237223,
+        "latitude": 33.369509
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:21:19.251Z",
+      "updated_at": "2026-01-22T09:21:19.251Z"
+    },
+    {
+      "estate_id": "6971eae73e8a4385e6bc2229",
+      "category": "원룸",
+      "title": "깔끔한 한라하우스 특별 할인",
+      "introduction": "마당 있는 1층 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1019108,
+      "monthly_rent": 103178,
+      "built_year": "1987-12-08",
+      "area": 970.7,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.815199,
+        "latitude": 33.440328
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:16:23.186Z",
+      "updated_at": "2026-01-22T09:16:23.186Z"
+    },
+    {
+      "estate_id": "6971e5d23e8a4385e6bbe1f4",
+      "category": "원룸",
+      "title": "[전망 좋은] 주거공간 - 후회 없는 선택",
+      "introduction": "반려동물과 함께 살기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1008404,
+      "monthly_rent": 125242,
+      "built_year": "2000-06-06",
+      "area": 702.2,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.299476,
+        "latitude": 33.407169
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:54:42.850Z",
+      "updated_at": "2026-01-22T08:54:42.850Z"
+    },
+    {
+      "estate_id": "6971f0ae3e8a4385e6bc6e8c",
+      "category": "아파트",
+      "title": "[깔끔한] 제주하우스 - 믿고 보세요",
+      "introduction": "빌트인 가전 완비",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1018163,
+      "monthly_rent": 102234,
+      "built_year": "2008-02-02",
+      "area": 25.7,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.294358,
+        "latitude": 33.349286
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:41:02.950Z",
+      "updated_at": "2026-01-22T09:41:02.950Z"
+    },
+    {
+      "estate_id": "6960cba33b912a9455c3b4a2",
+      "category": "상가",
+      "title": "★힐링 하우스★ 믿고 보세요",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1005760,
+      "monthly_rent": 122598,
+      "built_year": "2024-03-19",
+      "area": 1040,
+      "floors": 35,
+      "geolocation": {
+        "longitude": 126.892186,
+        "latitude": 37.490489
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:34:27.485Z",
+      "updated_at": "2026-01-09T09:34:27.485Z"
+    },
+    {
+      "estate_id": "6971e8243e8a4385e6bbfda1",
+      "category": "빌라",
+      "title": "[모던한] 제주하우스 - 월동준비 완료",
+      "introduction": "제주올레 코스 인접",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1004430,
+      "monthly_rent": 121269,
+      "built_year": "1983-04-08",
+      "area": 1202.2,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.778971,
+        "latitude": 33.429487
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:04:36.542Z",
+      "updated_at": "2026-01-22T09:04:36.542Z"
+    }
+  ]
+}

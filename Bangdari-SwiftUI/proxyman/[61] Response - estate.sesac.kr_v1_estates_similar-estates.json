@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960ca823b912a9455c3a51a",
+      "category": "오피스텔",
+      "title": "★역세권 파크★ 만족 보장",
+      "introduction": "분리형 원룸, 독립 공간",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1000522,
+      "monthly_rent": 117360,
+      "built_year": "1985-05-01",
+      "area": 276.6,
+      "floors": 17,
+      "geolocation": {
+        "longitude": 126.868916,
+        "latitude": 37.49956
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:29:38.955Z",
+      "updated_at": "2026-01-09T09:29:38.955Z"
+    },
+    {
+      "estate_id": "6960cf583b912a9455c3e987",
+      "category": "원룸",
+      "title": "품격있는 플레이스, 파격 조건",
+      "introduction": "조용하고 쾌적한 환경",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1025967,
+      "monthly_rent": 110037,
+      "built_year": "1992-03-23",
+      "area": 374.7,
+      "floors": 22,
+      "geolocation": {
+        "longitude": 126.856425,
+        "latitude": 37.524263
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:50:16.243Z",
+      "updated_at": "2026-01-09T09:50:16.243Z"
+    },
+    {
+      "estate_id": "6971f0a03e8a4385e6bc6dcc",
+      "category": "오피스텔",
+      "title": "[가성비] 하우스 - 사업자 등록 가능",
+      "introduction": "비자림 숲 인접",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1008978,
+      "monthly_rent": 125817,
+      "built_year": "2023-08-24",
+      "area": 1277.5,
+      "floors": 14,
+      "geolocation": {
+        "longitude": 126.759477,
+        "latitude": 33.414371
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:40:48.362Z",
+      "updated_at": "2026-01-22T09:40:48.362Z"
+    },
+    {
+      "estate_id": "6971edf63e8a4385e6bc4a80",
+      "category": "펜션",
+      "title": "품격있는 둥지 실매물",
+      "introduction": "관리비 저렴, 실속형 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1004839,
+      "monthly_rent": 121678,
+      "built_year": "2024-04-16",
+      "area": 120.5,
+      "floors": 15,
+      "geolocation": {
+        "longitude": 126.295269,
+        "latitude": 33.408406
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:29:26.355Z",
+      "updated_at": "2026-01-22T09:29:26.355Z"
+    },
+    {
+      "estate_id": "6971e6ea3e8a4385e6bbf0da",
+      "category": "오피스텔",
+      "title": "생활공간 현장 방문 환영 (첨단)",
+      "introduction": "숲속의 힐링 하우스",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1017570,
+      "monthly_rent": 101641,
+      "built_year": "2013-05-09",
+      "area": 923.7,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.295592,
+        "latitude": 33.35183
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:59:22.915Z",
+      "updated_at": "2026-01-22T08:59:22.915Z"
+    },
+    {
+      "estate_id": "6960ca6d3b912a9455c3a3f2",
+      "category": "원룸",
+      "title": "포근한 신축매물, 대박 조건",
+      "introduction": "건조기 설치 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1023352,
+      "monthly_rent": 107422,
+      "built_year": "1999-04-12",
+      "area": 741.3,
+      "floors": 47,
+      "geolocation": {
+        "longitude": 126.863271,
+        "latitude": 37.508766
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:29:17.445Z",
+      "updated_at": "2026-01-09T09:29:17.445Z"
+    },
+    {
+      "estate_id": "6960ceef3b912a9455c3e391",
+      "category": "원룸",
+      "title": "리모델링 뷰, 검증 완료",
+      "introduction": "인테리어 맞춤 가능",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1029092,
+      "monthly_rent": 113162,
+      "built_year": "1989-09-09",
+      "area": 517.9,
+      "floors": 28,
+      "geolocation": {
+        "longitude": 126.892272,
+        "latitude": 37.483729
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:48:31.722Z",
+      "updated_at": "2026-01-09T09:48:31.722Z"
+    },
+    {
+      "estate_id": "6971e58c3e8a4385e6bbde26",
+      "category": "게스트하우스",
+      "title": "제주스러운 포레스트 협의 가능",
+      "introduction": "합리적인 가격, 좋은 조건",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1012048,
+      "monthly_rent": 128886,
+      "built_year": "2010-04-28",
+      "area": 1364,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.32646,
+        "latitude": 33.425021
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:53:32.862Z",
+      "updated_at": "2026-01-22T08:53:32.862Z"
+    },
+    {
+      "estate_id": "6971edcd3e8a4385e6bc4860",
+      "category": "오피스텔",
+      "title": "숲속의 공간 놓치지 마세요!",
+      "introduction": "귤밭이 보이는 전원주택",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1015698,
+      "monthly_rent": 132536,
+      "built_year": "1981-12-04",
+      "area": 542.2,
+      "floors": 14,
+      "geolocation": {
+        "longitude": 126.293474,
+        "latitude": 33.348209
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:28:45.046Z",
+      "updated_at": "2026-01-22T09:28:45.046Z"
+    },
+    {
+      "estate_id": "6971e68a3e8a4385e6bbebe2",
+      "category": "원룸",
+      "title": "넉넉한 펜션 바로 입주",
+      "introduction": "전망 좋음, 층고 높음",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1015292,
+      "monthly_rent": 132130,
+      "built_year": "1989-07-19",
+      "area": 136,
+      "floors": 28,
+      "geolocation": {
+        "longitude": 126.805366,
+        "latitude": 33.45486
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:57:46.361Z",
+      "updated_at": "2026-01-22T08:57:46.361Z"
+    }
+  ]
+}

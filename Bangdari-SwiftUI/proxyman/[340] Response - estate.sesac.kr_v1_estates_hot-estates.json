@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960cd3e3b912a9455c3cb40",
+      "category": "상가",
+      "title": "주거공간 협의 가능 (환한)",
+      "introduction": "분리형 원룸, 독립 공간",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1012590,
+      "monthly_rent": 129429,
+      "built_year": "2001-03-15",
+      "area": 416.2,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.85276,
+        "latitude": 37.484373
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:41:18.370Z",
+      "updated_at": "2026-01-09T09:41:18.370Z"
+    },
+    {
+      "estate_id": "6971f2df3e8a4385e6bc8b64",
+      "category": "빌라",
+      "title": "[넓은] 제주빌라 - 협의 가능",
+      "introduction": "빌트인 가전 완비",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1011322,
+      "monthly_rent": 128161,
+      "built_year": "2012-01-13",
+      "area": 494.2,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.238789,
+        "latitude": 33.366394
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:50:23.984Z",
+      "updated_at": "2026-01-22T09:50:23.984Z"
+    },
+    {
+      "estate_id": "6971f03c3e8a4385e6bc68ac",
+      "category": "빌라",
+      "title": "시원한 자취방, 주차 OK",
+      "introduction": "감귤밭 한가운데 위치",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1009622,
+      "monthly_rent": 126460,
+      "built_year": "2022-10-06",
+      "area": 429.6,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.237963,
+        "latitude": 33.365058
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:39:08.693Z",
+      "updated_at": "2026-01-22T09:39:08.693Z"
+    },
+    {
+      "estate_id": "6960ccfb3b912a9455c3c786",
+      "category": "상가",
+      "title": "프리미엄 안식처 협의 가능",
+      "introduction": "옥상 사용 가능",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1029038,
+      "monthly_rent": 113108,
+      "built_year": "1980-12-04",
+      "area": 462.2,
+      "floors": 33,
+      "geolocation": {
+        "longitude": 126.866525,
+        "latitude": 37.459762
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:40:11.425Z",
+      "updated_at": "2026-01-09T09:40:11.425Z"
+    },
+    {
+      "estate_id": "6960c97c3b912a9455c396ee",
+      "category": "오피스텔",
+      "title": "★VIP 코너★ 위치 최상",
+      "introduction": "무인택배함 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1024980,
+      "monthly_rent": 109050,
+      "built_year": "2017-08-04",
+      "area": 878.7,
+      "floors": 56,
+      "geolocation": {
+        "longitude": 126.860369,
+        "latitude": 37.471159
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:25:16.144Z",
+      "updated_at": "2026-01-09T09:25:16.144Z"
+    },
+    {
+      "estate_id": "6960c6b63b912a9455c37057",
+      "category": "오피스텔",
+      "title": "★특가 하우스★ 조건 좋아요",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1028200,
+      "monthly_rent": 112270,
+      "built_year": "2016-01-05",
+      "area": 1116.2,
+      "floors": 35,
+      "geolocation": {
+        "longitude": 126.812921,
+        "latitude": 37.468262
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:13:26.560Z",
+      "updated_at": "2026-01-09T09:13:26.560Z"
+    },
+    {
+      "estate_id": "6971e5f33e8a4385e6bbe3d4",
+      "category": "상가",
+      "title": "★품격있는 테라스★ 귀농귀촌 최적",
+      "introduction": "귀농귀촌 최적의 매물",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1024125,
+      "monthly_rent": 108195,
+      "built_year": "1990-03-07",
+      "area": 23.8,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.328129,
+        "latitude": 33.418996
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:55:15.290Z",
+      "updated_at": "2026-01-22T08:55:15.290Z"
+    },
+    {
+      "estate_id": "6960c85c3b912a9455c38766",
+      "category": "빌라",
+      "title": "[친환경] 가든 - 허위 NO",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1023374,
+      "monthly_rent": 107444,
+      "built_year": "2021-03-11",
+      "area": 763.1,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.86879,
+        "latitude": 37.501514
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:20:28.016Z",
+      "updated_at": "2026-01-09T09:20:28.016Z"
+    },
+    {
+      "estate_id": "6971ed773e8a4385e6bc4400",
+      "category": "펜션",
+      "title": "효율적인 제주빌라 교통 편리",
+      "introduction": "제주 전통 돌담이 있는 집",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1031423,
+      "monthly_rent": 115493,
+      "built_year": "2019-08-04",
+      "area": 1391.4,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.809776,
+        "latitude": 33.440518
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:27:19.924Z",
+      "updated_at": "2026-01-22T09:27:19.924Z"
+    },
+    {
+      "estate_id": "6960ca553b912a9455c3a2aa",
+      "category": "빌라",
+      "title": "[스마트] 추천매물 - 여기가 진국",
+      "introduction": "반려동물 협의 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1022674,
+      "monthly_rent": 106744,
+      "built_year": "2010-08-12",
+      "area": 63.8,
+      "floors": 29,
+      "geolocation": {
+        "longitude": 126.83668,
+        "latitude": 37.509925
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:28:53.610Z",
+      "updated_at": "2026-01-09T09:28:53.610Z"
+    }
+  ]
+}

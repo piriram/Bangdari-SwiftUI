@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960cdd23b912a9455c3d37e",
+      "category": "아파트",
+      "title": "스토어 특별 할인 (편리한)",
+      "introduction": "학교 도보권",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1031046,
+      "monthly_rent": 115116,
+      "built_year": "2010-12-08",
+      "area": 431.5,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.840535,
+        "latitude": 37.505321
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:43:46.867Z",
+      "updated_at": "2026-01-09T09:43:46.867Z"
+    },
+    {
+      "estate_id": "6960ca883b912a9455c3a562",
+      "category": "빌라",
+      "title": "전망 좋은 홈, 만족 보장",
+      "introduction": "넓은 공간, 수납공간 충분",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1017921,
+      "monthly_rent": 101992,
+      "built_year": "1996-01-01",
+      "area": 1274,
+      "floors": 17,
+      "geolocation": {
+        "longitude": 126.864375,
+        "latitude": 37.46225
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:29:44.152Z",
+      "updated_at": "2026-01-09T09:29:44.152Z"
+    },
+    {
+      "estate_id": "6960ccbc3b912a9455c3c3e0",
+      "category": "아파트",
+      "title": "생활공간 문의 환영 (전망 좋은)",
+      "introduction": "세탁실 분리",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019271,
+      "monthly_rent": 103341,
+      "built_year": "2011-12-12",
+      "area": 1133,
+      "floors": 46,
+      "geolocation": {
+        "longitude": 126.824854,
+        "latitude": 37.458573
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:39:08.607Z",
+      "updated_at": "2026-01-09T09:39:08.607Z"
+    },
+    {
+      "estate_id": "6960cadf3b912a9455c3aa1a",
+      "category": "빌라",
+      "title": "자취방 여기가 진국 (세련된)",
+      "introduction": "바닥 난방, 겨울에도 따뜻",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1011586,
+      "monthly_rent": 128424,
+      "built_year": "2008-10-10",
+      "area": 903.2,
+      "floors": 41,
+      "geolocation": {
+        "longitude": 126.852584,
+        "latitude": 37.496996
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:31:11.757Z",
+      "updated_at": "2026-01-09T09:31:11.757Z"
+    },
+    {
+      "estate_id": "6960cf273b912a9455c3e6b1",
+      "category": "상가",
+      "title": "[햇살 가득] 코너 - 이 가격 실화?",
+      "introduction": "코너 세대, 채광 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1005220,
+      "monthly_rent": 122059,
+      "built_year": "1991-04-20",
+      "area": 501.8,
+      "floors": 36,
+      "geolocation": {
+        "longitude": 126.811481,
+        "latitude": 37.470252
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:49:27.393Z",
+      "updated_at": "2026-01-09T09:49:27.393Z"
+    },
+    {
+      "estate_id": "6960cf103b912a9455c3e569",
+      "category": "오피스텔",
+      "title": "VIP 레지던스 인증 매물",
+      "introduction": "독서실 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1014962,
+      "monthly_rent": 131801,
+      "built_year": "1981-07-23",
+      "area": 1297.4,
+      "floors": 58,
+      "geolocation": {
+        "longitude": 126.811683,
+        "latitude": 37.499252
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:49:04.857Z",
+      "updated_at": "2026-01-09T09:49:04.857Z"
+    },
+    {
+      "estate_id": "6971ea143e8a4385e6bc1759",
+      "category": "단독주택",
+      "title": "모던한 신혼집 여기가 진국",
+      "introduction": "제주 전통 돌담이 있는 집",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1024473,
+      "monthly_rent": 108543,
+      "built_year": "2015-06-18",
+      "area": 371.1,
+      "floors": 28,
+      "geolocation": {
+        "longitude": 126.239089,
+        "latitude": 33.365435
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:12:52.913Z",
+      "updated_at": "2026-01-22T09:12:52.913Z"
+    },
+    {
+      "estate_id": "6971f2fc3e8a4385e6bc8cdc",
+      "category": "원룸",
+      "title": "★합리적인 오피스★ 문의 환영",
+      "introduction": "오름 트레킹 코스 근처",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1020780,
+      "monthly_rent": 104850,
+      "built_year": "2002-10-06",
+      "area": 1150.9,
+      "floors": 25,
+      "geolocation": {
+        "longitude": 126.209775,
+        "latitude": 33.337615
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:50:52.556Z",
+      "updated_at": "2026-01-22T09:50:52.556Z"
+    },
+    {
+      "estate_id": "6971e6383e8a4385e6bbe7aa",
+      "category": "원룸",
+      "title": "★알찬 힐★ 허위 NO",
+      "introduction": "코너 세대, 채광 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1027460,
+      "monthly_rent": 111530,
+      "built_year": "2013-07-03",
+      "area": 376.7,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.285195,
+        "latitude": 33.37315
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:56:24.748Z",
+      "updated_at": "2026-01-22T08:56:24.748Z"
+    },
+    {
+      "estate_id": "6971f21e3e8a4385e6bc816c",
+      "category": "빌라",
+      "title": "★편리한 자취방★ 교통 편리",
+      "introduction": "오름 트레킹 코스 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1012630,
+      "monthly_rent": 129468,
+      "built_year": "1994-11-15",
+      "area": 455,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.292837,
+        "latitude": 33.349761
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:47:10.088Z",
+      "updated_at": "2026-01-22T09:47:10.088Z"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "estate_id": "6971ed463e8a4385e6bc4178",
+  "category": "오피스텔",
+  "title": "★모던한 가든★ 위치 최상",
+  "introduction": "카페거리 근처, 감성 충만",
+  "reservation_price": 351,
+  "description": "제주시 구좌읍 덕천리 별오름! 버스 정류장이 가까운 제주형 오피스텔으로 힐링 라이프를 시작하세요.",
+  "thumbnails": [
+    "/data/estates/estate_112_1767944326171.png"
+  ],
+  "deposit": 1007770,
+  "monthly_rent": 124608,
+  "built_year": "2010-12-20",
+  "maintenance_fee": 26425,
+  "area": 69.9,
+  "parking_count": 2,
+  "floors": 5,
+  "options": {
+    "option1": "식기세척기",
+    "option2": "인터넷",
+    "option3": "공기청정기",
+    "option4": "오븐",
+    "option5": "냉장고",
+    "option6": "선풍기",
+    "option7": "신발장"
+  },
+  "geolocation": {
+    "longitude": 126.806744,
+    "latitude": 33.455998
+  },
+  "creator": {
+    "user_id": "6938ceb8cd1a3725c019c8b9",
+    "nick": "핀공인중개사",
+    "introduction": "안녕하세요 :)",
+    "profileImage": "/data/profiles/1765331714972.png"
+  },
+  "like_count": 1,
+  "is_liked": true,
+  "is_reserved": false,
+  "is_safe_estate": true,
+  "is_recommended": false,
+  "comments": [],
+  "created_at": "2026-01-22T09:26:30.677Z",
+  "updated_at": "2026-02-08T05:38:21.763Z"
+}

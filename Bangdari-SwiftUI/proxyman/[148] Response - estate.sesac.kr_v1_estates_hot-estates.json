@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971ee993e8a4385e6bc5314",
+      "category": "아파트",
+      "title": "[편리한] 공간 - 가격 협의",
+      "introduction": "귤밭이 보이는 전원주택",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1001731,
+      "monthly_rent": 118569,
+      "built_year": "1997-07-03",
+      "area": 1484.6,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.808014,
+        "latitude": 33.456126
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:32:09.628Z",
+      "updated_at": "2026-01-22T09:32:09.628Z"
+    },
+    {
+      "estate_id": "6971e8b43e8a4385e6bc0521",
+      "category": "단독주택",
+      "title": "섬마을집 검증 완료 (최신식)",
+      "introduction": "조용한 마을, 힐링하기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1018641,
+      "monthly_rent": 102711,
+      "built_year": "2025-02-22",
+      "area": 503.2,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.256975,
+        "latitude": 33.381674
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:07:00.300Z",
+      "updated_at": "2026-01-22T09:07:00.300Z"
+    },
+    {
+      "estate_id": "6960cf373b912a9455c3e799",
+      "category": "상가",
+      "title": "[웰빙] 안식처 - 문의 환영",
+      "introduction": "CCTV 24시간 운영",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1000910,
+      "monthly_rent": 117749,
+      "built_year": "2005-09-05",
+      "area": 664.2,
+      "floors": 46,
+      "geolocation": {
+        "longitude": 126.847691,
+        "latitude": 37.473734
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:49:43.688Z",
+      "updated_at": "2026-01-09T09:49:43.688Z"
+    },
+    {
+      "estate_id": "6960ce533b912a9455c3daa4",
+      "category": "오피스텔",
+      "title": "★정갈한 포레스트★ 직접 확인",
+      "introduction": "가스레인지 사용 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1009885,
+      "monthly_rent": 126723,
+      "built_year": "2010-12-08",
+      "area": 693.5,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.855644,
+        "latitude": 37.508759
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:45:55.032Z",
+      "updated_at": "2026-01-09T09:45:55.032Z"
+    },
+    {
+      "estate_id": "6971eee23e8a4385e6bc56d4",
+      "category": "상가",
+      "title": "포근한 뷰, 문의 환영",
+      "introduction": "테라스 있음, 오션뷰 테라스",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1026756,
+      "monthly_rent": 110827,
+      "built_year": "1999-11-19",
+      "area": 1163.7,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.729156,
+        "latitude": 33.434662
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:33:22.314Z",
+      "updated_at": "2026-01-22T09:33:22.314Z"
+    },
+    {
+      "estate_id": "6971eca03e8a4385e6bc38f0",
+      "category": "펜션",
+      "title": "★웰빙 공간★ 사업자 등록 가능",
+      "introduction": "복층 구조로 넓게 사용",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1031255,
+      "monthly_rent": 115325,
+      "built_year": "1990-07-27",
+      "area": 1223.1,
+      "floors": 22,
+      "geolocation": {
+        "longitude": 126.248966,
+        "latitude": 33.327564
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:23:44.807Z",
+      "updated_at": "2026-01-22T09:23:44.807Z"
+    },
+    {
+      "estate_id": "6971ed723e8a4385e6bc43b8",
+      "category": "게스트하우스",
+      "title": "알찬 둥지, 제주살이 시작!",
+      "introduction": "인테리어 맞춤 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1008552,
+      "monthly_rent": 125390,
+      "built_year": "2011-09-01",
+      "area": 851.6,
+      "floors": 8,
+      "geolocation": {
+        "longitude": 126.808797,
+        "latitude": 33.439101
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:27:14.488Z",
+      "updated_at": "2026-01-22T09:27:14.488Z"
+    },
+    {
+      "estate_id": "6971e65b3e8a4385e6bbe97a",
+      "category": "아파트",
+      "title": "환한 귤밭집 후회 없는 선택",
+      "introduction": "제주 전통 돌담이 있는 집",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1005523,
+      "monthly_rent": 122361,
+      "built_year": "2018-10-22",
+      "area": 804.4,
+      "floors": 8,
+      "geolocation": {
+        "longitude": 126.780472,
+        "latitude": 33.427777
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:56:59.677Z",
+      "updated_at": "2026-01-22T08:56:59.677Z"
+    },
+    {
+      "estate_id": "6971eaf33e8a4385e6bc22c9",
+      "category": "빌라",
+      "title": "마운틴뷰 포레스트 귀농귀촌 최적",
+      "introduction": "신축 건물, 깨끗한 인테리어",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1020038,
+      "monthly_rent": 104108,
+      "built_year": "1996-10-06",
+      "area": 408.1,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.80925,
+        "latitude": 33.44371
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:16:35.374Z",
+      "updated_at": "2026-01-22T09:16:35.374Z"
+    },
+    {
+      "estate_id": "6960cc793b912a9455c3c022",
+      "category": "빌라",
+      "title": "힐링 투룸 급하게 내놓습니다",
+      "introduction": "대형마트 5분 거리",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1003260,
+      "monthly_rent": 120098,
+      "built_year": "2008-09-25",
+      "area": 32.4,
+      "floors": 55,
+      "geolocation": {
+        "longitude": 126.876324,
+        "latitude": 37.512866
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:38:01.833Z",
+      "updated_at": "2026-01-09T09:38:01.833Z"
+    }
+  ]
+}

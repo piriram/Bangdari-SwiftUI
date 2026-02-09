@@ -1,0 +1,14 @@
+{
+  "chat_id": "698821de3e8a4385e6c005cf",
+  "room_id": "697ab0223e8a4385e6be8171",
+  "content": "뭐하시나요?",
+  "createdAt": "2026-02-08T05:40:46.247Z",
+  "updatedAt": "2026-02-08T05:40:46.247Z",
+  "sender": {
+    "user_id": "6970c9913e8a4385e6bbafc7",
+    "nick": "이응",
+    "introduction": "자기소개",
+    "profileImage": "/data/profiles/1770528607777.jpg"
+  },
+  "files": []
+}

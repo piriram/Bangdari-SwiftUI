@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e5463e8a4385e6bbda86",
+      "category": "게스트하우스",
+      "title": "친환경 추천매물, 조건 좋아요",
+      "introduction": "제주 감성 가득한 돌담집",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1024952,
+      "monthly_rent": 109022,
+      "built_year": "1988-12-28",
+      "area": 850.6,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.299187,
+        "latitude": 33.40503
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:52:22.659Z",
+      "updated_at": "2026-01-22T08:52:22.659Z"
+    },
+    {
+      "estate_id": "6971f2cf3e8a4385e6bc8a8c",
+      "category": "아파트",
+      "title": "럭셔리 제주레지던스, 교통 편리",
+      "introduction": "방 2개, 화장실 2개",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1032411,
+      "monthly_rent": 116482,
+      "built_year": "1980-10-06",
+      "area": 888.7,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.809036,
+        "latitude": 33.440977
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:50:07.560Z",
+      "updated_at": "2026-01-22T09:50:07.560Z"
+    },
+    {
+      "estate_id": "6971efa73e8a4385e6bc6104",
+      "category": "아파트",
+      "title": "신축 올레하우스 지금 바로!",
+      "introduction": "합리적인 가격, 좋은 조건",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1005947,
+      "monthly_rent": 122786,
+      "built_year": "1982-04-16",
+      "area": 1228.7,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.314507,
+        "latitude": 33.46248
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:36:39.805Z",
+      "updated_at": "2026-01-22T09:36:39.805Z"
+    },
+    {
+      "estate_id": "6971f1b13e8a4385e6bc7bdc",
+      "category": "상가",
+      "title": "[해변가] 스토어 - 반려동물 OK",
+      "introduction": "이중창 설치, 방음 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1005365,
+      "monthly_rent": 122204,
+      "built_year": "1998-09-01",
+      "area": 646.6,
+      "floors": 1,
+      "geolocation": {
+        "longitude": 126.237161,
+        "latitude": 33.363693
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:45:21.977Z",
+      "updated_at": "2026-01-22T09:45:21.977Z"
+    },
+    {
+      "estate_id": "6960ca753b912a9455c3a45a",
+      "category": "원룸",
+      "title": "품격있는 스카이, 바로 입주",
+      "introduction": "중앙 난방, 따뜻함",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1001449,
+      "monthly_rent": 118287,
+      "built_year": "1992-06-22",
+      "area": 1203.5,
+      "floors": 45,
+      "geolocation": {
+        "longitude": 126.822676,
+        "latitude": 37.511193
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:29:25.013Z",
+      "updated_at": "2026-01-09T09:29:25.013Z"
+    },
+    {
+      "estate_id": "6971ec343e8a4385e6bc3360",
+      "category": "게스트하우스",
+      "title": "특가 추천매물, 강력 추천",
+      "introduction": "드레스룸 있음",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1019312,
+      "monthly_rent": 103382,
+      "built_year": "2007-02-22",
+      "area": 1174.1,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.314375,
+        "latitude": 33.464476
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:21:56.813Z",
+      "updated_at": "2026-01-22T09:21:56.813Z"
+    },
+    {
+      "estate_id": "6971e8453e8a4385e6bbff51",
+      "category": "펜션",
+      "title": "[스마트] 신혼집 - 월동준비 완료",
+      "introduction": "올레길 근처, 산책하기 좋은 위치",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1023439,
+      "monthly_rent": 107509,
+      "built_year": "1993-06-18",
+      "area": 827.2,
+      "floors": 14,
+      "geolocation": {
+        "longitude": 126.778382,
+        "latitude": 33.429386
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:05:09.263Z",
+      "updated_at": "2026-01-22T09:05:09.263Z"
+    },
+    {
+      "estate_id": "6960c6ba3b912a9455c37087",
+      "category": "아파트",
+      "title": "효율적인 둥지, 즉시 입주",
+      "introduction": "개별 난방, 관리비 절약",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1028877,
+      "monthly_rent": 112947,
+      "built_year": "2003-12-12",
+      "area": 302.9,
+      "floors": 52,
+      "geolocation": {
+        "longitude": 126.837709,
+        "latitude": 37.45664
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:13:30.071Z",
+      "updated_at": "2026-01-09T09:13:30.071Z"
+    },
+    {
+      "estate_id": "6971f3253e8a4385e6bc8efc",
+      "category": "빌라",
+      "title": "최신식 스튜디오 한정 매물",
+      "introduction": "신축 건물, 깨끗한 인테리어",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019838,
+      "monthly_rent": 103908,
+      "built_year": "1980-06-22",
+      "area": 209.1,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.280178,
+        "latitude": 33.369882
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:51:33.950Z",
+      "updated_at": "2026-01-22T09:51:33.950Z"
+    },
+    {
+      "estate_id": "6971ef743e8a4385e6bc5e5c",
+      "category": "게스트하우스",
+      "title": "세련된 레지던스, 반려동물 OK",
+      "introduction": "감귤밭 한가운데 위치",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1020072,
+      "monthly_rent": 104142,
+      "built_year": "1984-05-13",
+      "area": 443.4,
+      "floors": 7,
+      "geolocation": {
+        "longitude": 126.779729,
+        "latitude": 33.429701
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:35:48.280Z",
+      "updated_at": "2026-01-22T09:35:48.280Z"
+    }
+  ]
+}

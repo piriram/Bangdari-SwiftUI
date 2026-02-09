@@ -8,7 +8,7 @@ enum AppEnvironment {
 
     static var current: AppEnvironment {
         #if DEBUG
-        return .live  // 개발 중에는 live, 서버 종료 후 .mock으로 변경
+        return .mock  // 🔄 .mock으로 변경하면 목업 데이터 사용
         #else
         return .live
         #endif

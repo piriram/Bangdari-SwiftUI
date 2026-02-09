@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e9e43e8a4385e6bc14e1",
+      "category": "원룸",
+      "title": "★알찬 파크★ 반려동물 OK",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1007860,
+      "monthly_rent": 124698,
+      "built_year": "2008-04-08",
+      "area": 159.9,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.282433,
+        "latitude": 33.369668
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:12:04.929Z",
+      "updated_at": "2026-01-22T09:12:04.929Z"
+    },
+    {
+      "estate_id": "6960cb7f3b912a9455c3b2b2",
+      "category": "빌라",
+      "title": "힐 조건 최고 (햇살 가득)",
+      "introduction": "분리형 원룸, 독립 공간",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1016371,
+      "monthly_rent": 100441,
+      "built_year": "2009-06-26",
+      "area": 1215.9,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.813468,
+        "latitude": 37.475793
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:33:51.516Z",
+      "updated_at": "2026-01-09T09:33:51.516Z"
+    },
+    {
+      "estate_id": "6971f1ae3e8a4385e6bc7bac",
+      "category": "단독주택",
+      "title": "전망 좋은 테라스, 월동준비 완료",
+      "introduction": "제주 감성 가득한 돌담집",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1029201,
+      "monthly_rent": 113272,
+      "built_year": "2006-06-06",
+      "area": 626.4,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.383187,
+        "latitude": 33.397971
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:45:18.264Z",
+      "updated_at": "2026-01-22T09:45:18.264Z"
+    },
+    {
+      "estate_id": "6971e83d3e8a4385e6bbfee9",
+      "category": "상가",
+      "title": "★밝은 주거공간★ 만족 보장",
+      "introduction": "이중창 설치, 방음 우수",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1016961,
+      "monthly_rent": 101031,
+      "built_year": "2002-08-12",
+      "area": 314.8,
+      "floors": 17,
+      "geolocation": {
+        "longitude": 126.330957,
+        "latitude": 33.423082
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:05:01.347Z",
+      "updated_at": "2026-01-22T09:05:01.347Z"
+    },
+    {
+      "estate_id": "6960d1453b912a9455c40571",
+      "category": "원룸",
+      "title": "아늑한 신축매물 놓치지 마세요!",
+      "introduction": "산책로 인접",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1002664,
+      "monthly_rent": 119503,
+      "built_year": "2011-12-04",
+      "area": 927.3,
+      "floors": 60,
+      "geolocation": {
+        "longitude": 126.871216,
+        "latitude": 37.475694
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:58:29.974Z",
+      "updated_at": "2026-01-09T09:58:29.974Z"
+    },
+    {
+      "estate_id": "6971f0683e8a4385e6bc6aec",
+      "category": "단독주택",
+      "title": "최신식 자취방, 허위 NO",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1004969,
+      "monthly_rent": 121807,
+      "built_year": "2016-01-25",
+      "area": 250.5,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.236214,
+        "latitude": 33.367803
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:39:52.528Z",
+      "updated_at": "2026-01-22T09:39:52.528Z"
+    },
+    {
+      "estate_id": "6960c8e03b912a9455c38e8e",
+      "category": "빌라",
+      "title": "경제적인 생활공간, 문의 환영",
+      "introduction": "건조기 설치 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1016751,
+      "monthly_rent": 100822,
+      "built_year": "2022-02-10",
+      "area": 104.8,
+      "floors": 47,
+      "geolocation": {
+        "longitude": 126.813913,
+        "latitude": 37.473479
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:22:40.710Z",
+      "updated_at": "2026-01-09T09:22:40.710Z"
+    },
+    {
+      "estate_id": "6971e6f23e8a4385e6bbf13a",
+      "category": "게스트하우스",
+      "title": "[귤밭뷰] 사무실 - 실매물",
+      "introduction": "반려동물과 함께 살기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1020104,
+      "monthly_rent": 104174,
+      "built_year": "2016-07-27",
+      "area": 475.6,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.308491,
+        "latitude": 33.461774
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:59:30.229Z",
+      "updated_at": "2026-01-22T08:59:30.229Z"
+    },
+    {
+      "estate_id": "6960ca013b912a9455c39e1e",
+      "category": "아파트",
+      "title": "그린 타운 현장 방문 환영",
+      "introduction": "신발장 대용량",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019208,
+      "monthly_rent": 103278,
+      "built_year": "1995-04-12",
+      "area": 1070.9,
+      "floors": 44,
+      "geolocation": {
+        "longitude": 126.892349,
+        "latitude": 37.482926
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:27:29.560Z",
+      "updated_at": "2026-01-09T09:27:29.560Z"
+    },
+    {
+      "estate_id": "6971e54d3e8a4385e6bbdae6",
+      "category": "빌라",
+      "title": "★올레길근처 급매물★ 한정 매물",
+      "introduction": "오름 트레킹 코스 근처",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1008830,
+      "monthly_rent": 125668,
+      "built_year": "2012-05-09",
+      "area": 1129.9,
+      "floors": 15,
+      "geolocation": {
+        "longitude": 126.239585,
+        "latitude": 33.364587
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:52:29.949Z",
+      "updated_at": "2026-01-22T08:52:29.949Z"
+    }
+  ]
+}

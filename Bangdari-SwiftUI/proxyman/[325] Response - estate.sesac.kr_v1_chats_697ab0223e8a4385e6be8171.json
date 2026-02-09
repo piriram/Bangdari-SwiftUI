@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "chat_id": "697aba6b3e8a4385e6be8215",
+      "room_id": "697ab0223e8a4385e6be8171",
+      "content": "이것좀보세요",
+      "createdAt": "2026-01-29T01:39:55.370Z",
+      "updatedAt": "2026-01-29T01:39:55.370Z",
+      "sender": {
+        "user_id": "6970c9913e8a4385e6bbafc7",
+        "nick": "이응",
+        "introduction": "자기소개",
+        "profileImage": "/data/profiles/1770528607777.jpg"
+      },
+      "files": [
+        "/data/chats/file0_1769650795311.jpg"
+      ]
+    }
+  ]
+}

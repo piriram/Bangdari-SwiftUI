@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e6de3e8a4385e6bbf03a",
+      "category": "단독주택",
+      "title": "자연속 한라하우스, 제주살이 시작!",
+      "introduction": "한라산 조망, 자연과 함께하는 생활",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1000769,
+      "monthly_rent": 117607,
+      "built_year": "2001-02-06",
+      "area": 523.6,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.357608,
+        "latitude": 33.373791
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:59:10.723Z",
+      "updated_at": "2026-01-22T08:59:10.723Z"
+    },
+    {
+      "estate_id": "6971ea033e8a4385e6bc1679",
+      "category": "오피스텔",
+      "title": "실속형 파크, 여기가 진국",
+      "introduction": "인테리어 맞춤 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1016602,
+      "monthly_rent": 100672,
+      "built_year": "2011-10-18",
+      "area": 1446.1,
+      "floors": 18,
+      "geolocation": {
+        "longitude": 126.329336,
+        "latitude": 33.416547
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:12:35.838Z",
+      "updated_at": "2026-01-22T09:12:35.838Z"
+    },
+    {
+      "estate_id": "6971f3643e8a4385e6bc9234",
+      "category": "원룸",
+      "title": "플레이스 주차 OK (실속형)",
+      "introduction": "조용하고 쾌적한 제주 시골마을",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1018996,
+      "monthly_rent": 103066,
+      "built_year": "2013-08-20",
+      "area": 858.7,
+      "floors": 11,
+      "geolocation": {
+        "longitude": 126.300338,
+        "latitude": 33.409175
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:52:36.566Z",
+      "updated_at": "2026-01-22T09:52:36.566Z"
+    },
+    {
+      "estate_id": "6971eb6b3e8a4385e6bc28f9",
+      "category": "게스트하우스",
+      "title": "핫플 급매! (마운틴뷰)",
+      "introduction": "한라산 조망, 자연과 함께하는 생활",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1029936,
+      "monthly_rent": 114006,
+      "built_year": "2005-02-10",
+      "area": 1361.5,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.281644,
+        "latitude": 33.367642
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:18:35.773Z",
+      "updated_at": "2026-01-22T09:18:35.773Z"
+    },
+    {
+      "estate_id": "6971e8303e8a4385e6bbfe39",
+      "category": "원룸",
+      "title": "리모델링 주거공간 위치 최상",
+      "introduction": "월정리 해변 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1008028,
+      "monthly_rent": 124866,
+      "built_year": "1992-05-05",
+      "area": 327.7,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.220102,
+        "latitude": 33.361614
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:04:48.071Z",
+      "updated_at": "2026-01-22T09:04:48.071Z"
+    },
+    {
+      "estate_id": "6971f3433e8a4385e6bc907c",
+      "category": "상가",
+      "title": "풀옵션 한라하우스 후회 없는 선택",
+      "introduction": "곽지해수욕장 도보권",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1008533,
+      "monthly_rent": 125371,
+      "built_year": "1991-04-12",
+      "area": 831.2,
+      "floors": 18,
+      "geolocation": {
+        "longitude": 126.240742,
+        "latitude": 33.370742
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:52:03.198Z",
+      "updated_at": "2026-01-22T09:52:03.198Z"
+    },
+    {
+      "estate_id": "6971f1943e8a4385e6bc7a5c",
+      "category": "게스트하우스",
+      "title": "숲속의 귤밭집, 전입 가능",
+      "introduction": "드레스룸 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1014312,
+      "monthly_rent": 131150,
+      "built_year": "2021-07-07",
+      "area": 647,
+      "floors": 7,
+      "geolocation": {
+        "longitude": 126.294074,
+        "latitude": 33.35001
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:44:52.810Z",
+      "updated_at": "2026-01-22T09:44:52.810Z"
+    },
+    {
+      "estate_id": "6960c76f3b912a9455c37a92",
+      "category": "빌라",
+      "title": "[스마트] 추천매물 - 여기가 진국",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1002906,
+      "monthly_rent": 119744,
+      "built_year": "2022-04-12",
+      "area": 1169.5,
+      "floors": 1,
+      "geolocation": {
+        "longitude": 126.819631,
+        "latitude": 37.516612
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:16:31.930Z",
+      "updated_at": "2026-01-09T09:16:31.930Z"
+    },
+    {
+      "estate_id": "6971ea3c3e8a4385e6bc1961",
+      "category": "게스트하우스",
+      "title": "★럭셔리 돌담집★ 가격 협의",
+      "introduction": "관리비 저렴, 실속형 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1029640,
+      "monthly_rent": 113710,
+      "built_year": "1984-04-08",
+      "area": 1065.9,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.294812,
+        "latitude": 33.453298
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:13:32.354Z",
+      "updated_at": "2026-01-22T09:13:32.354Z"
+    },
+    {
+      "estate_id": "6960d11a3b912a9455c402ff",
+      "category": "상가",
+      "title": "★넓은 포레스트★ 주차 OK",
+      "introduction": "복층 구조로 넓게 사용",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1020215,
+      "monthly_rent": 104285,
+      "built_year": "1990-01-01",
+      "area": 586.3,
+      "floors": 31,
+      "geolocation": {
+        "longitude": 126.842709,
+        "latitude": 37.537476
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:57:46.597Z",
+      "updated_at": "2026-01-09T09:57:46.597Z"
+    }
+  ]
+}

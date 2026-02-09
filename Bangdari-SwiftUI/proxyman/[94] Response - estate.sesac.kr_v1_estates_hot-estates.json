@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e95d3e8a4385e6bc0de1",
+      "category": "빌라",
+      "title": "고급스러운 스토어, 사업자 등록 가능",
+      "introduction": "방 2개, 화장실 2개",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1012462,
+      "monthly_rent": 129300,
+      "built_year": "2010-05-25",
+      "area": 287.1,
+      "floors": 17,
+      "geolocation": {
+        "longitude": 126.300699,
+        "latitude": 33.406498
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:09:49.141Z",
+      "updated_at": "2026-01-22T09:09:49.141Z"
+    },
+    {
+      "estate_id": "6960cd2b3b912a9455c3ca30",
+      "category": "오피스텔",
+      "title": "★모던한 포레스트★ 직접 확인",
+      "introduction": "1.5룸 구조, 공간 활용 굿",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1025735,
+      "monthly_rent": 109805,
+      "built_year": "1990-04-20",
+      "area": 142.1,
+      "floors": 30,
+      "geolocation": {
+        "longitude": 126.807877,
+        "latitude": 37.496495
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:40:59.186Z",
+      "updated_at": "2026-01-09T09:40:59.186Z"
+    },
+    {
+      "estate_id": "6960cf573b912a9455c3e97f",
+      "category": "오피스텔",
+      "title": "편리한 스카이 전입 가능",
+      "introduction": "신축 건물, 깨끗한 인테리어",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1005977,
+      "monthly_rent": 122816,
+      "built_year": "2012-05-01",
+      "area": 1258.2,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.882741,
+        "latitude": 37.471104
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:50:15.670Z",
+      "updated_at": "2026-01-09T09:50:15.670Z"
+    },
+    {
+      "estate_id": "6971e52b3e8a4385e6bbd91e",
+      "category": "아파트",
+      "title": "돌담있는 스토어 특별 할인",
+      "introduction": "월정리 해변 근처",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1012227,
+      "monthly_rent": 129066,
+      "built_year": "2006-06-14",
+      "area": 53.6,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.208232,
+        "latitude": 33.339393
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:51:55.406Z",
+      "updated_at": "2026-01-22T08:51:55.406Z"
+    },
+    {
+      "estate_id": "6971f2543e8a4385e6bc8434",
+      "category": "아파트",
+      "title": "★실용적인 신혼집★ 가격 협의",
+      "introduction": "월정리 해변 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1004827,
+      "monthly_rent": 121665,
+      "built_year": "2012-06-10",
+      "area": 108.1,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.782588,
+        "latitude": 33.424952
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:48:04.281Z",
+      "updated_at": "2026-01-22T09:48:04.281Z"
+    },
+    {
+      "estate_id": "6971e8643e8a4385e6bc0101",
+      "category": "빌라",
+      "title": "하우스 현장 방문 환영 (숲속의)",
+      "introduction": "제주이주 첫 집으로 추천",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1012926,
+      "monthly_rent": 129764,
+      "built_year": "2015-01-01",
+      "area": 752,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.821194,
+        "latitude": 33.419067
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:05:40.456Z",
+      "updated_at": "2026-01-22T09:05:40.456Z"
+    },
+    {
+      "estate_id": "6971ea263e8a4385e6bc1841",
+      "category": "게스트하우스",
+      "title": "그린 힐, 생활 편리",
+      "introduction": "제주공항 20분 거리",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1025016,
+      "monthly_rent": 109087,
+      "built_year": "2007-08-16",
+      "area": 914.6,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.330989,
+        "latitude": 33.416958
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:13:10.530Z",
+      "updated_at": "2026-01-22T09:13:10.530Z"
+    },
+    {
+      "estate_id": "6960cdc33b912a9455c3d2a8",
+      "category": "상가",
+      "title": "★웰빙 주거공간★ 협의 가능",
+      "introduction": "분리형 원룸, 독립 공간",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019310,
+      "monthly_rent": 103380,
+      "built_year": "2005-01-01",
+      "area": 1172.2,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.830112,
+        "latitude": 37.456896
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:43:31.916Z",
+      "updated_at": "2026-01-09T09:43:31.916Z"
+    },
+    {
+      "estate_id": "6971e8703e8a4385e6bc01a1",
+      "category": "게스트하우스",
+      "title": "조용한 매물, 협의 가능",
+      "introduction": "제주 감성 가득한 돌담집",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1025552,
+      "monthly_rent": 109622,
+      "built_year": "1990-01-17",
+      "area": 1450.5,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.229899,
+        "latitude": 33.340431
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:05:52.554Z",
+      "updated_at": "2026-01-22T09:05:52.554Z"
+    },
+    {
+      "estate_id": "6971ee2a3e8a4385e6bc4d28",
+      "category": "게스트하우스",
+      "title": "★깔끔한 펜션★ 교통 편리",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1030520,
+      "monthly_rent": 114590,
+      "built_year": "1990-02-06",
+      "area": 488,
+      "floors": 7,
+      "geolocation": {
+        "longitude": 126.260576,
+        "latitude": 33.378655
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:30:18.107Z",
+      "updated_at": "2026-01-22T09:30:18.107Z"
+    }
+  ]
+}

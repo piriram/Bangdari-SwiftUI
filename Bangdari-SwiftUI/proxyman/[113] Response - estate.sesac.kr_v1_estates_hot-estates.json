@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e5463e8a4385e6bbda86",
+      "category": "게스트하우스",
+      "title": "친환경 추천매물, 조건 좋아요",
+      "introduction": "제주 감성 가득한 돌담집",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1024952,
+      "monthly_rent": 109022,
+      "built_year": "1988-12-28",
+      "area": 850.6,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.299187,
+        "latitude": 33.40503
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:52:22.659Z",
+      "updated_at": "2026-01-22T08:52:22.659Z"
+    },
+    {
+      "estate_id": "6971ed5d3e8a4385e6bc42a0",
+      "category": "오피스텔",
+      "title": "[감귤향가득] 샵 - 교통 편리",
+      "introduction": "반려동물과 함께 살기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1032154,
+      "monthly_rent": 116224,
+      "built_year": "1998-11-11",
+      "area": 631.4,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.783321,
+        "latitude": 33.432524
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:26:53.171Z",
+      "updated_at": "2026-01-22T09:26:53.171Z"
+    },
+    {
+      "estate_id": "6971f2943e8a4385e6bc8784",
+      "category": "펜션",
+      "title": "[감각적인] 가든 - 가격 협의",
+      "introduction": "마당 있는 1층 매물",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1026759,
+      "monthly_rent": 110829,
+      "built_year": "2001-11-07",
+      "area": 1165.4,
+      "floors": 4,
+      "geolocation": {
+        "longitude": 126.261992,
+        "latitude": 33.378625
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:49:08.637Z",
+      "updated_at": "2026-01-22T09:49:08.637Z"
+    },
+    {
+      "estate_id": "6960ccc73b912a9455c3c480",
+      "category": "원룸",
+      "title": "넉넉한 신축매물 놓치지 마세요!",
+      "introduction": "식세기 설치됨",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1028512,
+      "monthly_rent": 112583,
+      "built_year": "2007-06-22",
+      "area": 1428,
+      "floors": 48,
+      "geolocation": {
+        "longitude": 126.825736,
+        "latitude": 37.529962
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:39:19.875Z",
+      "updated_at": "2026-01-09T09:39:19.875Z"
+    },
+    {
+      "estate_id": "6960cb1d3b912a9455c3ad72",
+      "category": "원룸",
+      "title": "프리미엄 사무실, 융자 가능",
+      "introduction": "현관 중문 있음",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1030187,
+      "monthly_rent": 114257,
+      "built_year": "1980-12-28",
+      "area": 155.7,
+      "floors": 35,
+      "geolocation": {
+        "longitude": 126.874219,
+        "latitude": 37.530377
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:32:13.879Z",
+      "updated_at": "2026-01-09T09:32:13.879Z"
+    },
+    {
+      "estate_id": "6971e96c3e8a4385e6bc0ea9",
+      "category": "빌라",
+      "title": "따뜻한 자취방 제주이주 추천",
+      "introduction": "인테리어 맞춤 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1016253,
+      "monthly_rent": 100323,
+      "built_year": "1983-12-24",
+      "area": 1097.2,
+      "floors": 28,
+      "geolocation": {
+        "longitude": 126.314694,
+        "latitude": 33.464101
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:10:04.199Z",
+      "updated_at": "2026-01-22T09:10:04.199Z"
+    },
+    {
+      "estate_id": "6960caf93b912a9455c3ab82",
+      "category": "원룸",
+      "title": "프리미엄 스카이 계약금 협의",
+      "introduction": "신축 건물, 깨끗한 인테리어",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1032137,
+      "monthly_rent": 116208,
+      "built_year": "1982-07-19",
+      "area": 614,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.842814,
+        "latitude": 37.507412
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:31:37.878Z",
+      "updated_at": "2026-01-09T09:31:37.878Z"
+    },
+    {
+      "estate_id": "6971e6e73e8a4385e6bbf0b2",
+      "category": "오피스텔",
+      "title": "제주스러운 제주빌라 힐링라이프",
+      "introduction": "올레길 근처, 산책하기 좋은 위치",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1000770,
+      "monthly_rent": 117608,
+      "built_year": "2003-03-19",
+      "area": 524.4,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.77827,
+        "latitude": 33.425821
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:59:19.827Z",
+      "updated_at": "2026-01-22T08:59:19.827Z"
+    },
+    {
+      "estate_id": "6971f0053e8a4385e6bc65dc",
+      "category": "단독주택",
+      "title": "화사한 하우스 후회 없는 선택",
+      "introduction": "난방 잘됨, 제주 겨울도 따뜻",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1005265,
+      "monthly_rent": 122103,
+      "built_year": "1989-12-24",
+      "area": 545.2,
+      "floors": 20,
+      "geolocation": {
+        "longitude": 126.342813,
+        "latitude": 33.392587
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:38:13.998Z",
+      "updated_at": "2026-01-22T09:38:13.998Z"
+    },
+    {
+      "estate_id": "6971eb7c3e8a4385e6bc29d9",
+      "category": "빌라",
+      "title": "오션뷰 오피스 허위 NO",
+      "introduction": "합리적인 가격, 좋은 조건",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1001830,
+      "monthly_rent": 118668,
+      "built_year": "2004-10-26",
+      "area": 92.7,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.803664,
+        "latitude": 33.456054
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:18:52.782Z",
+      "updated_at": "2026-01-22T09:18:52.782Z"
+    }
+  ]
+}

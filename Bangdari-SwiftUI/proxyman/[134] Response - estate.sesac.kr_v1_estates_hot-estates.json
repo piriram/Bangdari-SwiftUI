@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971f2a83e8a4385e6bc888c",
+      "category": "원룸",
+      "title": "★프리미엄 복층★ 세컨하우스로 딱!",
+      "introduction": "조용한 마을, 힐링하기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1011740,
+      "monthly_rent": 128578,
+      "built_year": "2025-11-15",
+      "area": 1057.8,
+      "floors": 15,
+      "geolocation": {
+        "longitude": 126.33181,
+        "latitude": 33.45615
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:49:28.676Z",
+      "updated_at": "2026-01-22T09:49:28.676Z"
+    },
+    {
+      "estate_id": "6971e5ab3e8a4385e6bbdfbe",
+      "category": "단독주택",
+      "title": "[감귤향가득] 스토어 - 주차 OK",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1026609,
+      "monthly_rent": 110679,
+      "built_year": "1990-05-25",
+      "area": 1016.6,
+      "floors": 4,
+      "geolocation": {
+        "longitude": 126.776859,
+        "latitude": 33.427286
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:54:03.512Z",
+      "updated_at": "2026-01-22T08:54:03.512Z"
+    },
+    {
+      "estate_id": "6960ccd23b912a9455c3c524",
+      "category": "빌라",
+      "title": "감각적인 스토어, 직접 확인",
+      "introduction": "학원가 인접",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1007286,
+      "monthly_rent": 124125,
+      "built_year": "1987-03-19",
+      "area": 1076.9,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.822114,
+        "latitude": 37.457447
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:39:30.499Z",
+      "updated_at": "2026-01-09T09:39:30.499Z"
+    },
+    {
+      "estate_id": "6971eb213e8a4385e6bc2521",
+      "category": "원룸",
+      "title": "★시원한 공간★ 협의 가능",
+      "introduction": "오름 트레킹 코스 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1025380,
+      "monthly_rent": 109450,
+      "built_year": "2002-10-26",
+      "area": 1278.1,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.733782,
+        "latitude": 33.435233
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:17:21.053Z",
+      "updated_at": "2026-01-22T09:17:21.053Z"
+    },
+    {
+      "estate_id": "6960c6a13b912a9455c36f37",
+      "category": "아파트",
+      "title": "모던한 안식처 특별 할인",
+      "introduction": "옥상 사용 가능",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1009118,
+      "monthly_rent": 125956,
+      "built_year": "2024-11-23",
+      "area": 1417.1,
+      "floors": 33,
+      "geolocation": {
+        "longitude": 126.848539,
+        "latitude": 37.504838
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:13:05.905Z",
+      "updated_at": "2026-01-09T09:13:05.905Z"
+    },
+    {
+      "estate_id": "6960c6763b912a9455c36cd7",
+      "category": "빌라",
+      "title": "주거공간 문의 환영 (환한)",
+      "introduction": "분리형 원룸, 독립 공간",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1016191,
+      "monthly_rent": 100261,
+      "built_year": "2013-06-22",
+      "area": 1034.5,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.823727,
+        "latitude": 37.52138
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:12:22.186Z",
+      "updated_at": "2026-01-09T09:12:22.186Z"
+    },
+    {
+      "estate_id": "6971f0e03e8a4385e6bc7114",
+      "category": "오피스텔",
+      "title": "[넓은] 빌리지 - 지금 바로!",
+      "introduction": "한담해안산책로 근처",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1019234,
+      "monthly_rent": 103304,
+      "built_year": "2020-06-02",
+      "area": 1095.8,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.241397,
+        "latitude": 33.369196
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:41:52.219Z",
+      "updated_at": "2026-01-22T09:41:52.219Z"
+    },
+    {
+      "estate_id": "6960c9083b912a9455c390b6",
+      "category": "빌라",
+      "title": "친환경 자취방, 여기가 진국",
+      "introduction": "이중창 설치, 방음 우수",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1015906,
+      "monthly_rent": 132744,
+      "built_year": "2005-10-22",
+      "area": 750.9,
+      "floors": 42,
+      "geolocation": {
+        "longitude": 126.832101,
+        "latitude": 37.52367
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:23:20.712Z",
+      "updated_at": "2026-01-09T09:23:20.712Z"
+    },
+    {
+      "estate_id": "6971ec7a3e8a4385e6bc36f8",
+      "category": "게스트하우스",
+      "title": "★정갈한 생활공간★ 힐링라이프",
+      "introduction": "넓은 정원, 바베큐 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1023304,
+      "monthly_rent": 107375,
+      "built_year": "1997-01-17",
+      "area": 693.1,
+      "floors": 30,
+      "geolocation": {
+        "longitude": 126.806056,
+        "latitude": 33.439825
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:23:06.554Z",
+      "updated_at": "2026-01-22T09:23:06.554Z"
+    },
+    {
+      "estate_id": "6971eefd3e8a4385e6bc583c",
+      "category": "상가",
+      "title": "럭셔리 스튜디오 한라산이 보여요",
+      "introduction": "합리적인 가격, 좋은 조건",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1001029,
+      "monthly_rent": 117868,
+      "built_year": "1986-08-24",
+      "area": 783.1,
+      "floors": 15,
+      "geolocation": {
+        "longitude": 126.299316,
+        "latitude": 33.453993
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:33:49.537Z",
+      "updated_at": "2026-01-22T09:33:49.537Z"
+    }
+  ]
+}

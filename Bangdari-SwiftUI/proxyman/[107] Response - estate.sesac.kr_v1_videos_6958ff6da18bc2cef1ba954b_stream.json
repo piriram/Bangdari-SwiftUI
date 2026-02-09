@@ -1,0 +1,19 @@
+{
+  "video_id": "6958ff6da18bc2cef1ba954b",
+  "stream_url": "/videos/stream/estate_video_1/master.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrIjoiOGRlOWU3MzIyYjNiIiwidiI6ImVzdGF0ZV92aWRlb18xIiwiaWF0IjoxNzcwNTI4NzMwLCJleHAiOjE3NzA1Mjg5Mjl9.TvHD3mWIaF--CCGG-MnlArGXv5mWoaEZE1bVICpTpIc",
+  "qualities": [
+    {
+      "quality": "1080p",
+      "url": "/videos/stream/estate_video_1/1080p/index.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrIjoiOGRlOWU3MzIyYjNiIiwidiI6ImVzdGF0ZV92aWRlb18xIiwiaWF0IjoxNzcwNTI4NzMwLCJleHAiOjE3NzA1Mjg5Mjl9.TvHD3mWIaF--CCGG-MnlArGXv5mWoaEZE1bVICpTpIc"
+    },
+    {
+      "quality": "720p",
+      "url": "/videos/stream/estate_video_1/720p/index.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrIjoiOGRlOWU3MzIyYjNiIiwidiI6ImVzdGF0ZV92aWRlb18xIiwiaWF0IjoxNzcwNTI4NzMwLCJleHAiOjE3NzA1Mjg5Mjl9.TvHD3mWIaF--CCGG-MnlArGXv5mWoaEZE1bVICpTpIc"
+    },
+    {
+      "quality": "480p",
+      "url": "/videos/stream/estate_video_1/480p/index.m3u8?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrIjoiOGRlOWU3MzIyYjNiIiwidiI6ImVzdGF0ZV92aWRlb18xIiwiaWF0IjoxNzcwNTI4NzMwLCJleHAiOjE3NzA1Mjg5Mjl9.TvHD3mWIaF--CCGG-MnlArGXv5mWoaEZE1bVICpTpIc"
+    }
+  ],
+  "subtitles": []
+}

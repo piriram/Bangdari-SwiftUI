@@ -1,0 +1,455 @@
+{
+  "count": 50,
+  "logs": [
+    {
+      "date": "2026-02-08T05:40:12.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/orders",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:40:10.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/payments/KUCL998526",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:40:09.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/orders",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:40:07.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/payments/OZII204435",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:40:06.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/orders",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:47.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/chats",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:46.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/likes/me?limit=20",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:46.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/banners/main",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:44.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/similar-estates",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:44.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/6960cd8f3b912a9455c3cfc0",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:41.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/chats",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:39.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/banners/main",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:39.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/likes/me?limit=20",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:38.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/similar-estates",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:38.000Z",
+      "name": "김소람",
+      "method": "POST",
+      "route_path": "/v1/estates/6960cd8f3b912a9455c3cfc0/like",
+      "body": "{\"like_status\":true}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:38.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/6960cd8f3b912a9455c3cfc0",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:37.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/6960cd8f3b912a9455c3cfc0",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:37.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/similar-estates",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:35.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/today-estates",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:35.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/today-topic",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:35.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/hot-estates",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:32.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/banners/main",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:32.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/likes/me?limit=20",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:30.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/posts/geolocation?latitude=37.5082086237828&longitude=127.0190059477907&maxDistance=5000",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6959000ca18bc2cef1ba957d/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/69590020a18bc2cef1ba9583/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6958ff6da18bc2cef1ba954b/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6958fff0a18bc2cef1ba9577/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/69590020a18bc2cef1ba9583/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6959000ca18bc2cef1ba957d/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/posts/geolocation?latitude=37.5082086237828&longitude=127.0190059477907&maxDistance=5000",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos?limit=10",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:28.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6959003ca18bc2cef1ba9589/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:26.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/today-estates",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:26.000Z",
+      "name": "김소람",
+      "method": "PUT",
+      "route_path": "/v1/users/deviceToken",
+      "body": "{\"deviceToken\":\"323cd369c59683056a1e6aa9e51342d293c07136e45def52667b6f8bdee87dff\"}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:26.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/hot-estates",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:26.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/estates/today-topic",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "304"
+    },
+    {
+      "date": "2026-02-08T05:39:26.000Z",
+      "name": "김소람",
+      "method": "POST",
+      "route_path": "/v1/users/login/apple",
+      "body": "{\"idToken\":\"eyJraWQiOiJhVmVIRmFXeEFaIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLnJhbS5CYW5nZGFyaS1Td2lmdFVJIiwiZXhwIjoxNzcwNjE1NTY0LCJpYXQiOjE3NzA1MjkxNjQsInN1YiI6IjAwMDU0OS5kNTA0MjFhMTk1MzM0OTdmYTFkNTYzN2FkMGYwZjg1OC4wMTA4IiwiY19oYXNoIjoiUFNKMGFDVEQ0eGlRTU1aR1lXV1BZZyIsImVtYWlsIjoibnc3aHhqcGY5eEBwcml2YXRlcmVsYXkuYXBwbGVpZC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNfcHJpdmF0ZV9lbWFpbCI6dHJ1ZSwiYXV0aF90aW1lIjoxNzcwNTI5MTY0LCJub25jZV9zdXBwb3J0ZWQiOnRydWV9.HR4ARW1csSXDZOpywFr7SWJvhTJ9Zv1_wYTukIRohgfEYEOZgQ9fBwbUP8Wj6xAGSqP-4PzSleAkkHsJ1oweu0LdTSEque2F--qjtSX9TpBYd8TbfyKvzXlHf56Ro62DUoOfrlcSZKp066iyyjbmdsHl9fLzU1KMLXwSrizVD4dceeOLN3d3GVkIYRB0CIMxNIISFSBBqy2I9BGBe9nlTbMPidl4Nma67iKzQyNhDb7pWg4Urfaz44u-G-XujYTFMz9umLAL1C5iiiZerpCzToXDJ-uZy-dsNPBeNv2Sw8wBwMILwtL8guqFrrc7OVYLKkMZwuM53dL147mlse_60g\"}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:19.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/auth/refresh",
+      "body": "{}",
+      "contentType": "-",
+      "status_code": "403"
+    },
+    {
+      "date": "2026-02-08T05:39:19.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/banners/main",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "403"
+    },
+    {
+      "date": "2026-02-08T05:39:06.000Z",
+      "name": "김소람",
+      "method": "POST",
+      "route_path": "/v1/posts",
+      "body": "{\"files\":[\"/data/posts/file0_1770529145683.jpg\"],\"title\":\"공기좋은 휴가~\",\"latitude\":37.5180942,\"content\":\"휴가 다들 갔다오셨나요?\",\"category\":\"기타\",\"longitude\":126.855439}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:06.000Z",
+      "name": "김소람",
+      "method": "POST",
+      "route_path": "/v1/posts/files",
+      "body": "{}",
+      "contentType": "multipart/form-data; boundary=Boundary-170FE5BC-4948-4F64-BC42-AA3AE5C91C52",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:06.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/data/posts/file0_1770529145683.jpg",
+      "body": "{}",
+      "contentType": "-",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:06.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/posts/geolocation?latitude=37.5180942&longitude=126.855439&maxDistance=5000",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:39:06.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/data/posts/video_0_1769335516433.mp4",
+      "body": "{}",
+      "contentType": "-",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:38:45.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/data/posts/video_0_1769335516433.mp4",
+      "body": "{}",
+      "contentType": "-",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:38:43.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6958ff6da18bc2cef1ba954b/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:38:43.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6958fff0a18bc2cef1ba9577/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:38:41.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6959003ca18bc2cef1ba9589/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    },
+    {
+      "date": "2026-02-08T05:38:41.000Z",
+      "name": "김소람",
+      "method": "GET",
+      "route_path": "/v1/videos/6959003ca18bc2cef1ba9589/stream",
+      "body": "{}",
+      "contentType": "application/json",
+      "status_code": "200"
+    }
+  ]
+}

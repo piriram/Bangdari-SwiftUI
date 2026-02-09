@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e9603e8a4385e6bc0e09",
+      "category": "상가",
+      "title": "[효율적인] 섬집 - 융자 가능",
+      "introduction": "숲속의 힐링 하우스",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1003821,
+      "monthly_rent": 120659,
+      "built_year": "2017-06-10",
+      "area": 592.3,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.329524,
+        "latitude": 33.457399
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:09:52.160Z",
+      "updated_at": "2026-01-22T09:09:52.160Z"
+    },
+    {
+      "estate_id": "6960caf73b912a9455c3ab62",
+      "category": "상가",
+      "title": "품격있는 투룸 급하게 내놓습니다",
+      "introduction": "대형마트 5분 거리",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1025468,
+      "monthly_rent": 109538,
+      "built_year": "1998-07-15",
+      "area": 1366.9,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.879706,
+        "latitude": 37.487718
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:31:35.561Z",
+      "updated_at": "2026-01-09T09:31:35.561Z"
+    },
+    {
+      "estate_id": "6971e8733e8a4385e6bc01c9",
+      "category": "아파트",
+      "title": "★최신식 사무실★ 지금 바로!",
+      "introduction": "난방 잘됨, 제주 겨울도 따뜻",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1030115,
+      "monthly_rent": 114185,
+      "built_year": "1999-08-24",
+      "area": 82.7,
+      "floors": 22,
+      "geolocation": {
+        "longitude": 126.240921,
+        "latitude": 33.366334
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:05:55.593Z",
+      "updated_at": "2026-01-22T09:05:55.593Z"
+    },
+    {
+      "estate_id": "6960c8e33b912a9455c38eb6",
+      "category": "빌라",
+      "title": "생활공간 문의 환영 (경제적인)",
+      "introduction": "한강 도보 10분",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1011551,
+      "monthly_rent": 128389,
+      "built_year": "2020-06-14",
+      "area": 868.3,
+      "floors": 7,
+      "geolocation": {
+        "longitude": 126.850749,
+        "latitude": 37.498638
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:22:43.603Z",
+      "updated_at": "2026-01-09T09:22:43.603Z"
+    },
+    {
+      "estate_id": "6971eec73e8a4385e6bc5574",
+      "category": "단독주택",
+      "title": "급매물 강력 추천 (해변가)",
+      "introduction": "제주올레 코스 인접",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1005681,
+      "monthly_rent": 122519,
+      "built_year": "1991-05-21",
+      "area": 962.6,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.275916,
+        "latitude": 33.373164
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:32:55.674Z",
+      "updated_at": "2026-01-22T09:32:55.674Z"
+    },
+    {
+      "estate_id": "6960c75a3b912a9455c37962",
+      "category": "상가",
+      "title": "풀옵션 테라스 실매물",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1023493,
+      "monthly_rent": 107563,
+      "built_year": "2002-08-04",
+      "area": 882.5,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.836277,
+        "latitude": 37.514656
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:16:10.113Z",
+      "updated_at": "2026-01-09T09:16:10.113Z"
+    },
+    {
+      "estate_id": "6971f23b3e8a4385e6bc82f4",
+      "category": "상가",
+      "title": "파크 조건 좋아요 (감각적인)",
+      "introduction": "제주 바다가 한눈에 보이는 오션뷰",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1002117,
+      "monthly_rent": 118955,
+      "built_year": "2016-05-25",
+      "area": 380.9,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.274954,
+        "latitude": 33.369326
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:47:39.940Z",
+      "updated_at": "2026-01-22T09:47:39.940Z"
+    },
+    {
+      "estate_id": "6971f18b3e8a4385e6bc79dc",
+      "category": "상가",
+      "title": "쾌적한 안식처 여기가 진국",
+      "introduction": "곽지해수욕장 도보권",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1001165,
+      "monthly_rent": 118003,
+      "built_year": "1983-09-25",
+      "area": 919.6,
+      "floors": 30,
+      "geolocation": {
+        "longitude": 126.247978,
+        "latitude": 33.350035
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:44:43.098Z",
+      "updated_at": "2026-01-22T09:44:43.098Z"
+    },
+    {
+      "estate_id": "6971e5803e8a4385e6bbdd86",
+      "category": "원룸",
+      "title": "펜션 주차 OK (단정한)",
+      "introduction": "곽지해수욕장 도보권",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1004332,
+      "monthly_rent": 121171,
+      "built_year": "2023-06-22",
+      "area": 1104.3,
+      "floors": 18,
+      "geolocation": {
+        "longitude": 126.254682,
+        "latitude": 33.358016
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:53:20.794Z",
+      "updated_at": "2026-01-22T08:53:20.794Z"
+    },
+    {
+      "estate_id": "6960cc893b912a9455c3c0fa",
+      "category": "상가",
+      "title": "★스마트 포레스트★ 주차 OK",
+      "introduction": "역세권 도보 5분, 교통 편리!",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019055,
+      "monthly_rent": 103125,
+      "built_year": "1980-05-25",
+      "area": 917.3,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.7995,
+        "latitude": 37.510444
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:38:17.556Z",
+      "updated_at": "2026-01-09T09:38:17.556Z"
+    }
+  ]
+}

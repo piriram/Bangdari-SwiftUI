@@ -1,0 +1,115 @@
+{
+  "data": [
+    {
+      "post_id": "6988217a3e8a4385e6c00453",
+      "category": "기타",
+      "title": "공기좋은 휴가~",
+      "content": "휴가 다들 갔다오셨나요?",
+      "geolocation": {
+        "longitude": 126.855439,
+        "latitude": 37.5180942
+      },
+      "creator": {
+        "user_id": "6970c9913e8a4385e6bbafc7",
+        "nick": "이응",
+        "introduction": "자기소개",
+        "profileImage": "/data/profiles/1770528607777.jpg"
+      },
+      "files": [
+        "/data/posts/file0_1770529145683.jpg"
+      ],
+      "is_like": false,
+      "like_count": 0,
+      "createdAt": "2026-02-08T05:39:06.360Z",
+      "updatedAt": "2026-02-08T05:39:06.360Z"
+    },
+    {
+      "post_id": "6982df693e8a4385e6bf5325",
+      "category": "맛집",
+      "title": "미술관을 소개합니다!!",
+      "content": "우리동네 미술관도 있어요",
+      "geolocation": {
+        "longitude": 126.8948,
+        "latitude": 37.5179
+      },
+      "creator": {
+        "user_id": "695f66a43b912a9455c32d66",
+        "nick": "Jiyong"
+      },
+      "files": [
+        "/data/posts/image_0_1770184553541.jpg",
+        "/data/posts/image_1_1770184553571.jpg",
+        "/data/posts/image_2_1770184553601.jpg",
+        "/data/posts/video_3_1770184553609.mp4"
+      ],
+      "is_like": false,
+      "like_count": 2,
+      "createdAt": "2026-02-04T05:55:53.642Z",
+      "updatedAt": "2026-02-04T05:57:31.299Z"
+    },
+    {
+      "post_id": "6975eadc3e8a4385e6bd8fec",
+      "category": "기타",
+      "title": "동네 바다가 있어요!",
+      "content": "바다가있습니다!!",
+      "geolocation": {
+        "longitude": 126.8948,
+        "latitude": 37.5179
+      },
+      "creator": {
+        "user_id": "6974d9463e8a4385e6bcf5fd",
+        "nick": "문래동공인중개사",
+        "introduction": "안녕하세요!!"
+      },
+      "files": [
+        "/data/posts/video_0_1769335516433.mp4"
+      ],
+      "is_like": false,
+      "like_count": 1,
+      "createdAt": "2026-01-25T10:05:16.500Z",
+      "updatedAt": "2026-01-25T14:22:05.273Z"
+    },
+    {
+      "post_id": "697360043e8a4385e6bccc2e",
+      "category": "맛집",
+      "title": "영상테스트",
+      "content": "123",
+      "geolocation": {
+        "longitude": 126.899324,
+        "latitude": 37.5169958
+      },
+      "creator": {
+        "user_id": "695f66a43b912a9455c32d66",
+        "nick": "Jiyong"
+      },
+      "files": [],
+      "is_like": false,
+      "like_count": 0,
+      "createdAt": "2026-01-23T11:48:20.367Z",
+      "updatedAt": "2026-01-23T11:48:20.367Z"
+    },
+    {
+      "post_id": "69735d3f3e8a4385e6bcc9fa",
+      "category": "맛집",
+      "title": "문래동 맛집!!",
+      "content": "여기 꼭 와야해요!!",
+      "geolocation": {
+        "longitude": 126.899324,
+        "latitude": 37.5169958
+      },
+      "creator": {
+        "user_id": "695f66a43b912a9455c32d66",
+        "nick": "Jiyong"
+      },
+      "files": [
+        "/data/posts/image_0_1769168191627.jpg",
+        "/data/posts/image_1_1769168191634.jpg"
+      ],
+      "is_like": false,
+      "like_count": 0,
+      "createdAt": "2026-01-23T11:36:31.695Z",
+      "updatedAt": "2026-01-23T11:36:31.695Z"
+    }
+  ],
+  "next_cursor": "69735d3f3e8a4385e6bcc9fa"
+}

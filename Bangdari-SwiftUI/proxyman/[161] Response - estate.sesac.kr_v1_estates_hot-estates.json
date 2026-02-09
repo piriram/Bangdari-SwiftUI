@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971ec4b3e8a4385e6bc3488",
+      "category": "빌라",
+      "title": "[품격있는] 복층 - 검증 완료",
+      "introduction": "리모델링 완료, 새집같은 컨디션",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1021094,
+      "monthly_rent": 105164,
+      "built_year": "1994-05-21",
+      "area": 1464.6,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.74781,
+        "latitude": 33.449191
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:22:19.116Z",
+      "updated_at": "2026-01-22T09:22:19.116Z"
+    },
+    {
+      "estate_id": "6971e5983e8a4385e6bbdebe",
+      "category": "원룸",
+      "title": "친환경 플레이스, 한라산이 보여요",
+      "introduction": "넓은 마당, 텃밭 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1003524,
+      "monthly_rent": 120362,
+      "built_year": "1996-10-18",
+      "area": 296,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.330974,
+        "latitude": 33.455969
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:53:44.300Z",
+      "updated_at": "2026-01-22T08:53:44.300Z"
+    },
+    {
+      "estate_id": "6971f38d3e8a4385e6bc944c",
+      "category": "게스트하우스",
+      "title": "[오션뷰] 포레스트 - 계약금 협의",
+      "introduction": "반려동물과 함께 살기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1014304,
+      "monthly_rent": 131142,
+      "built_year": "2012-06-10",
+      "area": 639.9,
+      "floors": 29,
+      "geolocation": {
+        "longitude": 126.294779,
+        "latitude": 33.347509
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:53:17.292Z",
+      "updated_at": "2026-01-22T09:53:17.292Z"
+    },
+    {
+      "estate_id": "6971ef953e8a4385e6bc6014",
+      "category": "아파트",
+      "title": "스마트 제주하우스 강력 추천",
+      "introduction": "반려동물과 함께 살기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1000435,
+      "monthly_rent": 117273,
+      "built_year": "1990-03-11",
+      "area": 189.2,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.809557,
+        "latitude": 33.437824
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:36:21.559Z",
+      "updated_at": "2026-01-22T09:36:21.559Z"
+    },
+    {
+      "estate_id": "6960ccd83b912a9455c3c582",
+      "category": "원룸",
+      "title": "[포근한] 보금자리 - 대박 조건",
+      "introduction": "어린이 놀이터 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1017784,
+      "monthly_rent": 101854,
+      "built_year": "1997-06-18",
+      "area": 1137.1,
+      "floors": 60,
+      "geolocation": {
+        "longitude": 126.880726,
+        "latitude": 37.517091
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:39:36.691Z",
+      "updated_at": "2026-01-09T09:39:36.691Z"
+    },
+    {
+      "estate_id": "6960c75e3b912a9455c3799a",
+      "category": "아파트",
+      "title": "홈 가격 협의 (최신식)",
+      "introduction": "헬스장 이용 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1027321,
+      "monthly_rent": 111391,
+      "built_year": "2012-11-27",
+      "area": 237.8,
+      "floors": 57,
+      "geolocation": {
+        "longitude": 126.872722,
+        "latitude": 37.521856
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:16:14.145Z",
+      "updated_at": "2026-01-09T09:16:14.145Z"
+    },
+    {
+      "estate_id": "6971eb3e3e8a4385e6bc26a1",
+      "category": "아파트",
+      "title": "힐링되는 스토어, 조건 좋아요",
+      "introduction": "옥상 사용 가능, 루프탑 파티",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1000139,
+      "monthly_rent": 116977,
+      "built_year": "2016-06-22",
+      "area": 1384.8,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.812894,
+        "latitude": 33.444874
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:17:50.121Z",
+      "updated_at": "2026-01-22T09:17:50.121Z"
+    },
+    {
+      "estate_id": "6971f2ea3e8a4385e6bc8bec",
+      "category": "원룸",
+      "title": "모던한 복층, 주차 OK",
+      "introduction": "제주공항 20분 거리",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1012116,
+      "monthly_rent": 128955,
+      "built_year": "1987-05-13",
+      "area": 1433.9,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.802729,
+        "latitude": 33.43971
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:50:34.271Z",
+      "updated_at": "2026-01-22T09:50:34.271Z"
+    },
+    {
+      "estate_id": "6960ceab3b912a9455c3dfc1",
+      "category": "원룸",
+      "title": "[첨단] 오피스 - 검증 완료",
+      "introduction": "주차 가능, 엘리베이터 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1012404,
+      "monthly_rent": 129242,
+      "built_year": "1999-07-15",
+      "area": 230.6,
+      "floors": 20,
+      "geolocation": {
+        "longitude": 126.842774,
+        "latitude": 37.509446
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:47:23.706Z",
+      "updated_at": "2026-01-09T09:47:23.706Z"
+    },
+    {
+      "estate_id": "6960c8143b912a9455c38386",
+      "category": "오피스텔",
+      "title": "포레스트 현장 방문 환영 (모던한)",
+      "introduction": "복층 구조로 넓게 사용",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1003167,
+      "monthly_rent": 120006,
+      "built_year": "2008-01-09",
+      "area": 1430.3,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.854598,
+        "latitude": 37.465801
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:19:16.220Z",
+      "updated_at": "2026-01-09T09:19:16.220Z"
+    }
+  ]
+}

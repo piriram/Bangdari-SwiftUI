@@ -15,7 +15,7 @@ final class DIContainer: @unchecked Sendable {
         case .live:
             return RemoteAuthRepository()
         case .mock:
-            return RemoteAuthRepository() // TODO: MockAuthRepository
+            return MockAuthRepository()
         }
     }
 
@@ -33,7 +33,7 @@ final class DIContainer: @unchecked Sendable {
         case .live:
             return RemoteEstateRepository()
         case .mock:
-            return RemoteEstateRepository() // TODO: MockEstateRepository
+            return MockEstateRepository()
         }
     }
 

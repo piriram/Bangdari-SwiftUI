@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960c75d3b912a9455c3798a",
+      "category": "빌라",
+      "title": "[단정한] 추천매물 - 여기가 진국",
+      "introduction": "가스레인지 사용 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1000546,
+      "monthly_rent": 117384,
+      "built_year": "2009-12-24",
+      "area": 300.1,
+      "floors": 41,
+      "geolocation": {
+        "longitude": 126.828392,
+        "latitude": 37.480522
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:16:13.013Z",
+      "updated_at": "2026-01-09T09:16:13.013Z"
+    },
+    {
+      "estate_id": "6971e8d73e8a4385e6bc06f1",
+      "category": "상가",
+      "title": "[안전한] 하우스 - 즉시 입주",
+      "introduction": "관리비 저렴, 실속형 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1028389,
+      "monthly_rent": 112459,
+      "built_year": "2022-06-26",
+      "area": 1305.2,
+      "floors": 14,
+      "geolocation": {
+        "longitude": 126.776774,
+        "latitude": 33.429579
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:07:35.213Z",
+      "updated_at": "2026-01-22T09:07:35.213Z"
+    },
+    {
+      "estate_id": "6960c9af3b912a9455c399b6",
+      "category": "원룸",
+      "title": "탁 트인 사무실 급하게 내놓습니다",
+      "introduction": "대형마트 5분 거리",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1001939,
+      "monthly_rent": 118778,
+      "built_year": "2022-07-15",
+      "area": 202.5,
+      "floors": 55,
+      "geolocation": {
+        "longitude": 126.866549,
+        "latitude": 37.475804
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:26:07.829Z",
+      "updated_at": "2026-01-09T09:26:07.829Z"
+    },
+    {
+      "estate_id": "6960d10c3b912a9455c4022d",
+      "category": "오피스텔",
+      "title": "★편리한 인기매물★ 강력 추천",
+      "introduction": "1.5룸 구조, 공간 활용 굿",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1031195,
+      "monthly_rent": 115265,
+      "built_year": "2022-12-12",
+      "area": 1163,
+      "floors": 22,
+      "geolocation": {
+        "longitude": 126.795428,
+        "latitude": 37.515666
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:57:32.512Z",
+      "updated_at": "2026-01-09T09:57:32.512Z"
+    },
+    {
+      "estate_id": "6960c8153b912a9455c38396",
+      "category": "원룸",
+      "title": "[첨단] 보금자리 - 대박 조건",
+      "introduction": "어린이 놀이터 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1013104,
+      "monthly_rent": 129942,
+      "built_year": "2009-02-14",
+      "area": 930.9,
+      "floors": 60,
+      "geolocation": {
+        "longitude": 126.868303,
+        "latitude": 37.495564
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:19:17.393Z",
+      "updated_at": "2026-01-09T09:19:17.393Z"
+    },
+    {
+      "estate_id": "6971e63d3e8a4385e6bbe7ea",
+      "category": "단독주택",
+      "title": "감각적인 핫플 직접 확인",
+      "introduction": "월정리 해변 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1015977,
+      "monthly_rent": 100048,
+      "built_year": "1984-07-15",
+      "area": 821,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.810418,
+        "latitude": 33.439058
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:56:29.493Z",
+      "updated_at": "2026-01-22T08:56:29.493Z"
+    },
+    {
+      "estate_id": "6971f1683e8a4385e6bc7814",
+      "category": "아파트",
+      "title": "[품격있는] 게스트하우스 - 후회 없는 선택",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1008619,
+      "monthly_rent": 125457,
+      "built_year": "1986-08-16",
+      "area": 918.5,
+      "floors": 15,
+      "geolocation": {
+        "longitude": 126.315657,
+        "latitude": 33.465584
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:44:08.384Z",
+      "updated_at": "2026-01-22T09:44:08.384Z"
+    },
+    {
+      "estate_id": "6960cef83b912a9455c3e411",
+      "category": "빌라",
+      "title": "자취방 전입 가능 (세련된)",
+      "introduction": "바닥 난방, 겨울에도 따뜻",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1021186,
+      "monthly_rent": 105256,
+      "built_year": "1994-05-25",
+      "area": 66.3,
+      "floors": 41,
+      "geolocation": {
+        "longitude": 126.899527,
+        "latitude": 37.504314
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:48:40.700Z",
+      "updated_at": "2026-01-09T09:48:40.700Z"
+    },
+    {
+      "estate_id": "6971ef233e8a4385e6bc5a2c",
+      "category": "상가",
+      "title": "[힐링되는] 빌리지 - 즉시 입주",
+      "introduction": "게스트하우스 운영 가능",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1020173,
+      "monthly_rent": 104244,
+      "built_year": "1994-03-19",
+      "area": 544.1,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.760616,
+        "latitude": 33.409578
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:34:27.057Z",
+      "updated_at": "2026-01-22T09:34:27.057Z"
+    },
+    {
+      "estate_id": "6960cadb3b912a9455c3a9da",
+      "category": "빌라",
+      "title": "★단정한 가든★ 직접 확인",
+      "introduction": "1.5룸 구조, 공간 활용 굿",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1031014,
+      "monthly_rent": 115085,
+      "built_year": "2025-07-11",
+      "area": 982,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.889278,
+        "latitude": 37.502043
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:31:07.152Z",
+      "updated_at": "2026-01-09T09:31:07.152Z"
+    }
+  ]
+}

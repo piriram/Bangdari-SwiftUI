@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960ca7c3b912a9455c3a4c2",
+      "category": "원룸",
+      "title": "리모델링 신축매물 대박 조건",
+      "introduction": "인테리어 맞춤 가능",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1022792,
+      "monthly_rent": 106863,
+      "built_year": "1991-02-02",
+      "area": 181.4,
+      "floors": 28,
+      "geolocation": {
+        "longitude": 126.860954,
+        "latitude": 37.484155
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:29:32.551Z",
+      "updated_at": "2026-01-09T09:29:32.551Z"
+    },
+    {
+      "estate_id": "6960cc2e3b912a9455c3bc12",
+      "category": "오피스텔",
+      "title": "깔끔한 플레이스, 직접 확인",
+      "introduction": "이중창 설치, 방음 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1006967,
+      "monthly_rent": 123805,
+      "built_year": "1989-09-25",
+      "area": 757.7,
+      "floors": 42,
+      "geolocation": {
+        "longitude": 126.894317,
+        "latitude": 37.483558
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:36:46.074Z",
+      "updated_at": "2026-01-09T09:36:46.074Z"
+    },
+    {
+      "estate_id": "6971e96e3e8a4385e6bc0ec1",
+      "category": "단독주택",
+      "title": "★풀옵션 뷰★ 믿고 보세요",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1031409,
+      "monthly_rent": 115480,
+      "built_year": "2006-02-06",
+      "area": 1377.1,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.237126,
+        "latitude": 33.365538
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:10:06.045Z",
+      "updated_at": "2026-01-22T09:10:06.045Z"
+    },
+    {
+      "estate_id": "6971e7d83e8a4385e6bbf9b1",
+      "category": "빌라",
+      "title": "[모던한] 샵 - 융자 가능",
+      "introduction": "빌트인 가전 완비",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1031214,
+      "monthly_rent": 115284,
+      "built_year": "1994-01-09",
+      "area": 1182,
+      "floors": 11,
+      "geolocation": {
+        "longitude": 126.349033,
+        "latitude": 33.438218
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:03:20.161Z",
+      "updated_at": "2026-01-22T09:03:20.161Z"
+    },
+    {
+      "estate_id": "6971e7223e8a4385e6bbf3ba",
+      "category": "펜션",
+      "title": "숲속의 오피스 바로 입주",
+      "introduction": "바다 도보 5분, 해변가 매물",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1004799,
+      "monthly_rent": 121638,
+      "built_year": "1984-06-18",
+      "area": 80.3,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.801135,
+        "latitude": 33.455465
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:00:18.802Z",
+      "updated_at": "2026-01-22T09:00:18.802Z"
+    },
+    {
+      "estate_id": "6960c8e53b912a9455c38ed6",
+      "category": "빌라",
+      "title": "스팟 이 가격 실화? (햇살 가득)",
+      "introduction": "보안 철저, 안전한 주거환경",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1018221,
+      "monthly_rent": 102291,
+      "built_year": "2019-09-09",
+      "area": 83.3,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.828598,
+        "latitude": 37.46033
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:22:45.927Z",
+      "updated_at": "2026-01-09T09:22:45.927Z"
+    },
+    {
+      "estate_id": "6960c7a73b912a9455c37d9e",
+      "category": "상가",
+      "title": "햇살 가득 센트럴 계약금 협의",
+      "introduction": "CCTV 24시간 운영",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1022338,
+      "monthly_rent": 106408,
+      "built_year": "1997-06-10",
+      "area": 1218.5,
+      "floors": 53,
+      "geolocation": {
+        "longitude": 126.855663,
+        "latitude": 37.484245
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:17:27.566Z",
+      "updated_at": "2026-01-09T09:17:27.566Z"
+    },
+    {
+      "estate_id": "6971e7ea3e8a4385e6bbfaa9",
+      "category": "원룸",
+      "title": "★편리한 빌리지★ 서두르세요",
+      "introduction": "넓은 정원, 바베큐 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1014204,
+      "monthly_rent": 131042,
+      "built_year": "2005-05-05",
+      "area": 539.9,
+      "floors": 20,
+      "geolocation": {
+        "longitude": 126.29713,
+        "latitude": 33.348893
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:03:38.972Z",
+      "updated_at": "2026-01-22T09:03:38.972Z"
+    },
+    {
+      "estate_id": "6971ecc53e8a4385e6bc3ad0",
+      "category": "원룸",
+      "title": "안식처 반려동물 OK (실속형)",
+      "introduction": "제주 감성 가득한 돌담집",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1005452,
+      "monthly_rent": 122290,
+      "built_year": "1992-07-27",
+      "area": 732.7,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.312849,
+        "latitude": 33.465051
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:24:21.202Z",
+      "updated_at": "2026-01-22T09:24:21.202Z"
+    },
+    {
+      "estate_id": "6960cad83b912a9455c3a9b2",
+      "category": "아파트",
+      "title": "자취방 전입 가능 (실용적인)",
+      "introduction": "학교 도보권",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1002538,
+      "monthly_rent": 119376,
+      "built_year": "2022-11-03",
+      "area": 801.8,
+      "floors": 53,
+      "geolocation": {
+        "longitude": 126.809812,
+        "latitude": 37.493153
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:31:04.233Z",
+      "updated_at": "2026-01-09T09:31:04.233Z"
+    }
+  ]
+}

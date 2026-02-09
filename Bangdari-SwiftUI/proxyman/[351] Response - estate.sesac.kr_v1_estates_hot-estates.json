@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960ca733b912a9455c3a442",
+      "category": "원룸",
+      "title": "[럭셔리] 빌리지 - 바로 입주",
+      "introduction": "신발장 대용량",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1014769,
+      "monthly_rent": 131607,
+      "built_year": "2017-01-21",
+      "area": 1104,
+      "floors": 44,
+      "geolocation": {
+        "longitude": 126.871302,
+        "latitude": 37.510759
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:29:23.252Z",
+      "updated_at": "2026-01-09T09:29:23.252Z"
+    },
+    {
+      "estate_id": "6960c95f3b912a9455c3955e",
+      "category": "아파트",
+      "title": "알뜰 매물 꿀매물",
+      "introduction": "드레스룸 있음",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1006903,
+      "monthly_rent": 123741,
+      "built_year": "2017-12-12",
+      "area": 693,
+      "floors": 38,
+      "geolocation": {
+        "longitude": 126.848412,
+        "latitude": 37.536095
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:24:47.122Z",
+      "updated_at": "2026-01-09T09:24:47.122Z"
+    },
+    {
+      "estate_id": "6960d0a23b912a9455c3fc59",
+      "category": "아파트",
+      "title": "고급스러운 센트럴 전입 가능",
+      "introduction": "정원 있는 1층 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1014698,
+      "monthly_rent": 131536,
+      "built_year": "1993-07-15",
+      "area": 1033.9,
+      "floors": 33,
+      "geolocation": {
+        "longitude": 126.836165,
+        "latitude": 37.470245
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:55:46.839Z",
+      "updated_at": "2026-01-09T09:55:46.839Z"
+    },
+    {
+      "estate_id": "6960c6943b912a9455c36e7f",
+      "category": "상가",
+      "title": "★햇살 가득 주거공간★ 협의 가능",
+      "introduction": "공원 바로 앞",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1010470,
+      "monthly_rent": 127308,
+      "built_year": "1997-09-25",
+      "area": 1278.6,
+      "floors": 6,
+      "geolocation": {
+        "longitude": 126.836689,
+        "latitude": 37.476971
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:12:52.672Z",
+      "updated_at": "2026-01-09T09:12:52.672Z"
+    },
+    {
+      "estate_id": "6971eded3e8a4385e6bc4a10",
+      "category": "단독주택",
+      "title": "한라산뷰 레지던스 주차 OK",
+      "introduction": "5일장 근처, 생활 편리",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1017017,
+      "monthly_rent": 101088,
+      "built_year": "2012-03-19",
+      "area": 370,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.209426,
+        "latitude": 33.338367
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:29:17.856Z",
+      "updated_at": "2026-01-22T09:29:17.856Z"
+    },
+    {
+      "estate_id": "6971e89c3e8a4385e6bc03e1",
+      "category": "아파트",
+      "title": "★넉넉한 매물★ 제주이주 추천",
+      "introduction": "바다 도보 5분, 해변가 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1020899,
+      "monthly_rent": 104970,
+      "built_year": "1984-12-16",
+      "area": 1270.1,
+      "floors": 25,
+      "geolocation": {
+        "longitude": 126.2338,
+        "latitude": 33.345327
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:06:36.150Z",
+      "updated_at": "2026-01-22T09:06:36.150Z"
+    },
+    {
+      "estate_id": "6971f2d53e8a4385e6bc8adc",
+      "category": "펜션",
+      "title": "포레스트 직접 확인 (아늑한)",
+      "introduction": "방 2개, 화장실 2개",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1008711,
+      "monthly_rent": 125549,
+      "built_year": "1986-06-14",
+      "area": 1010.9,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.210604,
+        "latitude": 33.363447
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:50:13.662Z",
+      "updated_at": "2026-01-22T09:50:13.662Z"
+    },
+    {
+      "estate_id": "6960cf2e3b912a9455c3e719",
+      "category": "빌라",
+      "title": "★전망 좋은 빌리지★ 만족 보장",
+      "introduction": "붙박이장 설치 완료",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1029289,
+      "monthly_rent": 113360,
+      "built_year": "2002-04-16",
+      "area": 714.4,
+      "floors": 37,
+      "geolocation": {
+        "longitude": 126.83488,
+        "latitude": 37.455966
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:49:34.697Z",
+      "updated_at": "2026-01-09T09:49:34.697Z"
+    },
+    {
+      "estate_id": "6960d05b3b912a9455c3f831",
+      "category": "아파트",
+      "title": "생활공간 꿀매물 (특가)",
+      "introduction": "세탁실 분리",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1026351,
+      "monthly_rent": 110421,
+      "built_year": "2007-12-08",
+      "area": 758.1,
+      "floors": 46,
+      "geolocation": {
+        "longitude": 126.821757,
+        "latitude": 37.498695
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:54:35.190Z",
+      "updated_at": "2026-01-09T09:54:35.190Z"
+    },
+    {
+      "estate_id": "6960cd153b912a9455c3c900",
+      "category": "상가",
+      "title": "★프리미엄 하우스★ 믿고 보세요",
+      "introduction": "경비실 상주",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1009920,
+      "monthly_rent": 126758,
+      "built_year": "1998-11-19",
+      "area": 728.5,
+      "floors": 55,
+      "geolocation": {
+        "longitude": 126.864833,
+        "latitude": 37.491804
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:40:37.813Z",
+      "updated_at": "2026-01-09T09:40:37.813Z"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960cf183b912a9455c3e5d1",
+      "category": "오피스텔",
+      "title": "모던한 사무실 강력 추천",
+      "introduction": "대형마트 5분 거리",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1019467,
+      "monthly_rent": 103538,
+      "built_year": "2024-04-04",
+      "area": 1329.2,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.824838,
+        "latitude": 37.458037
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:49:12.208Z",
+      "updated_at": "2026-01-09T09:49:12.208Z"
+    },
+    {
+      "estate_id": "6971e97d3e8a4385e6bc0f89",
+      "category": "펜션",
+      "title": "넉넉한 섬집, 검증 완료",
+      "introduction": "제주이주 첫 집으로 추천",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1010127,
+      "monthly_rent": 126965,
+      "built_year": "2021-03-19",
+      "area": 935.4,
+      "floors": 22,
+      "geolocation": {
+        "longitude": 126.350143,
+        "latitude": 33.434149
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:10:21.153Z",
+      "updated_at": "2026-01-22T09:10:21.153Z"
+    },
+    {
+      "estate_id": "6971ec0b3e8a4385e6bc3140",
+      "category": "오피스텔",
+      "title": "가성비 샵, 반려동물 OK",
+      "introduction": "조용하고 쾌적한 제주 시골마을",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1029146,
+      "monthly_rent": 113217,
+      "built_year": "1997-12-12",
+      "area": 571,
+      "floors": 14,
+      "geolocation": {
+        "longitude": 126.809433,
+        "latitude": 33.441394
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:21:15.530Z",
+      "updated_at": "2026-01-22T09:21:15.530Z"
+    },
+    {
+      "estate_id": "6960cbf53b912a9455c3b90a",
+      "category": "아파트",
+      "title": "럭셔리 투룸 급매!",
+      "introduction": "관리 잘 된 건물, 청결함",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1016668,
+      "monthly_rent": 100738,
+      "built_year": "1985-11-07",
+      "area": 21,
+      "floors": 23,
+      "geolocation": {
+        "longitude": 126.840428,
+        "latitude": 37.462657
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:35:49.558Z",
+      "updated_at": "2026-01-09T09:35:49.558Z"
+    },
+    {
+      "estate_id": "6971ead03e8a4385e6bc2101",
+      "category": "아파트",
+      "title": "[힐링되는] 주거공간 - 월동준비 완료",
+      "introduction": "바다 도보 5분, 해변가 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1007699,
+      "monthly_rent": 124537,
+      "built_year": "1986-07-27",
+      "area": 1489.1,
+      "floors": 25,
+      "geolocation": {
+        "longitude": 126.252393,
+        "latitude": 33.357437
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:16:00.742Z",
+      "updated_at": "2026-01-22T09:16:00.742Z"
+    },
+    {
+      "estate_id": "6971e8253e8a4385e6bbfda9",
+      "category": "펜션",
+      "title": "프라임 공간 귀농귀촌 최적",
+      "introduction": "월정리 해변 근처",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1020727,
+      "monthly_rent": 104798,
+      "built_year": "1996-06-22",
+      "area": 1098.3,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.807123,
+        "latitude": 33.444541
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:04:37.132Z",
+      "updated_at": "2026-01-22T09:04:37.132Z"
+    },
+    {
+      "estate_id": "6960cab63b912a9455c3a7e2",
+      "category": "오피스텔",
+      "title": "★조용한 보금자리★ 사업자 등록 가능",
+      "introduction": "주차 가능, 엘리베이터 있음",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1022545,
+      "monthly_rent": 106615,
+      "built_year": "2019-05-01",
+      "area": 1424.4,
+      "floors": 20,
+      "geolocation": {
+        "longitude": 126.836626,
+        "latitude": 37.508988
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:30:30.627Z",
+      "updated_at": "2026-01-09T09:30:30.627Z"
+    },
+    {
+      "estate_id": "6960cfd13b912a9455c3f075",
+      "category": "아파트",
+      "title": "에코 센트럴 계약금 협의",
+      "introduction": "중앙 난방, 따뜻함",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1021258,
+      "monthly_rent": 105328,
+      "built_year": "2020-06-10",
+      "area": 137.7,
+      "floors": 53,
+      "geolocation": {
+        "longitude": 126.865039,
+        "latitude": 37.536963
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:52:17.107Z",
+      "updated_at": "2026-01-09T09:52:17.107Z"
+    },
+    {
+      "estate_id": "6960cf6a3b912a9455c3ea9d",
+      "category": "오피스텔",
+      "title": "정갈한 둥지, 한정 매물",
+      "introduction": "신축 건물, 깨끗한 인테리어",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1030144,
+      "monthly_rent": 114214,
+      "built_year": "1982-06-22",
+      "area": 112,
+      "floors": 51,
+      "geolocation": {
+        "longitude": 126.819324,
+        "latitude": 37.458366
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:50:34.715Z",
+      "updated_at": "2026-01-09T09:50:34.715Z"
+    },
+    {
+      "estate_id": "6971e9463e8a4385e6bc0cb9",
+      "category": "펜션",
+      "title": "보금자리 실매물 (세련된)",
+      "introduction": "제주올레 코스 인접",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1019631,
+      "monthly_rent": 103701,
+      "built_year": "2003-05-01",
+      "area": 1492.1,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.724765,
+        "latitude": 33.435138
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:09:26.710Z",
+      "updated_at": "2026-01-22T09:09:26.710Z"
+    }
+  ]
+}

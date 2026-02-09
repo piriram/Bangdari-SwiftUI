@@ -1,0 +1,48 @@
+{
+  "estate_id": "6960ca323b912a9455c3a0ca",
+  "category": "상가",
+  "title": "합리적인 센트럴 계약금 협의",
+  "introduction": "중앙 난방, 따뜻함",
+  "reservation_price": 643,
+  "description": "서울 영등포 벽산! 한강 조망이 가능한 사무실으로 편안한 생활을 시작하세요.",
+  "thumbnails": [
+    "/data/estates/estate_112_1767944326171.png"
+  ],
+  "deposit": 1030018,
+  "monthly_rent": 114088,
+  "built_year": "1994-02-10",
+  "maintenance_fee": 15905,
+  "area": 1443.1,
+  "parking_count": 2,
+  "floors": 45,
+  "options": {
+    "option1": "냉장고",
+    "option2": "세탁기",
+    "option3": "에어컨",
+    "option4": "옷장",
+    "option5": "신발장",
+    "option6": "전자레인지",
+    "option7": "싱크대",
+    "option8": "TV",
+    "option9": "기타1",
+    "option10": "기타2"
+  },
+  "geolocation": {
+    "longitude": 126.895373,
+    "latitude": 37.506384
+  },
+  "creator": {
+    "user_id": "6938ceb8cd1a3725c019c8b9",
+    "nick": "핀공인중개사",
+    "introduction": "안녕하세요 :)",
+    "profileImage": "/data/profiles/1765331714972.png"
+  },
+  "like_count": 1,
+  "is_liked": true,
+  "is_reserved": false,
+  "is_safe_estate": false,
+  "is_recommended": false,
+  "comments": [],
+  "created_at": "2026-01-09T09:28:18.886Z",
+  "updated_at": "2026-02-08T06:27:33.748Z"
+}

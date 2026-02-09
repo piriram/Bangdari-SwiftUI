@@ -1,0 +1,169 @@
+{
+  "data": [
+    {
+      "estate_id": "6971eb313e8a4385e6bc25f9",
+      "category": "단독주택",
+      "title": "귤밭뷰 바다집 문의 환영",
+      "introduction": "인테리어 맞춤 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1009861,
+      "monthly_rent": 126700,
+      "built_year": "1986-12-24",
+      "area": 669.6,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.279144,
+        "latitude": 33.369999
+      },
+      "like_count": 1,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:17:37.471Z",
+      "updated_at": "2026-01-29T22:30:29.304Z"
+    },
+    {
+      "estate_id": "6971e9c83e8a4385e6bc1369",
+      "category": "원룸",
+      "title": "★포근한 바다집★ 인증 매물",
+      "introduction": "오름 트레킹 코스 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1001612,
+      "monthly_rent": 118450,
+      "built_year": "2016-08-16",
+      "area": 1365.5,
+      "floors": 27,
+      "geolocation": {
+        "longitude": 126.239193,
+        "latitude": 33.364526
+      },
+      "like_count": 1,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:11:36.297Z",
+      "updated_at": "2026-01-25T10:46:24.699Z"
+    },
+    {
+      "estate_id": "6971e7213e8a4385e6bbf3aa",
+      "category": "아파트",
+      "title": "★해변가 샵★ 한라산이 보여요",
+      "introduction": "탁 트인 뷰, 고층 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1014059,
+      "monthly_rent": 130898,
+      "built_year": "1998-08-16",
+      "area": 394.3,
+      "floors": 25,
+      "geolocation": {
+        "longitude": 126.72725,
+        "latitude": 33.433078
+      },
+      "like_count": 1,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:00:17.605Z",
+      "updated_at": "2026-02-08T05:19:15.602Z"
+    },
+    {
+      "estate_id": "6960d11d3b912a9455c4032f",
+      "category": "원룸",
+      "title": "최신식 존, 생활 편리",
+      "introduction": "카페거리 근처, 감성 충만",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1004054,
+      "monthly_rent": 120892,
+      "built_year": "2020-05-01",
+      "area": 826.1,
+      "floors": 9,
+      "geolocation": {
+        "longitude": 126.853565,
+        "latitude": 37.462701
+      },
+      "like_count": 1,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:57:49.979Z",
+      "updated_at": "2026-01-24T01:14:23.638Z"
+    },
+    {
+      "estate_id": "6960cc2f3b912a9455c3bc22",
+      "category": "상가",
+      "title": "품격있는 투룸 급하게 내놓습니다",
+      "introduction": "관리비 저렴, 실속형 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1003700,
+      "monthly_rent": 120538,
+      "built_year": "1988-08-24",
+      "area": 472.2,
+      "floors": 15,
+      "geolocation": {
+        "longitude": 126.882637,
+        "latitude": 37.506274
+      },
+      "like_count": 1,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:36:47.225Z",
+      "updated_at": "2026-01-29T00:23:11.305Z"
+    },
+    {
+      "estate_id": "6960c97d3b912a9455c39706",
+      "category": "빌라",
+      "title": "★단정한 보금자리★ 사업자 등록 가능",
+      "introduction": "어린이 놀이터 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1024864,
+      "monthly_rent": 108935,
+      "built_year": "1993-11-19",
+      "area": 762.6,
+      "floors": 60,
+      "geolocation": {
+        "longitude": 126.875957,
+        "latitude": 37.485643
+      },
+      "like_count": 1,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:25:17.869Z",
+      "updated_at": "2026-02-02T22:20:06.191Z"
+    },
+    {
+      "estate_id": "6938d207cd1a3725c019c8d8",
+      "category": "원룸",
+      "title": "깔끔한 풀옵션 원룸",
+      "introduction": "신축급 컨디션, 즉시 입주!",
+      "thumbnails": [
+        "/data/estates/estate_13_1765330871397.jpg",
+        "/data/estates/estate_14_1765330871509.jpg",
+        "/data/estates/estate_15_1765330871511.jpg",
+        "/data/estates/estate_16_1765330871531.jpg"
+      ],
+      "deposit": 5000000,
+      "monthly_rent": 450000,
+      "built_year": "2019-08-20",
+      "area": 19.8,
+      "floors": 4,
+      "geolocation": {
+        "longitude": 126.889557,
+        "latitude": 37.51925
+      },
+      "like_count": 5,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2025-12-10T01:51:03.257Z",
+      "updated_at": "2026-01-22T19:19:53.411Z"
+    }
+  ],
+  "next_cursor": "0"
+}

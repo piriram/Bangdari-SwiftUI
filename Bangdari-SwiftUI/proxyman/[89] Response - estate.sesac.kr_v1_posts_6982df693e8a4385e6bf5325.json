@@ -1,0 +1,46 @@
+{
+  "post_id": "6982df693e8a4385e6bf5325",
+  "category": "맛집",
+  "title": "미술관을 소개합니다!!",
+  "content": "우리동네 미술관도 있어요",
+  "geolocation": {
+    "longitude": 126.8948,
+    "latitude": 37.5179
+  },
+  "creator": {
+    "user_id": "695f66a43b912a9455c32d66",
+    "nick": "Jiyong"
+  },
+  "files": [
+    "/data/posts/image_0_1770184553541.jpg",
+    "/data/posts/image_1_1770184553571.jpg",
+    "/data/posts/image_2_1770184553601.jpg",
+    "/data/posts/video_3_1770184553609.mp4"
+  ],
+  "is_like": false,
+  "like_count": 2,
+  "comments": [
+    {
+      "comment_id": "6982dfa53e8a4385e6bf544c",
+      "content": "이쁘네요!!",
+      "createdAt": "2026-02-04T05:56:53.379Z",
+      "creator": {
+        "user_id": "695f6e353b912a9455c33131",
+        "nick": "새싹이"
+      },
+      "replies": []
+    },
+    {
+      "comment_id": "6982dfcb3e8a4385e6bf546f",
+      "content": "한번 가보세요~",
+      "createdAt": "2026-02-04T05:57:31.295Z",
+      "creator": {
+        "user_id": "695f66a43b912a9455c32d66",
+        "nick": "Jiyong"
+      },
+      "replies": []
+    }
+  ],
+  "createdAt": "2026-02-04T05:55:53.642Z",
+  "updatedAt": "2026-02-04T05:57:31.299Z"
+}

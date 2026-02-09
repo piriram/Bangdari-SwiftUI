@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971ebde3e8a4385e6bc2ef0",
+      "category": "상가",
+      "title": "힐 위치 최상 (첨단)",
+      "introduction": "조용한 마을, 힐링하기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1028541,
+      "monthly_rent": 112611,
+      "built_year": "1989-04-28",
+      "area": 1457,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.260087,
+        "latitude": 33.382061
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:20:30.684Z",
+      "updated_at": "2026-01-22T09:20:30.684Z"
+    },
+    {
+      "estate_id": "6960cb163b912a9455c3ad12",
+      "category": "상가",
+      "title": "합리적인 투룸 급하게 내놓습니다",
+      "introduction": "현관 중문 있음",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1032468,
+      "monthly_rent": 116538,
+      "built_year": "1991-03-27",
+      "area": 945,
+      "floors": 35,
+      "geolocation": {
+        "longitude": 126.828619,
+        "latitude": 37.502136
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:32:06.896Z",
+      "updated_at": "2026-01-09T09:32:06.896Z"
+    },
+    {
+      "estate_id": "6960c9d63b912a9455c39bc6",
+      "category": "빌라",
+      "title": "★포근한 신혼집★ 놓치지 마세요!",
+      "introduction": "어린이 놀이터 근처",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1009385,
+      "monthly_rent": 126223,
+      "built_year": "2015-03-15",
+      "area": 193.9,
+      "floors": 60,
+      "geolocation": {
+        "longitude": 126.859317,
+        "latitude": 37.490324
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:26:46.049Z",
+      "updated_at": "2026-01-09T09:26:46.049Z"
+    },
+    {
+      "estate_id": "6960cbed3b912a9455c3b89a",
+      "category": "빌라",
+      "title": "리버 현장 방문 환영 (정갈한)",
+      "introduction": "도시가스 연결",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1022216,
+      "monthly_rent": 106286,
+      "built_year": "2012-07-23",
+      "area": 1096.8,
+      "floors": 51,
+      "geolocation": {
+        "longitude": 126.85786,
+        "latitude": 37.487324
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:35:41.405Z",
+      "updated_at": "2026-01-09T09:35:41.405Z"
+    },
+    {
+      "estate_id": "6960cd9f3b912a9455c3d0a0",
+      "category": "아파트",
+      "title": "스토어 특별 할인 (모던한)",
+      "introduction": "학교 도보권",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1002718,
+      "monthly_rent": 119556,
+      "built_year": "2018-01-09",
+      "area": 981.6,
+      "floors": 53,
+      "geolocation": {
+        "longitude": 126.872673,
+        "latitude": 37.513642
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:42:55.301Z",
+      "updated_at": "2026-01-09T09:42:55.301Z"
+    },
+    {
+      "estate_id": "6971f2f13e8a4385e6bc8c44",
+      "category": "원룸",
+      "title": "★쾌적한 한라하우스★ 전입 가능",
+      "introduction": "풀옵션, 즉시 입주 가능!",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1022035,
+      "monthly_rent": 106105,
+      "built_year": "2015-10-02",
+      "area": 914.6,
+      "floors": 20,
+      "geolocation": {
+        "longitude": 126.295726,
+        "latitude": 33.349232
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:50:41.023Z",
+      "updated_at": "2026-01-22T09:50:41.023Z"
+    },
+    {
+      "estate_id": "6960caeb3b912a9455c3aac2",
+      "category": "상가",
+      "title": "★리모델링 포레스트★ 주차 OK",
+      "introduction": "풀옵션, 즉시 입주 가능!",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1010775,
+      "monthly_rent": 127613,
+      "built_year": "2025-06-02",
+      "area": 91.4,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.861469,
+        "latitude": 37.478965
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:31:23.943Z",
+      "updated_at": "2026-01-09T09:31:23.943Z"
+    },
+    {
+      "estate_id": "6971efb03e8a4385e6bc6174",
+      "category": "게스트하우스",
+      "title": "[첨단] 올레하우스 - 계약금 협의",
+      "introduction": "반려동물과 함께 살기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1022304,
+      "monthly_rent": 106374,
+      "built_year": "2008-02-10",
+      "area": 1183.1,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.260443,
+        "latitude": 33.379423
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:36:48.387Z",
+      "updated_at": "2026-01-22T09:36:48.387Z"
+    },
+    {
+      "estate_id": "6971ed5e3e8a4385e6bc42b0",
+      "category": "아파트",
+      "title": "효율적인 투룸 믿고 보세요",
+      "introduction": "드레스룸 있음",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1030163,
+      "monthly_rent": 114233,
+      "built_year": "2001-07-19",
+      "area": 131,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.765079,
+        "latitude": 33.406587
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:26:54.370Z",
+      "updated_at": "2026-01-22T09:26:54.370Z"
+    },
+    {
+      "estate_id": "6971ea353e8a4385e6bc1909",
+      "category": "상가",
+      "title": "깔끔한 테라스, 바다가 눈앞에!",
+      "introduction": "넓은 마당, 텃밭 가능",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1030141,
+      "monthly_rent": 114212,
+      "built_year": "1980-09-21",
+      "area": 109.2,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.804333,
+        "latitude": 33.455121
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:13:25.693Z",
+      "updated_at": "2026-01-22T09:13:25.693Z"
+    }
+  ]
+}

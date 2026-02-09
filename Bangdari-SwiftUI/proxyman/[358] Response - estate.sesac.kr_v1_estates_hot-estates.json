@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971e7423e8a4385e6bbf571",
+      "category": "상가",
+      "title": "돌담있는 핫플 제주살이 시작!",
+      "introduction": "곽지해수욕장 도보권",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1032333,
+      "monthly_rent": 116403,
+      "built_year": "1993-10-02",
+      "area": 810.1,
+      "floors": 20,
+      "geolocation": {
+        "longitude": 126.823188,
+        "latitude": 33.420912
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:00:50.760Z",
+      "updated_at": "2026-01-22T09:00:50.760Z"
+    },
+    {
+      "estate_id": "6971ebf83e8a4385e6bc3040",
+      "category": "상가",
+      "title": "쾌적한 주거공간, 놓치지 마세요!",
+      "introduction": "한라산 조망, 자연과 함께하는 생활",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1010237,
+      "monthly_rent": 127075,
+      "built_year": "1993-08-20",
+      "area": 1045.7,
+      "floors": 12,
+      "geolocation": {
+        "longitude": 126.809032,
+        "latitude": 33.442742
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:20:56.097Z",
+      "updated_at": "2026-01-22T09:20:56.097Z"
+    },
+    {
+      "estate_id": "6971f20f3e8a4385e6bc80ac",
+      "category": "오피스텔",
+      "title": "★경제적인 제주레지던스★ 한라산이 보여요",
+      "introduction": "풀옵션, 즉시 입주 가능!",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1023434,
+      "monthly_rent": 107505,
+      "built_year": "1989-04-04",
+      "area": 823.3,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.250804,
+        "latitude": 33.329054
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:46:55.519Z",
+      "updated_at": "2026-01-22T09:46:55.519Z"
+    },
+    {
+      "estate_id": "6960ccf03b912a9455c3c6e8",
+      "category": "아파트",
+      "title": "리버 현장 방문 환영 (효율적인)",
+      "introduction": "역세권 도보 5분, 교통 편리!",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1023856,
+      "monthly_rent": 107926,
+      "built_year": "1997-12-24",
+      "area": 1245.5,
+      "floors": 11,
+      "geolocation": {
+        "longitude": 126.852369,
+        "latitude": 37.473604
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:40:00.799Z",
+      "updated_at": "2026-01-09T09:40:00.799Z"
+    },
+    {
+      "estate_id": "6971e7bf3e8a4385e6bbf871",
+      "category": "상가",
+      "title": "오피스 힐링라이프 (친환경)",
+      "introduction": "조용한 마을, 힐링하기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1013541,
+      "monthly_rent": 130379,
+      "built_year": "1985-01-25",
+      "area": 1367.4,
+      "floors": 16,
+      "geolocation": {
+        "longitude": 126.78305,
+        "latitude": 33.428272
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:02:55.920Z",
+      "updated_at": "2026-01-22T09:02:55.920Z"
+    },
+    {
+      "estate_id": "6971e9813e8a4385e6bc0fc9",
+      "category": "빌라",
+      "title": "실용적인 하우스, 월동준비 완료",
+      "introduction": "조용하고 쾌적한 제주 시골마을",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1029846,
+      "monthly_rent": 113917,
+      "built_year": "2007-03-27",
+      "area": 1271.8,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.292967,
+        "latitude": 33.348675
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:10:25.986Z",
+      "updated_at": "2026-01-22T09:10:25.986Z"
+    },
+    {
+      "estate_id": "6971edf13e8a4385e6bc4a40",
+      "category": "아파트",
+      "title": "★럭셔리 제주빌라★ 생활 편리",
+      "introduction": "관리비 저렴, 실속형 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1023339,
+      "monthly_rent": 107410,
+      "built_year": "1986-11-11",
+      "area": 728.7,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.25224,
+        "latitude": 33.350465
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:29:21.488Z",
+      "updated_at": "2026-01-22T09:29:21.488Z"
+    },
+    {
+      "estate_id": "6960d0e83b912a9455c40023",
+      "category": "상가",
+      "title": "힐링 센트럴 계약금 협의",
+      "introduction": "중앙 난방, 따뜻함",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1000010,
+      "monthly_rent": 116848,
+      "built_year": "2024-12-12",
+      "area": 1255.3,
+      "floors": 45,
+      "geolocation": {
+        "longitude": 126.838605,
+        "latitude": 37.479179
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:56:56.265Z",
+      "updated_at": "2026-01-09T09:56:56.265Z"
+    },
+    {
+      "estate_id": "6960c8413b912a9455c385f6",
+      "category": "상가",
+      "title": "★풀옵션 인기매물★ 지금 바로!",
+      "introduction": "풀옵션, 즉시 입주 가능!",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1012875,
+      "monthly_rent": 129713,
+      "built_year": "2010-04-20",
+      "area": 701.2,
+      "floors": 10,
+      "geolocation": {
+        "longitude": 126.83156,
+        "latitude": 37.48152
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:20:01.398Z",
+      "updated_at": "2026-01-09T09:20:01.398Z"
+    },
+    {
+      "estate_id": "6971efd63e8a4385e6bc6364",
+      "category": "단독주택",
+      "title": "핫플 사업자 등록 가능 (실용적인)",
+      "introduction": "독채 펜션, 수익형 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1032439,
+      "monthly_rent": 116509,
+      "built_year": "2008-10-06",
+      "area": 916.1,
+      "floors": 6,
+      "geolocation": {
+        "longitude": 126.328176,
+        "latitude": 33.456637
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:37:26.017Z",
+      "updated_at": "2026-01-22T09:37:26.017Z"
+    }
+  ]
+}

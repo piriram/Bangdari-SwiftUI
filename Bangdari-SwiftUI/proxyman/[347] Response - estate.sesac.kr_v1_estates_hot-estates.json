@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6971ea743e8a4385e6bc1c41",
+      "category": "펜션",
+      "title": "★바다가보이는 홈★ 급매!",
+      "introduction": "오름 트레킹 코스 근처",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1013679,
+      "monthly_rent": 130518,
+      "built_year": "1986-08-12",
+      "area": 14.4,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.241799,
+        "latitude": 33.364926
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:14:28.407Z",
+      "updated_at": "2026-01-22T09:14:28.407Z"
+    },
+    {
+      "estate_id": "6971f2083e8a4385e6bc804c",
+      "category": "게스트하우스",
+      "title": "자연속 주거공간 기회를 잡으세요",
+      "introduction": "귤밭이 보이는 전원주택",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1010848,
+      "monthly_rent": 127686,
+      "built_year": "2007-08-16",
+      "area": 165.5,
+      "floors": 24,
+      "geolocation": {
+        "longitude": 126.820002,
+        "latitude": 33.420589
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:46:48.240Z",
+      "updated_at": "2026-01-22T09:46:48.240Z"
+    },
+    {
+      "estate_id": "6960cc0f3b912a9455c3ba72",
+      "category": "원룸",
+      "title": "★안전한 복층★ 즉시 입주",
+      "introduction": "병원 인접, 의료 편리",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1012629,
+      "monthly_rent": 129468,
+      "built_year": "1994-06-06",
+      "area": 455,
+      "floors": 5,
+      "geolocation": {
+        "longitude": 126.864646,
+        "latitude": 37.497288
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:36:15.848Z",
+      "updated_at": "2026-01-09T09:36:15.848Z"
+    },
+    {
+      "estate_id": "6971e6613e8a4385e6bbe9ca",
+      "category": "단독주택",
+      "title": "프리미엄 힐, 교통 편리",
+      "introduction": "감귤밭 한가운데 위치",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1002353,
+      "monthly_rent": 119192,
+      "built_year": "2022-02-10",
+      "area": 616,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.349037,
+        "latitude": 33.376005
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:57:05.743Z",
+      "updated_at": "2026-01-22T08:57:05.743Z"
+    },
+    {
+      "estate_id": "6960cfd73b912a9455c3f0cf",
+      "category": "오피스텔",
+      "title": "인기매물 급매! (실용적인)",
+      "introduction": "도시가스 연결",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1031755,
+      "monthly_rent": 115826,
+      "built_year": "1984-08-08",
+      "area": 232,
+      "floors": 43,
+      "geolocation": {
+        "longitude": 126.83696,
+        "latitude": 37.489374
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:52:23.265Z",
+      "updated_at": "2026-01-09T09:52:23.265Z"
+    },
+    {
+      "estate_id": "6960cf733b912a9455c3eb1d",
+      "category": "원룸",
+      "title": "[안전한] 빌리지 - 후회 없는 선택",
+      "introduction": "병원 인접, 의료 편리",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1021329,
+      "monthly_rent": 105399,
+      "built_year": "2000-09-05",
+      "area": 209.4,
+      "floors": 4,
+      "geolocation": {
+        "longitude": 126.886778,
+        "latitude": 37.465212
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:50:43.722Z",
+      "updated_at": "2026-01-09T09:50:43.722Z"
+    },
+    {
+      "estate_id": "6960cfb63b912a9455c3eecd",
+      "category": "아파트",
+      "title": "시원한 스튜디오 인증 매물",
+      "introduction": "드레스룸 있음",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1015843,
+      "monthly_rent": 132681,
+      "built_year": "1988-03-11",
+      "area": 687.2,
+      "floors": 38,
+      "geolocation": {
+        "longitude": 126.831111,
+        "latitude": 37.467238
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:51:50.131Z",
+      "updated_at": "2026-01-09T09:51:50.131Z"
+    },
+    {
+      "estate_id": "6971ef353e8a4385e6bc5b24",
+      "category": "상가",
+      "title": "신혼집 만족 보장 (모던한)",
+      "introduction": "코너 세대, 채광 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1024661,
+      "monthly_rent": 108731,
+      "built_year": "2020-01-05",
+      "area": 559.5,
+      "floors": 6,
+      "geolocation": {
+        "longitude": 126.232714,
+        "latitude": 33.342038
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:34:45.863Z",
+      "updated_at": "2026-01-22T09:34:45.863Z"
+    },
+    {
+      "estate_id": "6971ee483e8a4385e6bc4eb8",
+      "category": "원룸",
+      "title": "하우스 특별 할인 (프라임)",
+      "introduction": "이중창 설치, 방음 우수",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1020916,
+      "monthly_rent": 104986,
+      "built_year": "2001-02-22",
+      "area": 1287.8,
+      "floors": 11,
+      "geolocation": {
+        "longitude": 126.789393,
+        "latitude": 33.458935
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:30:48.397Z",
+      "updated_at": "2026-01-22T09:30:48.397Z"
+    },
+    {
+      "estate_id": "6971f2863e8a4385e6bc86c4",
+      "category": "빌라",
+      "title": "★정갈한 테라스★ 즉시 입주",
+      "introduction": "넓은 정원, 바베큐 가능",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1008004,
+      "monthly_rent": 124843,
+      "built_year": "2015-04-08",
+      "area": 303.9,
+      "floors": 30,
+      "geolocation": {
+        "longitude": 126.779034,
+        "latitude": 33.42705
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:48:54.025Z",
+      "updated_at": "2026-01-22T09:48:54.025Z"
+    }
+  ]
+}

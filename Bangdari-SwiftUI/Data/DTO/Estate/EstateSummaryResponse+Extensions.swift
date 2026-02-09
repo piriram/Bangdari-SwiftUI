@@ -55,7 +55,25 @@ extension EstateFormattable {
 
 // MARK: - Estate Summary Response Extensions
 
-extension EstateSummaryResponse: EstateFormattable {}
+extension EstateSummaryResponse: EstateFormattable {
+
+    /// Mock 모드에서 로컬 이미지 경로 반환
+    var displayImageURLs: [String] {
+        guard AppEnvironment.current == .mock else {
+            return files
+        }
+
+        // Mock 모드: 로컬 이미지 이름으로 변환
+        return files.compactMap { urlString in
+            MockImageMapper.mapToLocalImage(urlString)
+        }
+    }
+
+    /// 첫 번째 이미지 URL (또는 Mock 이미지)
+    var firstImageURL: String? {
+        displayImageURLs.first
+    }
+}
 
 // MARK: - Estate Detail Response Extensions
 

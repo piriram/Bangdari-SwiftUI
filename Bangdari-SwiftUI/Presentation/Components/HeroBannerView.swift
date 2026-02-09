@@ -155,6 +155,13 @@ struct HeroBannerView: View {
 
     private func imageURL(for estate: EstateSummaryResponse) -> URL? {
         guard let first = estate.files.first, !first.isEmpty else { return nil }
+
+        // Mock 모드: 로컬 파일 경로를 file:// URL로 변환
+        if AppEnvironment.current == .mock {
+            return URL(fileURLWithPath: first)
+        }
+
+        // Live 모드: 서버 URL
         return URL(string: APIConfig.baseURL + "/" + first)
     }
 }
@@ -213,6 +220,13 @@ struct FeaturedEstateBanner: View {
 
     private var imageURL: URL? {
         guard let first = estate.files.first else { return nil }
+
+        // Mock 모드: 로컬 파일 경로를 file:// URL로 변환
+        if AppEnvironment.current == .mock {
+            return URL(fileURLWithPath: first)
+        }
+
+        // Live 모드: 서버 URL
         return URL(string: APIConfig.baseURL + "/" + first)
     }
 }

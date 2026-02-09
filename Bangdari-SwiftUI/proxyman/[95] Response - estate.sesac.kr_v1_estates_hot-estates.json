@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960c92d3b912a9455c392ae",
+      "category": "오피스텔",
+      "title": "★실용적인 둥지★ 한정 매물",
+      "introduction": "중앙 난방, 따뜻함",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1005237,
+      "monthly_rent": 122075,
+      "built_year": "2008-06-26",
+      "area": 518.6,
+      "floors": 53,
+      "geolocation": {
+        "longitude": 126.881908,
+        "latitude": 37.516858
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:23:57.182Z",
+      "updated_at": "2026-01-09T09:23:57.182Z"
+    },
+    {
+      "estate_id": "6971ed443e8a4385e6bc4160",
+      "category": "상가",
+      "title": "복층 월동준비 완료 (실용적인)",
+      "introduction": "독채 펜션, 수익형 매물",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1000733,
+      "monthly_rent": 117571,
+      "built_year": "2011-08-12",
+      "area": 486.6,
+      "floors": 18,
+      "geolocation": {
+        "longitude": 126.280113,
+        "latitude": 33.36798
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:26:28.878Z",
+      "updated_at": "2026-01-22T09:26:28.878Z"
+    },
+    {
+      "estate_id": "6971e5723e8a4385e6bbdcc6",
+      "category": "원룸",
+      "title": "[바다가보이는] 제주빌라 - 귀농귀촌 최적",
+      "introduction": "넓은 정원, 바베큐 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1018404,
+      "monthly_rent": 102474,
+      "built_year": "2019-12-12",
+      "area": 266.3,
+      "floors": 20,
+      "geolocation": {
+        "longitude": 126.209878,
+        "latitude": 33.33351
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:53:06.264Z",
+      "updated_at": "2026-01-22T08:53:06.264Z"
+    },
+    {
+      "estate_id": "6971efd13e8a4385e6bc632c",
+      "category": "상가",
+      "title": "한라산뷰 보금자리 힐링라이프",
+      "introduction": "리모델링 완료, 새집같은 컨디션",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1007693,
+      "monthly_rent": 124531,
+      "built_year": "1980-11-03",
+      "area": 1483.8,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.228056,
+        "latitude": 33.340317
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:37:21.730Z",
+      "updated_at": "2026-01-22T09:37:21.730Z"
+    },
+    {
+      "estate_id": "6960cd433b912a9455c3cb88",
+      "category": "빌라",
+      "title": "경제적인 생활공간, 문의 환영",
+      "introduction": "건조기 설치 가능",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1013151,
+      "monthly_rent": 129990,
+      "built_year": "2010-05-09",
+      "area": 977.8,
+      "floors": 47,
+      "geolocation": {
+        "longitude": 126.862264,
+        "latitude": 37.482278
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:41:23.430Z",
+      "updated_at": "2026-01-09T09:41:23.430Z"
+    },
+    {
+      "estate_id": "6971efe63e8a4385e6bc6444",
+      "category": "오피스텔",
+      "title": "둥지 실매물 (햇살 가득)",
+      "introduction": "한라산 조망, 자연과 함께하는 생활",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1018986,
+      "monthly_rent": 103056,
+      "built_year": "2003-06-26",
+      "area": 848.4,
+      "floors": 2,
+      "geolocation": {
+        "longitude": 126.778994,
+        "latitude": 33.430821
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:37:42.988Z",
+      "updated_at": "2026-01-22T09:37:42.988Z"
+    },
+    {
+      "estate_id": "6971ec483e8a4385e6bc3460",
+      "category": "게스트하우스",
+      "title": "경제적인 보금자리 특별 할인",
+      "introduction": "월정리 해변 근처",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1007928,
+      "monthly_rent": 124766,
+      "built_year": "1985-11-23",
+      "area": 227.3,
+      "floors": 13,
+      "geolocation": {
+        "longitude": 126.317937,
+        "latitude": 33.461412
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:22:16.064Z",
+      "updated_at": "2026-01-22T09:22:16.064Z"
+    },
+    {
+      "estate_id": "6971e5833e8a4385e6bbdda6",
+      "category": "단독주택",
+      "title": "펜션 지금 바로! (해변가)",
+      "introduction": "코너 세대, 채광 우수",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1002593,
+      "monthly_rent": 119431,
+      "built_year": "1985-12-08",
+      "area": 856.8,
+      "floors": 18,
+      "geolocation": {
+        "longitude": 126.803818,
+        "latitude": 33.412607
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T08:53:23.222Z",
+      "updated_at": "2026-01-22T08:53:23.222Z"
+    },
+    {
+      "estate_id": "6971ede33e8a4385e6bc4988",
+      "category": "단독주택",
+      "title": "특가 제주빌라 현장 방문 환영",
+      "introduction": "5일장 근처, 생활 편리",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1026817,
+      "monthly_rent": 110888,
+      "built_year": "2014-10-26",
+      "area": 1224.1,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.296525,
+        "latitude": 33.411424
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:29:07.500Z",
+      "updated_at": "2026-01-22T09:29:07.500Z"
+    },
+    {
+      "estate_id": "6960ca663b912a9455c3a392",
+      "category": "원룸",
+      "title": "[럭셔리] 투룸 - 즉시 입주",
+      "introduction": "신발장 대용량",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1006069,
+      "monthly_rent": 122907,
+      "built_year": "2011-04-24",
+      "area": 1349.8,
+      "floors": 44,
+      "geolocation": {
+        "longitude": 126.79639,
+        "latitude": 37.496337
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:29:10.481Z",
+      "updated_at": "2026-01-09T09:29:10.481Z"
+    }
+  ]
+}

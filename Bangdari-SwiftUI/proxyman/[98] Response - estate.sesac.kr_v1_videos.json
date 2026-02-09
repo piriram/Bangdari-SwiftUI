@@ -1,0 +1,89 @@
+{
+  "data": [
+    {
+      "video_id": "6959003ca18bc2cef1ba9589",
+      "file_name": "estate_video_5",
+      "title": "대로변 코너 상가 매물 소개",
+      "description": "유동인구 많은 대로변 1층 코너 상가입니다.\n버스정류장 바로 앞에 위치하여 가시성이 뛰어납니다.\n카페, 음식점, 편의점 등 다양한 업종에 적합합니다.\n전기 증설 완료, 주차 2대 가능합니다.",
+      "duration": 331.581233,
+      "thumbnail_url": "/data/videos/estate_video_5.jpg",
+      "available_qualities": [
+        "1080p",
+        "720p",
+        "480p"
+      ],
+      "view_count": 765,
+      "like_count": 2,
+      "is_liked": false,
+      "createdAt": "2026-01-03T11:40:44.582Z"
+    },
+    {
+      "video_id": "69590020a18bc2cef1ba9583",
+      "file_name": "estate_video_4",
+      "title": "가성비 끝판왕 풀옵션 원룸",
+      "description": "1인 가구를 위한 깔끔한 풀옵션 원룸입니다.\n냉장고, 세탁기, 에어컨, 인덕션 등 생활가전이 모두 구비되어 있습니다.\n편의점, 카페가 도보 1분 거리에 있어 생활이 편리합니다.",
+      "duration": 713.734966,
+      "thumbnail_url": "/data/videos/estate_video_4.jpg",
+      "available_qualities": [
+        "1080p",
+        "720p",
+        "480p"
+      ],
+      "view_count": 376,
+      "like_count": 1,
+      "is_liked": false,
+      "createdAt": "2026-01-03T11:40:16.740Z"
+    },
+    {
+      "video_id": "6959000ca18bc2cef1ba957d",
+      "file_name": "estate_video_3",
+      "title": "조용한 주택가 신축 빌라 하이라이트",
+      "description": "한적한 주택가에 위치한 프라이빗 신축 빌라입니다.\n탑층으로 위층 소음 걱정이 없고, 넓은 테라스가 있습니다.\n도시가스 개별난방으로 난방비 부담이 적습니다.\n반려동물 입주 가능하며, 주차 1대 기본 제공됩니다.\n문래역까지 도보 7분 거리로 대중교통 접근성도 좋습니다.",
+      "duration": 759.617596,
+      "thumbnail_url": "/data/videos/estate_video_3.jpg",
+      "available_qualities": [
+        "1080p",
+        "720p",
+        "480p"
+      ],
+      "view_count": 393,
+      "like_count": 1,
+      "is_liked": false,
+      "createdAt": "2026-01-03T11:39:56.860Z"
+    },
+    {
+      "video_id": "6958fff0a18bc2cef1ba9577",
+      "file_name": "estate_video_2",
+      "title": "감각적인 복층 오피스텔 룸투어",
+      "description": "젊은 감성의 복층 구조 오피스텔을 소개합니다.\n1층은 거실과 주방, 2층은 침실로 구성되어 공간 활용도가 높습니다.\n24시간 경비 시스템과 피트니스센터가 완비되어 있습니다.\n영등포 업무지구와 인접하여 출퇴근이 편리합니다.",
+      "duration": 197.973333,
+      "thumbnail_url": "/data/videos/estate_video_2.jpg",
+      "available_qualities": [
+        "1080p",
+        "720p",
+        "480p"
+      ],
+      "view_count": 210,
+      "like_count": 1,
+      "is_liked": false,
+      "createdAt": "2026-01-03T11:39:28.744Z"
+    },
+    {
+      "video_id": "6958ff6da18bc2cef1ba954b",
+      "file_name": "estate_video_1",
+      "title": "문래역 초역세권 신축 아파트 투어",
+      "description": "문래역 도보 2분 거리에 위치한 2023년 신축 아파트입니다.\n전 세대 남향으로 채광이 뛰어나며 한강 조망이 가능합니다.\n풀옵션 제공으로 입주 시 별도 가전 구매가 필요 없습니다.",
+      "duration": 132.400181,
+      "thumbnail_url": "/data/videos/estate_video_1.jpg",
+      "available_qualities": [
+        "1080p",
+        "720p",
+        "480p"
+      ],
+      "view_count": 142,
+      "like_count": 0,
+      "is_liked": false,
+      "createdAt": "2026-01-03T11:37:17.554Z"
+    }
+  ]
+}

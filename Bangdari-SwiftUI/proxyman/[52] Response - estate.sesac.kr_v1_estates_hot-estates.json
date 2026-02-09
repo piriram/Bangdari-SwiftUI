@@ -1,0 +1,234 @@
+{
+  "data": [
+    {
+      "estate_id": "6960ca323b912a9455c3a0ca",
+      "category": "상가",
+      "title": "합리적인 센트럴 계약금 협의",
+      "introduction": "중앙 난방, 따뜻함",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1030018,
+      "monthly_rent": 114088,
+      "built_year": "1994-02-10",
+      "area": 1443.1,
+      "floors": 45,
+      "geolocation": {
+        "longitude": 126.895373,
+        "latitude": 37.506384
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:28:18.886Z",
+      "updated_at": "2026-01-09T09:28:18.886Z"
+    },
+    {
+      "estate_id": "6971e7513e8a4385e6bbf631",
+      "category": "오피스텔",
+      "title": "하우스 반려동물 OK (전망 좋은)",
+      "introduction": "복층 구조로 넓게 사용",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1029706,
+      "monthly_rent": 113776,
+      "built_year": "2004-08-24",
+      "area": 1130.1,
+      "floors": 3,
+      "geolocation": {
+        "longitude": 126.31139,
+        "latitude": 33.463043
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:01:05.244Z",
+      "updated_at": "2026-01-22T09:01:05.244Z"
+    },
+    {
+      "estate_id": "6971e5473e8a4385e6bbda8e",
+      "category": "펜션",
+      "title": "게스트하우스 한정 매물 (알뜰)",
+      "introduction": "복층 구조로 넓게 사용",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1008055,
+      "monthly_rent": 124894,
+      "built_year": "2020-05-05",
+      "area": 354.1,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.292264,
+        "latitude": 33.447857
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T08:52:23.250Z",
+      "updated_at": "2026-01-22T08:52:23.250Z"
+    },
+    {
+      "estate_id": "6960cf263b912a9455c3e6a5",
+      "category": "원룸",
+      "title": "[품격있는] 공간 - 파격 조건",
+      "introduction": "정원 있는 1층 매물",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1017999,
+      "monthly_rent": 102069,
+      "built_year": "1982-06-26",
+      "area": 1352.3,
+      "floors": 34,
+      "geolocation": {
+        "longitude": 126.827901,
+        "latitude": 37.529177
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:49:26.816Z",
+      "updated_at": "2026-01-09T09:49:26.816Z"
+    },
+    {
+      "estate_id": "6960caf43b912a9455c3ab32",
+      "category": "빌라",
+      "title": "프라임 스팟, 이 가격 실화?",
+      "introduction": "넓은 공간, 수납공간 충분",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1008861,
+      "monthly_rent": 125699,
+      "built_year": "1998-03-15",
+      "area": 1341.9,
+      "floors": 21,
+      "geolocation": {
+        "longitude": 126.824533,
+        "latitude": 37.529262
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:31:32.069Z",
+      "updated_at": "2026-01-09T09:31:32.069Z"
+    },
+    {
+      "estate_id": "6971f3553e8a4385e6bc916c",
+      "category": "오피스텔",
+      "title": "[깔끔한] 바다집 - 바로 입주",
+      "introduction": "빌트인 가전 완비",
+      "thumbnails": [
+        "/data/estates/estate_111_1767944326072.png"
+      ],
+      "deposit": 1021314,
+      "monthly_rent": 105384,
+      "built_year": "1984-03-23",
+      "area": 194.2,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.258442,
+        "latitude": 33.38133
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": false,
+      "created_at": "2026-01-22T09:52:21.366Z",
+      "updated_at": "2026-01-22T09:52:21.366Z"
+    },
+    {
+      "estate_id": "6971f2f33e8a4385e6bc8c64",
+      "category": "펜션",
+      "title": "[오션뷰] 핫플 - 믿고 보세요",
+      "introduction": "조용한 마을, 힐링하기 좋은 환경",
+      "thumbnails": [
+        "/data/estates/estate_112_1767944326171.png"
+      ],
+      "deposit": 1004791,
+      "monthly_rent": 121629,
+      "built_year": "2021-11-23",
+      "area": 71.7,
+      "floors": 26,
+      "geolocation": {
+        "longitude": 126.807151,
+        "latitude": 33.4411
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:50:43.477Z",
+      "updated_at": "2026-01-22T09:50:43.477Z"
+    },
+    {
+      "estate_id": "6960c82b3b912a9455c384ce",
+      "category": "빌라",
+      "title": "스팟 이 가격 실화? (환한)",
+      "introduction": "코너 세대, 채광 우수",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1016141,
+      "monthly_rent": 100211,
+      "built_year": "2009-05-09",
+      "area": 985.1,
+      "floors": 36,
+      "geolocation": {
+        "longitude": 126.808981,
+        "latitude": 37.483538
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": true,
+      "created_at": "2026-01-09T09:19:39.929Z",
+      "updated_at": "2026-01-09T09:19:39.929Z"
+    },
+    {
+      "estate_id": "6971ed233e8a4385e6bc3fb0",
+      "category": "단독주택",
+      "title": "[고급스러운] 테라스 - 파격 조건",
+      "introduction": "빌트인 가전 완비",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1024313,
+      "monthly_rent": 108384,
+      "built_year": "1994-10-22",
+      "area": 211.1,
+      "floors": 19,
+      "geolocation": {
+        "longitude": 126.822018,
+        "latitude": 33.420558
+      },
+      "like_count": 0,
+      "is_safe_estate": true,
+      "is_recommended": true,
+      "created_at": "2026-01-22T09:25:55.921Z",
+      "updated_at": "2026-01-22T09:25:55.921Z"
+    },
+    {
+      "estate_id": "6960ce873b912a9455c3ddaf",
+      "category": "오피스텔",
+      "title": "★특가 하우스★ 조건 좋아요",
+      "introduction": "관리비 저렴, 실속형 매물",
+      "thumbnails": [
+        "/data/estates/estate_113_1767944326272.png"
+      ],
+      "deposit": 1030400,
+      "monthly_rent": 114470,
+      "built_year": "2009-05-13",
+      "area": 368.2,
+      "floors": 12,
+      "geolocation": {
+        "longitude": 126.873207,
+        "latitude": 37.469337
+      },
+      "like_count": 0,
+      "is_safe_estate": false,
+      "is_recommended": false,
+      "created_at": "2026-01-09T09:46:47.228Z",
+      "updated_at": "2026-01-09T09:46:47.228Z"
+    }
+  ]
+}

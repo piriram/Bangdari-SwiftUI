@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "name": "banner4",
+      "imageUrl": "/data/banners/Estate_4.png",
+      "payload": {
+        "type": "WEBVIEW",
+        "value": "/event-application"
+      }
+    },
+    {
+      "name": "banner4",
+      "imageUrl": "/data/banners/Estate_3.png",
+      "payload": {
+        "type": "WEBVIEW",
+        "value": "/event-application"
+      }
+    },
+    {
+      "name": "banner4",
+      "imageUrl": "/data/banners/Estate_2.png",
+      "payload": {
+        "type": "WEBVIEW",
+        "value": "/event-application"
+      }
+    },
+    {
+      "name": "banner4",
+      "imageUrl": "/data/banners/Estate_1.png",
+      "payload": {
+        "type": "WEBVIEW",
+        "value": "/event-application"
+      }
+    }
+  ]
+}

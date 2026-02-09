@@ -1,0 +1,37 @@
+{
+  "post_id": "6988217a3e8a4385e6c00453",
+  "category": "기타",
+  "title": "공기좋은 휴가~",
+  "content": "휴가 다들 갔다오셨나요?",
+  "geolocation": {
+    "longitude": 126.855439,
+    "latitude": 37.5180942
+  },
+  "creator": {
+    "user_id": "6970c9913e8a4385e6bbafc7",
+    "nick": "이응",
+    "introduction": "자기소개",
+    "profileImage": "/data/profiles/1770528607777.jpg"
+  },
+  "files": [
+    "/data/posts/file0_1770529145683.jpg"
+  ],
+  "is_like": false,
+  "like_count": 0,
+  "comments": [
+    {
+      "comment_id": "6988224e3e8a4385e6c006ae",
+      "content": "넵",
+      "createdAt": "2026-02-08T05:42:38.353Z",
+      "creator": {
+        "user_id": "6970c9913e8a4385e6bbafc7",
+        "nick": "이응",
+        "introduction": "자기소개",
+        "profileImage": "/data/profiles/1770528607777.jpg"
+      },
+      "replies": []
+    }
+  ],
+  "createdAt": "2026-02-08T05:39:06.360Z",
+  "updatedAt": "2026-02-08T05:42:38.362Z"
+}
