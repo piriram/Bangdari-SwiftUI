@@ -272,7 +272,7 @@ private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
         }
 
         private func applyItemSpacing(on tabBar: UITabBar) {
-            let verticalOffset: CGFloat = 6
+            let verticalOffset: CGFloat = 8
 
             tabBar.subviews
                 .filter { NSStringFromClass(type(of: $0)).contains("UITabBarButton") }
