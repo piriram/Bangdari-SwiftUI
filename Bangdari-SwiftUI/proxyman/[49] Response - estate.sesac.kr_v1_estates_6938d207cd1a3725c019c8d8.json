@@ -40,7 +40,7 @@
   },
   "like_count": 5,
   "is_liked": false,
-  "is_reserved": true,
+  "is_reserved": false,
   "is_safe_estate": true,
   "is_recommended": false,
   "comments": [],
