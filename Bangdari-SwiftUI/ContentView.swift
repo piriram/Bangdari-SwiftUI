@@ -186,10 +186,6 @@ struct MainTabView: View {
         appearance.inlineLayoutAppearance = normalItemAppearance
         appearance.compactInlineLayoutAppearance = normalItemAppearance
 
-        // 아이콘과 탭바 상단 간격 확보
-        UITabBarItem.appearance().imageInsets = UIEdgeInsets(top: 2, left: 0, bottom: -2, right: 0)
-        UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
-
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
