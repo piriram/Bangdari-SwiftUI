@@ -45,9 +45,14 @@ final class MockEstateRepository: EstateRepository {
     // MARK: - Detail
 
     func fetchEstateDetail(estateId: String) async throws -> EstateDetailResponse {
-        // 샘플 ID 중 하나 사용
-        let filename = "estate-detail-6938d207cd1a3725c019c8d8"
-        return try loadJSON(filename: filename)
+        // 1) 요청된 estateId와 매칭되는 상세 파일이 있으면 우선 사용
+        let requestedFilename = "estate-detail-\(estateId)"
+        if let matchedDetail: EstateDetailResponse = try? loadJSON(filename: requestedFilename) {
+            return matchedDetail
+        }
+
+        // 2) 없으면 예약되지 않은 케이스로 fallback (UI 검증용)
+        return try loadJSON(filename: "estate-detail-6960ca323b912a9455c3a0ca")
     }
 
     func toggleLike(estateId: String, like: Bool) async throws -> Bool {
