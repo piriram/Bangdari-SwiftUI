@@ -169,14 +169,14 @@ struct MainTabView: View {
         // 비선택 아이템 색상 (gray45)
         let normalItemAppearance = UITabBarItemAppearance()
         normalItemAppearance.normal.iconColor = UIColor(Color.gray45)
-        normalItemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 2)
+        normalItemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
         normalItemAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor(Color.gray45)
         ]
 
         // 선택 아이템 색상 (gray90)
         normalItemAppearance.selected.iconColor = UIColor(Color.gray90)
-        normalItemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 2)
+        normalItemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
         normalItemAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor(Color.gray90)
         ]
@@ -184,6 +184,10 @@ struct MainTabView: View {
         appearance.stackedLayoutAppearance = normalItemAppearance
         appearance.inlineLayoutAppearance = normalItemAppearance
         appearance.compactInlineLayoutAppearance = normalItemAppearance
+
+        // 아이콘과 탭바 상단 간격 확보
+        UITabBarItem.appearance().imageInsets = UIEdgeInsets(top: 2, left: 0, bottom: -2, right: 0)
+        UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
 
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
