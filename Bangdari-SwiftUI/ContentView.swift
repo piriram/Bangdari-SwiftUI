@@ -267,7 +267,7 @@ private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
 
         private func applyItemSpacing(on tabBar: UITabBar) {
             tabBar.items?.forEach { item in
-                item.imageInsets = UIEdgeInsets(top: 3, left: 0, bottom: -3, right: 0)
+                item.imageInsets = UIEdgeInsets(top: 4, left: 0, bottom: -4, right: 0)
                 item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
             }
         }
