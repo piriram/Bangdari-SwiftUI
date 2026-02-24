@@ -49,13 +49,6 @@ struct InlinePromoItem: View {
             return nil
         }
 
-        if banner.image.hasPrefix("http") {
-            return URL(string: banner.image)
-        }
-
-        let separator = banner.image.hasPrefix("/") ? "" : "/"
-        let fullPath = Secrets.baseURL + separator + banner.image
-        print("🖼️ [BANNER-UI] URL 구성: '\(fullPath)'")
-        return URL(string: fullPath)
+        return MockImageMapper.resolvedImageURL(from: banner.image)
     }
 }

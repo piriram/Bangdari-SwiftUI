@@ -21,7 +21,7 @@ extension EstateSummaryResponse {
 
     var mapImageURL: URL? {
         guard let firstFile = files.first else { return nil }
-        return URL(string: Secrets.baseURL + "/" + firstFile)
+        return MockImageMapper.resolvedImageURL(from: firstFile)
     }
 
     private var shortDepositText: String {

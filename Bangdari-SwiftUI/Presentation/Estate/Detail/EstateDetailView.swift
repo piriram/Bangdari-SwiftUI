@@ -166,7 +166,7 @@ struct EstateDetailView: View {
             // 이미지 캐러셀
             TabView(selection: $currentImageIndex) {
                 ForEach(Array(files.enumerated()), id: \.offset) { index, file in
-                    KFImage.auth(url: URL(string: APIConfig.baseURL + "/" + file))
+                    KFImage.auth(url: MockImageMapper.resolvedImageURL(from: file))
                         .resizable()
                         .scaledToFill()
                         .frame(width: UIScreen.main.bounds.width)
@@ -758,12 +758,12 @@ struct EstateDetailView: View {
 
     private func profileImageURL(_ path: String?) -> URL? {
         guard let path else { return nil }
-        return URL(string: APIConfig.baseURL + "/" + path)
+        return MockImageMapper.resolvedImageURL(from: path)
     }
 
     private func similarEstateImageURL(_ estate: EstateSummaryResponse) -> URL? {
         guard let first = estate.files.first else { return nil }
-        return URL(string: APIConfig.baseURL + "/" + first)
+        return MockImageMapper.resolvedImageURL(from: first)
     }
 
     private func similarPriceText(_ estate: EstateSummaryResponse) -> String {

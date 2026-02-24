@@ -75,7 +75,7 @@ final class MockEstateRepository: EstateRepository {
 
     // MARK: - Helper
 
-    /// 이미지 경로를 로컬 파일 URL로 변환 (JSON 수정)
+    /// 이미지 경로를 로컬 파일 경로로 변환 (JSON 수정)
     private func convertImagePathsInJSON(_ data: Data) throws -> Data {
         guard var json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
               var dataArray = json["data"] as? [[String: Any]] else {
@@ -83,37 +83,32 @@ final class MockEstateRepository: EstateRepository {
             return data
         }
 
-        let baseImagePath = "file:///Users/ram/25-2/Bangdari-SwiftUI/Bangdari-SwiftUI/proxyman/media/images"
-        let folders = ["banners": "banners", "estates": "estates", "chats": "chats", "posts": "posts"]
-
-        // 각 항목의 files/thumbnails 필드 변환
+        // 각 항목의 files/thumbnails/image 필드 변환
         for (index, var item) in dataArray.enumerated() {
             if let files = item["files"] as? [String] {
-                item["files"] = files.compactMap { originalPath -> String? in
-                    guard let imageName = MockImageMapper.mapToLocalImage(originalPath) else { return nil }
-
-                    // 카테고리 감지
-                    var folder = "estates" // 기본값
-                    if originalPath.contains("/banners/") { folder = "banners" }
-                    else if originalPath.contains("/chats/") { folder = "chats" }
-                    else if originalPath.contains("/posts/") { folder = "posts" }
-
-                    return "\(baseImagePath)/\(folder)/\(imageName).jpg"
-                }
-                dataArray[index] = item
-            } else if let thumbnails = item["thumbnails"] as? [String] {
-                item["thumbnails"] = thumbnails.compactMap { originalPath -> String? in
-                    guard let imageName = MockImageMapper.mapToLocalImage(originalPath) else { return nil }
-
-                    var folder = "estates"
-                    if originalPath.contains("/banners/") { folder = "banners" }
-                    else if originalPath.contains("/chats/") { folder = "chats" }
-                    else if originalPath.contains("/posts/") { folder = "posts" }
-
-                    return "\(baseImagePath)/\(folder)/\(imageName).jpg"
-                }
-                dataArray[index] = item
+                item["files"] = files.compactMap { MockImageMapper.localImagePath(for: $0) }
             }
+
+            if let thumbnails = item["thumbnails"] as? [String] {
+                item["thumbnails"] = thumbnails.compactMap { MockImageMapper.localImagePath(for: $0) }
+            }
+
+            if let image = item["image"] as? String,
+               let localImagePath = MockImageMapper.localImagePath(for: image) {
+                item["image"] = localImagePath
+            }
+
+            if let imageUrl = item["imageUrl"] as? String,
+               let localImagePath = MockImageMapper.localImagePath(for: imageUrl) {
+                item["imageUrl"] = localImagePath
+            }
+
+            if let img = item["img"] as? String,
+               let localImagePath = MockImageMapper.localImagePath(for: img) {
+                item["img"] = localImagePath
+            }
+
+            dataArray[index] = item
         }
 
         json["data"] = dataArray
