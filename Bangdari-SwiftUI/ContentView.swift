@@ -246,29 +246,60 @@ private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
                 return
             }
 
-            guard let tabBar = tabBarController?.tabBar,
-                  let tabBarSuperview = tabBar.superview else { return }
+            let tabBars = collectTargetTabBars()
+            guard !tabBars.isEmpty else { return }
 
-            applyItemSpacing(on: tabBar)
+            for tabBar in tabBars {
+                guard let tabBarSuperview = tabBar.superview else { continue }
 
-            let defaultHeight = tabBar.sizeThatFits(CGSize(width: tabBar.frame.width, height: 0)).height
-            let targetHeight = defaultHeight + extraHeight
+                applyItemSpacing(on: tabBar)
 
-            guard abs(tabBar.frame.height - targetHeight) > 0.5 else { return }
+                let defaultHeight = tabBar.sizeThatFits(CGSize(width: tabBar.frame.width, height: 0)).height
+                let targetHeight = defaultHeight + extraHeight
+                let targetY = tabBarSuperview.bounds.height - targetHeight
 
-            var frame = tabBar.frame
-            frame.size.height = targetHeight
-            frame.origin.y = tabBarSuperview.bounds.height - targetHeight
-            tabBar.frame = frame
+                var frame = tabBar.frame
+                if abs(frame.height - targetHeight) > 0.5 || abs(frame.origin.y - targetY) > 0.5 {
+                    frame.size.height = targetHeight
+                    frame.origin.y = targetY
+                    tabBar.frame = frame
+                }
 
-            tabBar.setNeedsLayout()
-            tabBar.layoutIfNeeded()
-            applyItemSpacing(on: tabBar)
+                tabBar.setNeedsLayout()
+                tabBar.layoutIfNeeded()
+                applyItemSpacing(on: tabBar)
 
-            DispatchQueue.main.async { [weak tabBar] in
-                guard let tabBar else { return }
-                self.applyItemSpacing(on: tabBar)
+                DispatchQueue.main.async { [weak self, weak tabBar] in
+                    guard let self, let tabBar else { return }
+                    self.applyItemSpacing(on: tabBar)
+                }
             }
+        }
+
+        private func collectTargetTabBars() -> [UITabBar] {
+            if let currentTabBar = tabBarController?.tabBar {
+                return [currentTabBar]
+            }
+
+            let windows = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+
+            return windows.compactMap { findTabBar(in: $0) }
+        }
+
+        private func findTabBar(in view: UIView) -> UITabBar? {
+            if let tabBar = view as? UITabBar {
+                return tabBar
+            }
+
+            for subview in view.subviews {
+                if let found = findTabBar(in: subview) {
+                    return found
+                }
+            }
+
+            return nil
         }
 
         private func applyItemSpacing(on tabBar: UITabBar) {
