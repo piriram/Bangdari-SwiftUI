@@ -99,220 +99,90 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @State private var selectedTab: MainTab = .home
-    private static var didConfigureTabBarAppearance = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 MainView()
             }
-            .tabItem {
-                Image(selectedTab == .home ? "TabHomeFill" : "TabHomeEmpty")
-                    .renderingMode(.template)
-                Text("홈")
-            }
             .tag(MainTab.home)
 
             NavigationStack {
                 CommunityListView()
-            }
-            .tabItem {
-                Image(systemName: selectedTab == .community ? "bubble.left.and.bubble.right.fill" : "bubble.left.and.bubble.right")
-                    .renderingMode(.template)
-                Text("커뮤니티")
             }
             .tag(MainTab.community)
 
             NavigationStack {
                 EstateListView(mode: .liked)
             }
-            .tabItem {
-                Image(selectedTab == .like ? "TabLikeFill" : "TabLikeEmpty")
-                    .renderingMode(.template)
-                Text("관심매물")
-            }
             .tag(MainTab.like)
 
             NavigationStack {
                 MyPageView()
             }
-            .tabItem {
-                Image(selectedTab == .my ? "TabMyFill" : "TabMyEmpty")
-                    .renderingMode(.template)
-                Text("설정")
-            }
             .tag(MainTab.my)
         }
-        .modifier(TabBarHeightModifier(extraHeight: 8))
-        .onAppear {
-            MainTabView.configureTabBarAppearanceIfNeeded()
+        .toolbar(.hidden, for: .tabBar)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            customTabBar
         }
         .onChange(of: selectedTab) { _, _ in
             VideoPlayerManager.shared.pause()
         }
     }
 
-    private static func configureTabBarAppearanceIfNeeded() {
-        guard Thread.isMainThread else {
-            DispatchQueue.main.async {
-                configureTabBarAppearanceIfNeeded()
+    private var customTabBar: some View {
+        VStack(spacing: 0) {
+            Divider()
+
+            HStack(spacing: 0) {
+                tabButton(.home, title: "홈")
+                tabButton(.community, title: "커뮤니티")
+                tabButton(.like, title: "관심매물")
+                tabButton(.my, title: "설정")
             }
-            return
+            .padding(.top, 12)
+            .padding(.bottom, 8)
+            .background(Color.gray0)
         }
-
-        guard !didConfigureTabBarAppearance else { return }
-        didConfigureTabBarAppearance = true
-
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(Color.gray0)
-
-        // 비선택 아이템 색상 (gray45)
-        let normalItemAppearance = UITabBarItemAppearance()
-        normalItemAppearance.normal.iconColor = UIColor(Color.gray45)
-        normalItemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
-        normalItemAppearance.normal.titleTextAttributes = [
-            .foregroundColor: UIColor(Color.gray45)
-        ]
-
-        // 선택 아이템 색상 (gray90)
-        normalItemAppearance.selected.iconColor = UIColor(Color.gray90)
-        normalItemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
-        normalItemAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor(Color.gray90)
-        ]
-
-        appearance.stackedLayoutAppearance = normalItemAppearance
-        appearance.inlineLayoutAppearance = normalItemAppearance
-        appearance.compactInlineLayoutAppearance = normalItemAppearance
-
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-    }
-}
-
-// MARK: - Tab Bar Height
-
-private struct TabBarHeightModifier: ViewModifier {
-    let extraHeight: CGFloat
-
-    func body(content: Content) -> some View {
-        content.background(TabBarHeightAdjuster(extraHeight: extraHeight))
-    }
-}
-
-private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
-    let extraHeight: CGFloat
-
-    func makeUIViewController(context: Context) -> TabBarHeightViewController {
-        TabBarHeightViewController(extraHeight: extraHeight)
+        .background(Color.gray0)
     }
 
-    func updateUIViewController(_ uiViewController: TabBarHeightViewController, context: Context) {
-        uiViewController.extraHeight = extraHeight
-        uiViewController.applyHeightAdjustment()
+    private func tabButton(_ tab: MainTab, title: String) -> some View {
+        Button {
+            selectedTab = tab
+        } label: {
+            VStack(spacing: 6) {
+                tabIcon(for: tab)
+                    .font(.system(size: 20, weight: .medium))
+
+                Text(title)
+                    .font(.pretendard(.caption2, .medium))
+                    .lineLimit(1)
+            }
+            .foregroundColor(selectedTab == tab ? Color.gray90 : Color.gray45)
+            .frame(maxWidth: .infinity)
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
-    final class TabBarHeightViewController: UIViewController {
-        var extraHeight: CGFloat
-
-        init(extraHeight: CGFloat) {
-            self.extraHeight = extraHeight
-            super.init(nibName: nil, bundle: nil)
-            view.backgroundColor = .clear
-            view.isUserInteractionEnabled = false
-        }
-
-        @available(*, unavailable)
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-
-        override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-            applyHeightAdjustment()
-        }
-
-        override func viewDidLayoutSubviews() {
-            super.viewDidLayoutSubviews()
-            applyHeightAdjustment()
-        }
-
-        func applyHeightAdjustment() {
-            guard Thread.isMainThread else {
-                DispatchQueue.main.async { [weak self] in
-                    self?.applyHeightAdjustment()
-                }
-                return
-            }
-
-            let tabBars = collectTargetTabBars()
-            guard !tabBars.isEmpty else { return }
-
-            for tabBar in tabBars {
-                guard let tabBarSuperview = tabBar.superview else { continue }
-
-                applyItemSpacing(on: tabBar)
-
-                let defaultHeight = tabBar.sizeThatFits(CGSize(width: tabBar.frame.width, height: 0)).height
-                let targetHeight = defaultHeight + extraHeight
-                let targetY = tabBarSuperview.bounds.height - targetHeight
-
-                var frame = tabBar.frame
-                if abs(frame.height - targetHeight) > 0.5 || abs(frame.origin.y - targetY) > 0.5 {
-                    frame.size.height = targetHeight
-                    frame.origin.y = targetY
-                    tabBar.frame = frame
-                }
-
-                tabBar.setNeedsLayout()
-                tabBar.layoutIfNeeded()
-                applyItemSpacing(on: tabBar)
-
-                DispatchQueue.main.async { [weak self, weak tabBar] in
-                    guard let self, let tabBar else { return }
-                    self.applyItemSpacing(on: tabBar)
-                }
-            }
-        }
-
-        private func collectTargetTabBars() -> [UITabBar] {
-            if let currentTabBar = tabBarController?.tabBar {
-                return [currentTabBar]
-            }
-
-            let windows = UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap { $0.windows }
-
-            return windows.compactMap { findTabBar(in: $0) }
-        }
-
-        private func findTabBar(in view: UIView) -> UITabBar? {
-            if let tabBar = view as? UITabBar {
-                return tabBar
-            }
-
-            for subview in view.subviews {
-                if let found = findTabBar(in: subview) {
-                    return found
-                }
-            }
-
-            return nil
-        }
-
-        private func applyItemSpacing(on tabBar: UITabBar) {
-            let verticalOffset: CGFloat = 8
-
-            tabBar.subviews
-                .filter { NSStringFromClass(type(of: $0)).contains("UITabBarButton") }
-                .forEach { button in
-                    var frame = button.frame
-                    guard abs(frame.origin.y - verticalOffset) > 0.5 else { return }
-                    frame.origin.y = verticalOffset
-                    button.frame = frame
-                }
+    @ViewBuilder
+    private func tabIcon(for tab: MainTab) -> some View {
+        switch tab {
+        case .home:
+            Image(selectedTab == .home ? "TabHomeFill" : "TabHomeEmpty")
+                .renderingMode(.template)
+        case .community:
+            Image(systemName: selectedTab == .community ? "bubble.left.and.bubble.right.fill" : "bubble.left.and.bubble.right")
+                .renderingMode(.template)
+        case .like:
+            Image(selectedTab == .like ? "TabLikeFill" : "TabLikeEmpty")
+                .renderingMode(.template)
+        case .my:
+            Image(selectedTab == .my ? "TabMyFill" : "TabMyEmpty")
+                .renderingMode(.template)
         }
     }
 }
