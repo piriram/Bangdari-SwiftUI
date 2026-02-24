@@ -108,12 +108,6 @@ struct LoginView: View {
                 }
             }
 
-            HStack(spacing: 8) {
-                featurePill("실거래 기반")
-                featurePill("맞춤 추천")
-                featurePill("빠른 탐색")
-            }
-
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.deepCoast.opacity(0.08))
                 .frame(height: 84)
@@ -131,20 +125,6 @@ struct LoginView: View {
                 }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func featurePill(_ title: String) -> some View {
-        Text(title)
-            .font(.pretendard(.caption1, .medium))
-            .foregroundColor(.deepWood)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background(Color.gray0.opacity(0.8))
-            .overlay(
-                Capsule()
-                    .stroke(Color.gray30, lineWidth: 1)
-            )
-            .clipShape(Capsule())
     }
 
     // MARK: - Credential Section
