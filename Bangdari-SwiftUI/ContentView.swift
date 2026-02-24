@@ -143,6 +143,7 @@ struct MainTabView: View {
             }
             .tag(MainTab.my)
         }
+        .modifier(TabBarHeightModifier(extraHeight: 8))
         .onAppear {
             MainTabView.configureTabBarAppearanceIfNeeded()
         }
@@ -191,6 +192,73 @@ struct MainTabView: View {
 
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+}
+
+// MARK: - Tab Bar Height
+
+private struct TabBarHeightModifier: ViewModifier {
+    let extraHeight: CGFloat
+
+    func body(content: Content) -> some View {
+        content.background(TabBarHeightAdjuster(extraHeight: extraHeight))
+    }
+}
+
+private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
+    let extraHeight: CGFloat
+
+    func makeUIViewController(context: Context) -> TabBarHeightViewController {
+        TabBarHeightViewController(extraHeight: extraHeight)
+    }
+
+    func updateUIViewController(_ uiViewController: TabBarHeightViewController, context: Context) {
+        uiViewController.extraHeight = extraHeight
+        uiViewController.applyHeightAdjustment()
+    }
+
+    final class TabBarHeightViewController: UIViewController {
+        var extraHeight: CGFloat
+
+        init(extraHeight: CGFloat) {
+            self.extraHeight = extraHeight
+            super.init(nibName: nil, bundle: nil)
+            view.backgroundColor = .clear
+            view.isUserInteractionEnabled = false
+        }
+
+        @available(*, unavailable)
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            applyHeightAdjustment()
+        }
+
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            applyHeightAdjustment()
+        }
+
+        func applyHeightAdjustment() {
+            guard let tabBar = tabBarController?.tabBar,
+                  let tabBarSuperview = tabBar.superview else { return }
+
+            let defaultHeight = tabBar.sizeThatFits(CGSize(width: tabBar.frame.width, height: 0)).height
+            let targetHeight = defaultHeight + extraHeight
+
+            guard abs(tabBar.frame.height - targetHeight) > 0.5 else { return }
+
+            var frame = tabBar.frame
+            frame.size.height = targetHeight
+            frame.origin.y = tabBarSuperview.bounds.height - targetHeight
+            tabBar.frame = frame
+
+            tabBar.setNeedsLayout()
+            tabBar.layoutIfNeeded()
+        }
     }
 }
 
