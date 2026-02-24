@@ -28,7 +28,7 @@ struct LoginView: View {
                 .padding(.top, 28)
                 .padding(.bottom, 24)
             }
-            .background(backgroundGradient)
+            .background(decorativeBackground)
             .onTapGesture {
                 focusedField = nil
             }
@@ -55,29 +55,64 @@ struct LoginView: View {
 
     // MARK: - Background
 
-    private var backgroundGradient: some View {
-        LinearGradient(
-            colors: [
-                Color.brightCream.opacity(0.2),
-                Color.gray0
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
+    private var decorativeBackground: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color.brightCream.opacity(0.35),
+                    Color.gray0,
+                    Color.brightCoast.opacity(0.08)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            Circle()
+                .fill(Color.deepCoast.opacity(0.12))
+                .frame(width: 220)
+                .blur(radius: 20)
+                .offset(x: 150, y: -260)
+
+            Circle()
+                .fill(Color.deepWood.opacity(0.08))
+                .frame(width: 180)
+                .blur(radius: 24)
+                .offset(x: -140, y: 320)
+        }
         .ignoresSafeArea()
     }
 
     // MARK: - Header
 
     private var headerSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("방다리")
-                .font(.pretendard(.title1, .bold))
-                .foregroundColor(.deepWood)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color.deepCoast.opacity(0.18))
+                        .frame(width: 44, height: 44)
 
-            Text("원하는 방을 가장 빠르게 찾는 방법")
-                .font(.pretendard(.body2))
-                .foregroundColor(.gray75)
+                    Image(systemName: "house.fill")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundColor(.deepCoast)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("방다리")
+                        .font(.pretendard(.title1, .bold))
+                        .foregroundColor(.deepWood)
+
+                    Text("원하는 방을 가장 빠르게 찾는 방법")
+                        .font(.pretendard(.body3))
+                        .foregroundColor(.gray75)
+                }
+            }
+
+            HStack(spacing: 8) {
+                featurePill("실거래 기반")
+                featurePill("맞춤 추천")
+                featurePill("빠른 탐색")
+            }
 
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.deepCoast.opacity(0.08))
@@ -96,6 +131,20 @@ struct LoginView: View {
                 }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func featurePill(_ title: String) -> some View {
+        Text(title)
+            .font(.pretendard(.caption1, .medium))
+            .foregroundColor(.deepWood)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(Color.gray0.opacity(0.8))
+            .overlay(
+                Capsule()
+                    .stroke(Color.gray30, lineWidth: 1)
+            )
+            .clipShape(Capsule())
     }
 
     // MARK: - Credential Section
@@ -181,18 +230,29 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 52)
                     .background(intent.state.canSubmit ? Color.deepCoast : Color.gray45)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(intent.state.canSubmit ? Color.deepCoast.opacity(0.6) : Color.gray45, lineWidth: 1)
+                    )
                     .cornerRadius(12)
+                    .shadow(
+                        color: intent.state.canSubmit ? Color.deepCoast.opacity(0.24) : .clear,
+                        radius: 10,
+                        x: 0,
+                        y: 5
+                    )
             }
             .disabled(!intent.state.canSubmit)
             .accessibilityHint("이메일과 비밀번호를 입력한 뒤 로그인합니다")
         }
         .padding(18)
-        .background(Color.gray0)
+        .background(Color.gray0.opacity(0.95))
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.gray30, lineWidth: 1)
         )
+        .shadow(color: Color.deepWood.opacity(0.08), radius: 16, x: 0, y: 8)
     }
 
     // MARK: - Social Section
@@ -243,6 +303,13 @@ struct LoginView: View {
             .frame(height: 50)
             .cornerRadius(12)
         }
+        .padding(16)
+        .background(Color.gray0.opacity(0.9))
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.gray30, lineWidth: 1)
+        )
     }
 
     // MARK: - SignUp Link
