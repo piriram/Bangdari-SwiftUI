@@ -263,13 +263,25 @@ private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
 
             tabBar.setNeedsLayout()
             tabBar.layoutIfNeeded()
+            applyItemSpacing(on: tabBar)
+
+            DispatchQueue.main.async { [weak tabBar] in
+                guard let tabBar else { return }
+                self.applyItemSpacing(on: tabBar)
+            }
         }
 
         private func applyItemSpacing(on tabBar: UITabBar) {
-            tabBar.items?.forEach { item in
-                item.imageInsets = UIEdgeInsets(top: 8, left: 0, bottom: -8, right: 0)
-                item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
-            }
+            let verticalOffset: CGFloat = 6
+
+            tabBar.subviews
+                .filter { NSStringFromClass(type(of: $0)).contains("UITabBarButton") }
+                .forEach { button in
+                    var frame = button.frame
+                    guard abs(frame.origin.y - verticalOffset) > 0.5 else { return }
+                    frame.origin.y = verticalOffset
+                    button.frame = frame
+                }
         }
     }
 }
