@@ -57,8 +57,14 @@ final class CommunityListIntent: ObservableObject {
         state.nextCursor = nil
         state.hasMore = true
 
-        // 위치 기반 조회
-        if let location = state.currentLocation ?? locationManager.location?.coordinate {
+        // 위치 기반 조회 (mock에서는 기본 좌표로 fallback)
+        let location = state.currentLocation
+            ?? locationManager.location?.coordinate
+            ?? (AppEnvironment.current == .mock
+                ? CLLocationCoordinate2D(latitude: 37.5179, longitude: 126.8948)
+                : nil)
+
+        if let location {
             do {
                 let posts = try await postRepository.fetchPostsByLocation(
                     latitude: location.latitude,

@@ -254,8 +254,7 @@ struct CommunityListView: View {
     }
 
     private func thumbnailURL(for video: VideoResponse) -> URL? {
-        let separator = video.thumbnail_url.hasPrefix("/") ? "" : "/"
-        return URL(string: Secrets.baseURL + separator + video.thumbnail_url)
+        MockImageMapper.resolvedImageURL(from: video.thumbnail_url)
     }
 
     // MARK: - Error View

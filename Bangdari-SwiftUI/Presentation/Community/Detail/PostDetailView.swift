@@ -119,7 +119,7 @@ struct PostDetailView: View {
     private func imageGallery(_ files: [String]) -> some View {
         TabView {
             ForEach(files, id: \.self) { file in
-                KFImage.auth(url: URL(string: Secrets.baseURL + "/" + file))
+                KFImage.auth(url: MockImageMapper.resolvedImageURL(from: file))
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .background(Color.gray.opacity(0.2))
@@ -286,8 +286,7 @@ struct PostDetailView: View {
     // MARK: - Helpers
 
     private func profileImageURL(_ path: String?) -> URL? {
-        guard let path else { return nil }
-        return URL(string: Secrets.baseURL + "/" + path)
+        MockImageMapper.resolvedImageURL(from: path)
     }
 
     private func formatDate(_ dateString: String) -> String {

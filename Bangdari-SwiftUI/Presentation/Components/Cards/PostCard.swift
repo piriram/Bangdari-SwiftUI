@@ -13,7 +13,7 @@ struct PostCard: View {
         VStack(alignment: .leading, spacing: 0) {
             // 이미지 썸네일 (있는 경우)
             if let firstFile = post.files.first,
-               let imageURL = URL(string: Secrets.baseURL + "/" + firstFile) {
+               let imageURL = MockImageMapper.resolvedImageURL(from: firstFile) {
                 KFImage.auth(url: imageURL)
                     .resizable()
                     .aspectRatio(contentMode: .fill)

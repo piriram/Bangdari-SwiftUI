@@ -42,7 +42,7 @@ final class DIContainer: @unchecked Sendable {
         case .live:
             return RemotePostRepository()
         case .mock:
-            return RemotePostRepository() // TODO: MockPostRepository
+            return MockPostRepository()
         }
     }
 
@@ -78,7 +78,7 @@ final class DIContainer: @unchecked Sendable {
         case .live:
             return RemoteVideoRepository()
         case .mock:
-            return RemoteVideoRepository() // TODO: MockVideoRepository
+            return MockVideoRepository()
         }
     }
 }
