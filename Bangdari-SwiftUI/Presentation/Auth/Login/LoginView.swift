@@ -6,49 +6,45 @@ import KakaoSDKAuth
 // MARK: - Login View
 
 struct LoginView: View {
+    private enum Field {
+        case email
+        case password
+    }
+
     @StateObject private var intent = LoginIntent()
     @State private var showSignUp = false
+    @FocusState private var focusedField: Field?
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 32) {
-                Spacer()
-
-                // 로고/타이틀
-                titleSection
-
-                // 입력 필드
-                inputSection
-
-                // 에러 메시지
-                if let error = intent.state.errorMessage {
-                    Text(error)
-                        .font(.caption)
-                        .foregroundColor(.red)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 24) {
+                    headerSection
+                    credentialSection
+                    socialSection
+                    signUpLink
                 }
-
-                // 로그인 버튼
-                loginButton
-
-                // 소셜 로그인 구분선
-                socialDivider
-
-                // 카카오 로그인 버튼
-                kakaoLoginButton
-
-                // 애플 로그인 버튼
-                appleLoginButton
-
-                // 회원가입 링크
-                signUpLink
-
-                Spacer()
+                .padding(.horizontal, 20)
+                .padding(.top, 28)
+                .padding(.bottom, 24)
             }
-            .padding(20)
+            .background(backgroundGradient)
+            .onTapGesture {
+                focusedField = nil
+            }
             .disabled(intent.state.isLoading)
             .overlay {
                 if intent.state.isLoading {
-                    ProgressView()
+                    ZStack {
+                        Color.black.opacity(0.1)
+                            .ignoresSafeArea()
+
+                        ProgressView("로그인 중...")
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 14)
+                            .background(Color.gray0)
+                            .cornerRadius(12)
+                    }
                 }
             }
             .navigationDestination(isPresented: $showSignUp) {
@@ -57,116 +53,196 @@ struct LoginView: View {
         }
     }
 
-    // MARK: - Title Section
+    // MARK: - Background
 
-    private var titleSection: some View {
-        VStack(spacing: 8) {
-            Text("방다리")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-
-            Text("원하는 방을 찾아보세요")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-    }
-
-    // MARK: - Input Section
-
-    private var inputSection: some View {
-        VStack(spacing: 16) {
-            TextField("이메일", text: Binding(
-                get: { intent.state.email },
-                set: { intent.updateEmail($0) }
-            ))
-            .textContentType(.emailAddress)
-            .keyboardType(.emailAddress)
-            .autocapitalization(.none)
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-
-            SecureField("비밀번호", text: Binding(
-                get: { intent.state.password },
-                set: { intent.updatePassword($0) }
-            ))
-            .textContentType(.password)
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
-        }
-    }
-
-    // MARK: - Login Button
-
-    private var loginButton: some View {
-        Button {
-            Task { await intent.login() }
-        } label: {
-            Text("로그인")
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(intent.state.canSubmit ? Color.brown : Color.gray)
-                .foregroundColor(.white)
-                .cornerRadius(12)
-        }
-        .disabled(!intent.state.canSubmit)
-    }
-
-    // MARK: - Social Divider
-
-    private var socialDivider: some View {
-        HStack(spacing: 16) {
-            Rectangle()
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 1)
-
-            Text("또는")
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            Rectangle()
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 1)
-        }
-    }
-
-    // MARK: - Kakao Login Button
-
-    private var kakaoLoginButton: some View {
-        Button {
-            Task { await handleKakaoLogin() }
-        } label: {
-            HStack {
-                Image(systemName: "message.fill")
-                    .foregroundColor(.black)
-                Text("카카오로 시작하기")
-                    .fontWeight(.medium)
-                    .foregroundColor(.black)
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 50)
-            .background(Color(red: 254/255, green: 229/255, blue: 0/255))
-            .cornerRadius(12)
-        }
-    }
-
-    // MARK: - Apple Login Button
-
-    private var appleLoginButton: some View {
-        SignInWithAppleButton(
-            onRequest: { request in
-                request.requestedScopes = [.email, .fullName]
-            },
-            onCompletion: { result in
-                Task {
-                    await handleAppleSignIn(result)
-                }
-            }
+    private var backgroundGradient: some View {
+        LinearGradient(
+            colors: [
+                Color.brightCream.opacity(0.2),
+                Color.gray0
+            ],
+            startPoint: .top,
+            endPoint: .bottom
         )
-        .signInWithAppleButtonStyle(.black)
-        .frame(height: 50)
-        .cornerRadius(12)
+        .ignoresSafeArea()
+    }
+
+    // MARK: - Header
+
+    private var headerSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("방다리")
+                .font(.pretendard(.title1, .bold))
+                .foregroundColor(.deepWood)
+
+            Text("원하는 방을 가장 빠르게 찾는 방법")
+                .font(.pretendard(.body2))
+                .foregroundColor(.gray75)
+
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.deepCoast.opacity(0.08))
+                .frame(height: 84)
+                .overlay(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("실거래 데이터 기반 추천")
+                            .font(.pretendard(.body2, .semiBold))
+                            .foregroundColor(.deepCoast)
+
+                        Text("로그인 후 맞춤 매물과 실시간 소식을 확인해보세요")
+                            .font(.pretendard(.caption1))
+                            .foregroundColor(.gray75)
+                    }
+                    .padding(.horizontal, 16)
+                }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - Credential Section
+
+    private var credentialSection: some View {
+        VStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("이메일")
+                    .font(.pretendard(.caption1, .medium))
+                    .foregroundColor(.gray75)
+
+                TextField("이메일을 입력하세요", text: Binding(
+                    get: { intent.state.email },
+                    set: { intent.updateEmail($0) }
+                ))
+                .textContentType(.emailAddress)
+                .keyboardType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+                .focused($focusedField, equals: .email)
+                .submitLabel(.next)
+                .onSubmit {
+                    focusedField = .password
+                }
+                .padding(.horizontal, 14)
+                .frame(height: 52)
+                .background(Color.gray15)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(focusedField == .email ? Color.deepCoast : Color.gray30, lineWidth: 1)
+                )
+                .cornerRadius(12)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("비밀번호")
+                    .font(.pretendard(.caption1, .medium))
+                    .foregroundColor(.gray75)
+
+                SecureField("비밀번호를 입력하세요", text: Binding(
+                    get: { intent.state.password },
+                    set: { intent.updatePassword($0) }
+                ))
+                .textContentType(.password)
+                .focused($focusedField, equals: .password)
+                .submitLabel(.go)
+                .onSubmit {
+                    Task { await intent.login() }
+                }
+                .padding(.horizontal, 14)
+                .frame(height: 52)
+                .background(Color.gray15)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(focusedField == .password ? Color.deepCoast : Color.gray30, lineWidth: 1)
+                )
+                .cornerRadius(12)
+            }
+
+            if let error = intent.state.errorMessage {
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "exclamationmark.circle.fill")
+                        .foregroundColor(.red)
+                    Text(error)
+                        .font(.pretendard(.caption1))
+                        .foregroundColor(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(12)
+                .background(Color.red.opacity(0.08))
+                .cornerRadius(10)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("오류: \(error)")
+            }
+
+            Button {
+                focusedField = nil
+                Task { await intent.login() }
+            } label: {
+                Text("이메일로 로그인")
+                    .font(.pretendard(.body1, .semiBold))
+                    .foregroundColor(.gray0)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
+                    .background(intent.state.canSubmit ? Color.deepCoast : Color.gray45)
+                    .cornerRadius(12)
+            }
+            .disabled(!intent.state.canSubmit)
+            .accessibilityHint("이메일과 비밀번호를 입력한 뒤 로그인합니다")
+        }
+        .padding(18)
+        .background(Color.gray0)
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.gray30, lineWidth: 1)
+        )
+    }
+
+    // MARK: - Social Section
+
+    private var socialSection: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                Rectangle()
+                    .fill(Color.gray30)
+                    .frame(height: 1)
+
+                Text("또는")
+                    .font(.pretendard(.caption1))
+                    .foregroundColor(.gray60)
+
+                Rectangle()
+                    .fill(Color.gray30)
+                    .frame(height: 1)
+            }
+
+            Button {
+                Task { await handleKakaoLogin() }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "message.fill")
+                    Text("카카오로 시작하기")
+                        .font(.pretendard(.body2, .semiBold))
+                }
+                .foregroundColor(.gray100)
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .background(Color(red: 254 / 255, green: 229 / 255, blue: 0 / 255))
+                .cornerRadius(12)
+            }
+            .accessibilityHint("카카오 계정으로 로그인합니다")
+
+            SignInWithAppleButton(
+                onRequest: { request in
+                    request.requestedScopes = [.email, .fullName]
+                },
+                onCompletion: { result in
+                    Task {
+                        await handleAppleSignIn(result)
+                    }
+                }
+            )
+            .signInWithAppleButtonStyle(.black)
+            .frame(height: 50)
+            .cornerRadius(12)
+        }
     }
 
     // MARK: - SignUp Link
@@ -177,20 +253,20 @@ struct LoginView: View {
         } label: {
             HStack(spacing: 4) {
                 Text("계정이 없으신가요?")
-                    .foregroundColor(.secondary)
+                    .font(.pretendard(.body3))
+                    .foregroundColor(.gray75)
+
                 Text("회원가입")
-                    .fontWeight(.medium)
+                    .font(.pretendard(.body3, .semiBold))
+                    .foregroundColor(.deepCoast)
             }
-            .font(.subheadline)
         }
     }
 
     // MARK: - Helper Methods
 
     private func handleKakaoLogin() async {
-        // 카카오톡 앱 설치 여부 확인
         if UserApi.isKakaoTalkLoginAvailable() {
-            // 카카오톡 앱으로 로그인
             UserApi.shared.loginWithKakaoTalk { oauthToken, error in
                 if let error = error {
                     print("카카오톡 로그인 실패: \(error)")
@@ -202,7 +278,6 @@ struct LoginView: View {
                 }
             }
         } else {
-            // 카카오 계정으로 웹 로그인
             UserApi.shared.loginWithKakaoAccount { oauthToken, error in
                 if let error = error {
                     print("카카오 계정 로그인 실패: \(error)")
@@ -231,7 +306,6 @@ struct LoginView: View {
         case .failure(let error):
             if let authError = error as? ASAuthorizationError,
                authError.code == .canceled {
-                // 사용자가 취소한 경우 에러 메시지 표시하지 않음
                 return
             }
             intent.setErrorMessage("애플 로그인 중 오류가 발생했습니다.")
