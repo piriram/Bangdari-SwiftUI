@@ -58,12 +58,78 @@ struct CommunityListView: View {
 
     private var waterfallContent: some View {
         ScrollView {
-            VStack(spacing: 0) {
-                // 비디오 리스트 (썸네일 only)
+            VStack(spacing: 18) {
+                topControlsSection
                 videoListSection
+                postSection
+            }
+            .padding(.bottom, 24)
+        }
+        .refreshable {
+            await intent.refresh()
+        }
+    }
 
-                // Waterfall 그리드
-                WaterfallGrid(intent.state.posts, id: \.post_id) { post in
+    private var filteredPosts: [PostSummaryResponse] {
+        intent.state.posts.filter { post in
+            let matchesCategory = selectedCategory == nil || post.category == selectedCategory
+            guard matchesCategory else { return false }
+
+            let keyword = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !keyword.isEmpty else { return true }
+
+            return post.title.localizedCaseInsensitiveContains(keyword)
+                || post.content.localizedCaseInsensitiveContains(keyword)
+                || post.creator.nick.localizedCaseInsensitiveContains(keyword)
+        }
+    }
+
+    private var topControlsSection: some View {
+        VStack(spacing: 12) {
+            searchBar
+            categoryFilter
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+    }
+
+    private var postSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("동네 게시글")
+                    .font(.pretendard(.body1, .semiBold))
+                    .foregroundColor(.gray90)
+
+                Spacer()
+
+                Text("\(filteredPosts.count)개")
+                    .font(.pretendard(.caption1, .medium))
+                    .foregroundColor(.gray60)
+            }
+            .padding(.horizontal, 16)
+
+            if filteredPosts.isEmpty {
+                VStack(spacing: 10) {
+                    Image(systemName: "text.bubble")
+                        .font(.system(size: 26))
+                        .foregroundColor(.gray45)
+
+                    Text("조건에 맞는 게시글이 없어요")
+                        .font(.pretendard(.body2, .semiBold))
+                        .foregroundColor(.gray75)
+
+                    Text("검색어나 카테고리를 바꿔서 다시 찾아보세요")
+                        .font(.pretendard(.caption1))
+                        .foregroundColor(.gray60)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 28)
+                .background(Color.gray0)
+                .cornerRadius(16)
+                .padding(.horizontal, 16)
+            } else {
+                WaterfallGrid(filteredPosts, id: \.post_id) { post in
                     NavigationLink(destination: PostDetailView(postId: post.post_id)) {
                         PostCard(post: post)
                     }
@@ -71,21 +137,16 @@ struct CommunityListView: View {
                 }
                 .gridStyle(columns: 2, spacing: 12)
                 .padding(.horizontal, 16)
-                .padding(.top, 16)
-
-                // 더 불러오기
-                if intent.state.hasMore && !intent.state.posts.isEmpty {
-                    ProgressView()
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .onAppear {
-                            Task { await intent.loadMore() }
-                        }
-                }
             }
-        }
-        .refreshable {
-            await intent.refresh()
+
+            if intent.state.hasMore && !intent.state.posts.isEmpty {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 4)
+                    .onAppear {
+                        Task { await intent.loadMore() }
+                    }
+            }
         }
     }
 
@@ -97,9 +158,11 @@ struct CommunityListView: View {
                 .font(.system(size: 16))
                 .foregroundColor(.gray60)
 
-            TextField("게시글 검색", text: $searchText)
+            TextField("제목/내용/작성자 검색", text: $searchText)
                 .font(.pretendardBody2)
                 .foregroundColor(.gray90)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
                 .onSubmit {
                     intent.updateSearchQuery(searchText)
                     Task { await intent.searchPosts() }
@@ -115,41 +178,49 @@ struct CommunityListView: View {
                         .font(.system(size: 16))
                         .foregroundColor(.gray60)
                 }
+                .frame(width: 32, height: 32)
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
         .background(Color.gray0)
-        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.gray30, lineWidth: 1)
+        )
+        .cornerRadius(14)
     }
 
     // MARK: - Category Filter
 
     private var categoryFilter: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                // 전체 버튼
-                FilterChipButton(
-                    title: "전체",
-                    isActive: selectedCategory == nil
-                ) {
-                    selectedCategory = nil
-                    Task { await intent.refresh() }
-                }
+        VStack(alignment: .leading, spacing: 8) {
+            Text("카테고리")
+                .font(.pretendard(.caption1, .medium))
+                .foregroundColor(.gray60)
 
-                // 카테고리 버튼들
-                ForEach(intent.categories, id: \.self) { category in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
                     FilterChipButton(
-                        title: category,
-                        isActive: selectedCategory == category
+                        title: "전체",
+                        isActive: selectedCategory == nil,
+                        style: .filledActive
                     ) {
-                        selectedCategory = category
-                        // TODO: 카테고리별 필터링 기능 추가
-                        // intent.filterByCategory(category)
+                        selectedCategory = nil
+                    }
+
+                    ForEach(intent.categories, id: \.self) { category in
+                        FilterChipButton(
+                            title: category,
+                            isActive: selectedCategory == category,
+                            style: .filledActive
+                        ) {
+                            selectedCategory = category
+                        }
                     }
                 }
+                .padding(.horizontal, 2)
             }
-            .padding(.horizontal, 16)
         }
     }
 
@@ -158,13 +229,27 @@ struct CommunityListView: View {
     private var videoListSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Section Header with Action
-            HStack {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("숏폼 영상")
+                        .font(.pretendard(.body1, .semiBold))
+                        .foregroundColor(.gray90)
+
+                    Text("요즘 인기 있는 방다리 커뮤니티 영상")
+                        .font(.pretendard(.caption1))
+                        .foregroundColor(.gray60)
+                }
+
                 Spacer()
 
                 NavigationLink(destination: VideoListView()) {
-                    Text("더보기")
-                        .font(.pretendard(.caption1, .semiBold))
-                        .foregroundColor(.deepCoast)
+                    HStack(spacing: 4) {
+                        Text("더보기")
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .font(.pretendard(.caption1, .semiBold))
+                    .foregroundColor(.deepCoast)
                 }
             }
 
@@ -249,8 +334,14 @@ struct CommunityListView: View {
                 }
             }
         }
+        .padding(16)
+        .background(Color.gray0)
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.gray30, lineWidth: 1)
+        )
         .padding(.horizontal, 16)
-        .padding(.top, 16)
     }
 
     private func thumbnailURL(for video: VideoResponse) -> URL? {
@@ -261,21 +352,35 @@ struct CommunityListView: View {
 
     private func errorView(_ message: String) -> some View {
         VStack(spacing: 12) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.largeTitle)
-                .foregroundColor(.orange)
+            Image(systemName: "wifi.exclamationmark")
+                .font(.system(size: 30, weight: .semibold))
+                .foregroundColor(.deepCoast)
 
             Text(message)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.pretendard(.body2))
+                .foregroundColor(.gray75)
                 .multilineTextAlignment(.center)
 
             Button("다시 시도") {
                 Task { await intent.loadPosts() }
             }
-            .buttonStyle(.bordered)
+            .font(.pretendard(.body3, .semiBold))
+            .foregroundColor(.gray0)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 8)
+            .background(Color.deepCoast)
+            .cornerRadius(10)
         }
-        .padding()
+        .padding(.horizontal, 24)
+        .padding(.vertical, 28)
+        .background(Color.gray0)
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.gray30, lineWidth: 1)
+        )
+        .padding(.horizontal, 16)
+        .frame(maxHeight: .infinity)
     }
 }
 

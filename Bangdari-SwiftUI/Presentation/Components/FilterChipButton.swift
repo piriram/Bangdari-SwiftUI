@@ -18,10 +18,10 @@ struct FilterChipButton: View {
                 .foregroundColor(foregroundColor)
                 .padding(.horizontal, 12)
                 .frame(height: 32)
-                .background(Color.gray0)
+                .background(backgroundColor)
                 .overlay(
                     Capsule()
-                        .stroke(strokeColor, lineWidth: 2)
+                        .stroke(strokeColor, lineWidth: 1.2)
                 )
                 .clipShape(Capsule())
         }
@@ -33,7 +33,7 @@ struct FilterChipButton: View {
         case .outlined:
             return isActive ? .brightWood : .gray75
         case .filledActive:
-            return isActive ? .brightWood : .gray75
+            return isActive ? .gray0 : .gray75
         }
     }
 
