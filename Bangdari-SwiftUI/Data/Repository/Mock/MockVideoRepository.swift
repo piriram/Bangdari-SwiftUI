@@ -22,16 +22,13 @@ final class MockVideoRepository: VideoRepository {
 
     func fetchStreamURL(videoId: String) async throws -> VideoStreamResponse {
         let videos: VideoPaginationResponse = try loadJSON(filename: "videos")
-        let fileName = videos.data.first(where: { $0.video_id == videoId })?.file_name ?? "video_1"
+        let sourceFileName = videos.data.first(where: { $0.video_id == videoId })?.file_name ?? "video_1"
+        let playbackFileName = mappedPlaybackFileName(from: sourceFileName)
 
         return try decodeFromJSONObject([
             "video_id": videoId,
-            "stream_url": "/data/videos/\(fileName)/master.m3u8",
-            "qualities": [
-                ["quality": "720p", "url": "/data/videos/\(fileName)/720p.m3u8"],
-                ["quality": "1080p", "url": "/data/videos/\(fileName)/1080p.m3u8"],
-                ["quality": "480p", "url": "/data/videos/\(fileName)/480p.m3u8"]
-            ],
+            "stream_url": "/data/videos/\(playbackFileName).mp4",
+            "qualities": [],
             "subtitles": []
         ])
     }
@@ -72,6 +69,29 @@ final class MockVideoRepository: VideoRepository {
             "is_liked": video.is_liked,
             "createdAt": video.createdAt
         ]
+    }
+
+    /// Mock 영상 파일명 매핑 (estate_video_* -> 실제 번들 mp4)
+    private func mappedPlaybackFileName(from source: String) -> String {
+        if source.hasPrefix("video_") {
+            return source
+        }
+
+        if source.hasPrefix("estate_video_") {
+            let suffix = source.replacingOccurrences(of: "estate_video_", with: "")
+            if let index = Int(suffix) {
+                switch index {
+                case 1: return "video_1"
+                case 2: return "video_2"
+                case 3: return "video_3"
+                case 4: return "video_2"
+                case 5: return "video_3"
+                default: return "video_1"
+                }
+            }
+        }
+
+        return "video_1"
     }
 }
 

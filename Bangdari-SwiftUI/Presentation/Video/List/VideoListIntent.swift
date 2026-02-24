@@ -176,13 +176,14 @@ final class VideoListIntent: ObservableObject {
             let selectedStreamPath = preferredStreamPath(from: response)
 
             // 🔍 DEBUG: 상대 경로 → 절대 URL 변환
-            let absoluteURL = Secrets.baseURL + selectedStreamPath
+            let resolvedURL = MockImageMapper.resolvedImageURL(from: selectedStreamPath)
+            let playableURL = resolvedURL?.absoluteString ?? (Secrets.baseURL + selectedStreamPath)
             print("🎬 [VIDEO] Prefetched stream URL for \(videoId)")
             print("   📍 Master: \(response.stream_url)")
             print("   🎯 Selected: \(selectedStreamPath)")
-            print("   🌐 Absolute: \(absoluteURL)")
+            print("   🌐 Playable: \(playableURL)")
 
-            state.streamURLCache[videoId] = absoluteURL
+            state.streamURLCache[videoId] = playableURL
         } catch {
             print("❌ Failed to prefetch stream URL for \(videoId): \(error)")
         }
@@ -194,13 +195,14 @@ final class VideoListIntent: ObservableObject {
         do {
             let response = try await repository.fetchStreamURL(videoId: videoId)
             let selectedStreamPath = preferredStreamPath(from: response)
-            let absoluteURL = Secrets.baseURL + selectedStreamPath
+            let resolvedURL = MockImageMapper.resolvedImageURL(from: selectedStreamPath)
+            let playableURL = resolvedURL?.absoluteString ?? (Secrets.baseURL + selectedStreamPath)
             print("🎬 [VIDEO] Prefetched stream URL for \(videoId) (FRESH TOKEN)")
             print("   📍 Master: \(response.stream_url)")
             print("   🎯 Selected: \(selectedStreamPath)")
-            print("   🌐 Absolute: \(absoluteURL)")
+            print("   🌐 Playable: \(playableURL)")
 
-            state.streamURLCache[videoId] = absoluteURL
+            state.streamURLCache[videoId] = playableURL
         } catch {
             print("❌ Failed to prefetch stream URL for \(videoId): \(error)")
         }
