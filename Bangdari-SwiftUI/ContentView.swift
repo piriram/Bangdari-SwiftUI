@@ -239,8 +239,17 @@ private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
         }
 
         func applyHeightAdjustment() {
+            guard Thread.isMainThread else {
+                DispatchQueue.main.async { [weak self] in
+                    self?.applyHeightAdjustment()
+                }
+                return
+            }
+
             guard let tabBar = tabBarController?.tabBar,
                   let tabBarSuperview = tabBar.superview else { return }
+
+            applyItemSpacing(on: tabBar)
 
             let defaultHeight = tabBar.sizeThatFits(CGSize(width: tabBar.frame.width, height: 0)).height
             let targetHeight = defaultHeight + extraHeight
@@ -254,6 +263,13 @@ private struct TabBarHeightAdjuster: UIViewControllerRepresentable {
 
             tabBar.setNeedsLayout()
             tabBar.layoutIfNeeded()
+        }
+
+        private func applyItemSpacing(on tabBar: UITabBar) {
+            tabBar.items?.forEach { item in
+                item.imageInsets = UIEdgeInsets(top: 3, left: 0, bottom: -3, right: 0)
+                item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 5)
+            }
         }
     }
 }
