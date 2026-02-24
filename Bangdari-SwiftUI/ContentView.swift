@@ -141,7 +141,7 @@ struct MainTabView: View {
                 tabButton(.like, title: "관심매물")
                 tabButton(.my, title: "설정")
             }
-            .padding(.top, 12)
+            .padding(.top, 8)
             .padding(.bottom, 8)
             .background(Color.gray0)
         }
