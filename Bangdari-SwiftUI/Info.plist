@@ -19,7 +19,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakaod8d86395b711a71670debadcf4ee2c55</string>
+				<string>kakao04e44fa83414c65767130a731be962a9</string>
 			</array>
 		</dict>
 	</array>
@@ -66,6 +66,6 @@
 		<string>Yeongdeok Haeparang.ttf</string>
 	</array>
 	<key>KAKAO_APP_KEY</key>
-	<string>d8d86395b711a71670debadcf4ee2c55</string>
+	<string>04e44fa83414c65767130a731be962a9</string>
 </dict>
 </plist>

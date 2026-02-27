@@ -33,9 +33,49 @@ import SwiftUI
 ///     Button("완료") { save() }
 /// }
 /// ```
+
+// MARK: - Usage Guidelines
+
+/// ## 네비게이션 바 아이콘 크기 가이드
+///
+/// 모든 네비게이션 바 아이콘은 `DesignSystem.Layout.IconSize` 상수를 사용합니다:
+/// - **보조 아이콘** (위치 등): `IconSize.small` (16pt)
+/// - **주요 버튼** (검색, 리스트, 지도): `IconSize.medium` (20pt)
+/// - **강조 버튼** (찜하기): `IconSize.large` (24pt)
+/// - **뱃지**: `IconSize.xsmall` (14pt)
+///
+/// ## 네비게이션 바 텍스트 크기 가이드
+///
+/// - **네비게이션 바 제목/주요 텍스트**: `.pretendardBody1Bold` (16pt bold)
+/// - **보조 텍스트/위치**: `.pretendardBody2Bold` (14pt semibold)
+///
+/// ## 예시
+/// ```swift
+/// // 위치 + 텍스트
+/// HStack(spacing: 6) {
+///     DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
+///         .foregroundColor(.deepWood)
+///     Text("서울 강남구")
+///         .font(.pretendardBody1Bold)
+///         .foregroundColor(.gray90)
+/// }
+///
+/// // 검색 버튼
+/// Button {
+///     // action
+/// } label: {
+///     DSIconView(.search, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
+///         .foregroundColor(.gray90)
+/// }
+///
+/// // 찜하기 버튼
+/// DSIconView(.likeFill, size: DesignSystem.Layout.IconSize.large, renderingMode: .template)
+///     .foregroundColor(.red)
+/// ```
 struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
     private let showDefaultBackButton: Bool
     private let onBack: (() -> Void)?
+    private let backgroundColor: Color
     private let leadingContent: () -> Leading
     private let centerContent: () -> Center
     private let trailingContent: () -> Trailing
@@ -47,11 +87,13 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
     ///   - trailing: 우측 영역 (ViewBuilder, 기본값: EmptyView)
     init(
         onBack: @escaping () -> Void,
+        backgroundColor: Color = .gray0,
         @ViewBuilder center: @escaping () -> Center,
         @ViewBuilder trailing: @escaping () -> Trailing = { EmptyView() }
     ) where Leading == EmptyView {
         self.showDefaultBackButton = true
         self.onBack = onBack
+        self.backgroundColor = backgroundColor
         self.leadingContent = { EmptyView() }
         self.centerContent = center
         self.trailingContent = trailing
@@ -67,12 +109,14 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
     init(
         showDefaultBackButton: Bool = true,
         onBack: (() -> Void)? = nil,
+        backgroundColor: Color = .gray0,
         @ViewBuilder leading: @escaping () -> Leading,
         @ViewBuilder center: @escaping () -> Center,
         @ViewBuilder trailing: @escaping () -> Trailing = { EmptyView() }
     ) {
         self.showDefaultBackButton = showDefaultBackButton
         self.onBack = onBack
+        self.backgroundColor = backgroundColor
         self.leadingContent = leading
         self.centerContent = center
         self.trailingContent = trailing
@@ -84,9 +128,8 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
             if showDefaultBackButton {
                 // 기본 Back 버튼
                 Button(action: { onBack?() }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.gray90)
+                    DSIconView(.chevron, size: NavBarStyle.iconMedium, renderingMode: .template)
+                        .foregroundColor(NavBarStyle.iconColor)
                 }
             } else {
                 // 커스텀 Leading
@@ -103,22 +146,65 @@ struct CustomNavigationBar<Leading: View, Center: View, Trailing: View>: View {
         }
         .padding(.horizontal, 16)
         .frame(height: 56)
-        .background(Color.gray0)
+        .background(backgroundColor)
     }
 }
 
 // MARK: - Convenience Extensions
 
+// MARK: - Design Tokens
+
+/// 네비게이션 바 디자인 토큰 (MapView 기준)
+///
+/// **사용 예시:**
+/// ```swift
+/// CustomNavigationBar(onBack: { dismiss() }) {
+///     Text("제목")
+///         .font(NavBarStyle.titleFont)
+///         .foregroundColor(NavBarStyle.titleColor)
+/// } trailing: {
+///     DSIconView(.search, size: NavBarStyle.iconLarge, renderingMode: .template)
+///         .foregroundColor(NavBarStyle.iconColor)
+/// }
+/// ```
+struct NavBarStyle {
+    // MARK: - 높이
+    static let height: CGFloat = 56
+
+    // MARK: - 아이콘 크기
+    static let iconSmall: CGFloat = 16   // center 영역용 (location 등)
+    static let iconMedium: CGFloat = 24   // 강조 trailing (search, list, filter 등)
+    static let iconLarge: CGFloat = 32
+    // MARK: - 텍스트
+    static let titleFont = Font.pretendardBody1Bold
+    static let titleColor = Color.gray75
+
+    // MARK: - 아이콘 색상
+    static let iconColor = Color.gray75
+
+    // MARK: - Spacing
+    static let centerSpacing: CGFloat = 6    // center 영역 내부 간격
+    static let trailingSpacing: CGFloat = 12 // trailing 버튼 간 간격
+
+    // MARK: - 버튼 텍스트
+    static let buttonFont = Font.pretendardBody2
+    static let buttonColor = Color.gray75
+    static let buttonColorPrimary = Color.deepWood
+}
+
+// MARK: - Convenience Extensions
+
 extension CustomNavigationBar where Leading == EmptyView, Trailing == EmptyView {
-    /// 제목만 있는 간단한 네비게이션 바
+    /// 제목만 있는 간단한 네비게이션 바 (기존 호환성)
     init(
         onBack: @escaping () -> Void,
+        backgroundColor: Color = .gray0,
         title: String
     ) where Center == Text {
-        self.init(onBack: onBack) {
+        self.init(onBack: onBack, backgroundColor: backgroundColor) {
             Text(title)
-                .font(.pretendardBody1Bold)
-                .foregroundColor(.gray90)
+                .font(NavBarStyle.titleFont)
+                .foregroundColor(NavBarStyle.titleColor)
         }
     }
 }
@@ -132,22 +218,16 @@ extension CustomNavigationBar where Leading == EmptyView, Trailing == EmptyView 
 #Preview("위치 + 지도 버튼") {
     CustomNavigationBar(onBack: {}) {
         HStack(spacing: 6) {
-            Image(dsIcon: .location)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 16, height: 16)
+            DSIconView(.location, size: DesignSystem.Layout.IconSize.small, renderingMode: .template)
                 .foregroundColor(.deepWood)
 
-            Text("서울시, 중구")
+            Text("서울 강남구")
                 .font(.pretendardBody1Bold)
                 .foregroundColor(.gray90)
         }
     } trailing: {
         Button {} label: {
-            Image(dsIcon: .map)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 20, height: 20)
+            DSIconView(.map, size: DesignSystem.Layout.IconSize.medium, renderingMode: .template)
                 .foregroundColor(.gray90)
         }
     }

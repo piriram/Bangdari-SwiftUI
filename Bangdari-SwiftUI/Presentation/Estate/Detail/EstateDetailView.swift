@@ -6,6 +6,7 @@ import SwiftUI
 struct EstateDetailView: View {
     @StateObject private var intent: EstateDetailIntent
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @State private var currentImageIndex = 0
     @State private var navigateToChatRoom = false
 
@@ -15,6 +16,11 @@ struct EstateDetailView: View {
     private var imageHeight: CGFloat {
         UIScreen.main.bounds.width / imageAspectRatio
     }
+
+    // TODO: API 연동 후 creator.phoneNum 사용
+    // - Estate 상세 API 응답에 중개사 전화번호 필드 추가 필요
+    // - UserInfo 구조체에 phoneNum: String? 필드 추가
+    private let tempPhoneNumber = "010-1234-5678"
 
     init(estateId: String) {
         _intent = StateObject(wrappedValue: EstateDetailIntent(estateId: estateId))
@@ -26,14 +32,14 @@ struct EstateDetailView: View {
             if let estate = intent.state.estate {
                 CustomNavigationBar(onBack: { dismiss() }) {
                     Text(estate.title)
-                        .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray90)
+                        .font(NavBarStyle.titleFont)
+                        .foregroundColor(NavBarStyle.titleColor)
                         .lineLimit(1)
                 } trailing: {
                     Button {
                         Task { await intent.toggleLike() }
                     } label: {
-                        DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: 24, renderingMode: .template)
+                        DSIconView(intent.state.isLiked ? .likeFill : .likeEmpty, size: NavBarStyle.iconMedium, renderingMode: .template)
                             .foregroundColor(intent.state.isLiked ? .red : .gray60)
                     }
                     .disabled(intent.state.isLikeLoading)
@@ -41,8 +47,8 @@ struct EstateDetailView: View {
             } else {
                 CustomNavigationBar(onBack: { dismiss() }) {
                     Text("매물 상세")
-                        .font(.pretendardBody1Bold)
-                        .foregroundColor(.gray90)
+                        .font(NavBarStyle.titleFont)
+                        .foregroundColor(NavBarStyle.titleColor)
                 }
             }
 
@@ -132,7 +138,10 @@ struct EstateDetailView: View {
                     onSuccess: { impUid in
                         Task { await intent.validatePayment(impUid: impUid) }
                     },
-                    onCancel: { intent.cancelPayment() }
+                    onCancel: { intent.cancelPayment() },
+                    onFailure: { message in
+                        intent.failPayment(message: message)
+                    }
                 )
             }
         }
@@ -236,7 +245,6 @@ struct EstateDetailView: View {
             // 안심매물 배지 (오른쪽)
             if estate.is_safe_estate {
                 HStack(spacing: 4) {
-                    DSIconView(.safety, size: 14, renderingMode: .template)
                     Text("안심매물")
                         .font(.pretendard(.caption1, .medium))
                 }
@@ -275,13 +283,13 @@ struct EstateDetailView: View {
                     Text("월세")
                         .font(.pretendard(.body2, .medium))
                         .foregroundColor(.gray60)
-                    Text("\(formatPrice(estate.deposit))")
+                    Text("\(estate.formattedPriceInBillion(estate.deposit))만원")
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.gray90)
                     Text("/")
                         .font(.pretendard(.title1))
                         .foregroundColor(.gray60)
-                    Text("\(estate.monthly_rent)")
+                    Text("\(estate.formattedPriceInBillion(estate.monthly_rent))만원")
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.deepCoast)
                 }
@@ -290,7 +298,7 @@ struct EstateDetailView: View {
                     Text("전세")
                         .font(.pretendard(.body2, .medium))
                         .foregroundColor(.gray60)
-                    Text("\(formatPrice(estate.deposit))")
+                    Text("\(estate.formattedPriceInBillion(estate.deposit))만원")
                         .font(.pretendard(.title1, .bold))
                         .foregroundColor(.gray90)
                 }
@@ -300,11 +308,11 @@ struct EstateDetailView: View {
             HStack(spacing: 12) {
                 infoChip(
                     icon: "wonsign.circle",
-                    text: estate.maintenance_fee > 0 ? "\(estate.maintenance_fee)만원" : "별도"
+                    text: estate.maintenance_fee < 0 ? "관리비 \(estate.maintenance_fee.formatted())" : "관리비 별도"
                 )
                 infoChip(
                     icon: "square.grid.3x3",
-                    text: "\(String(format: "%.1f", estate.area))m²"
+                    text: estate.formattedArea()
                 )
                 infoChip(
                     icon: "building.2",
@@ -412,7 +420,7 @@ struct EstateDetailView: View {
     private func conditionRow(_ estate: EstateDetailResponse) -> some View {
         HStack(spacing: 8) {
             if estate.parking_count > 0 {
-                conditionChip(icon: "IconParking", text: "주차 \(estate.parking_count)대 가능", isHighlight: true)
+                conditionChip(icon: "OptionParking", text: "주차 \(estate.parking_count)대 가능", isHighlight: true)
             }
             // 추가 조건들이 있으면 여기에 추가
         }
@@ -424,6 +432,8 @@ struct EstateDetailView: View {
         HStack(spacing: 6) {
             Image(icon)
                 .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
                 .frame(width: 16, height: 16)
             Text(text)
                 .font(.pretendard(.caption1, .medium))
@@ -649,15 +659,15 @@ struct EstateDetailView: View {
                     }
                 }
             } else if icon == .call {
-                // TODO: 전화 걸기 기능
+                // 전화번호에서 하이픈 제거
+                let phoneNumber = tempPhoneNumber.replacingOccurrences(of: "-", with: "")
+                if let url = URL(string: "tel://\(phoneNumber)") {
+                    openURL(url)
+                }
             }
         } label: {
             Image.contactIcon(icon)
-                .frame(width: 18, height: 18)
                 .frame(width: 40, height: 40)
-                .background(Color.deepCream)
-                .cornerRadius(10)
-                .opacity(intent.state.isCreatingChatRoom ? 0.5 : 1.0)
         }
         .disabled(intent.state.isCreatingChatRoom)
     }
@@ -746,15 +756,6 @@ struct EstateDetailView: View {
 
     // MARK: - Helpers
 
-    private func formatPrice(_ price: Int) -> String {
-        if price >= 10000 {
-            let billion = price / 10000
-            let remainder = price % 10000
-            return remainder == 0 ? "\(billion)억" : "\(billion)억 \(remainder)"
-        }
-        return "\(price)"
-    }
-
     private func profileImageURL(_ path: String?) -> URL? {
         guard let path else { return nil }
         return URL(string: APIConfig.baseURL + "/" + path)
@@ -766,10 +767,7 @@ struct EstateDetailView: View {
     }
 
     private func similarPriceText(_ estate: EstateSummaryResponse) -> String {
-        if estate.monthly_rent > 0 {
-            return "월세 \(estate.deposit)/\(estate.monthly_rent)"
-        }
-        return "전세 \(estate.deposit)"
+        return estate.formattedPrice()
     }
 
     @ViewBuilder
@@ -783,28 +781,6 @@ struct EstateDetailView: View {
         } else {
             EmptyView()
         }
-    }
-}
-
-// MARK: - Corner Radius Extension
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-private struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
     }
 }
 

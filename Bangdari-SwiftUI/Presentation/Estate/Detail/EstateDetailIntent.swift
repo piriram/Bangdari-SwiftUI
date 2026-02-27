@@ -72,7 +72,7 @@ final class EstateDetailIntent: ObservableObject {
     // MARK: - Actions
 
     func loadDetail() async {
-        print("🔍 [DEBUG] loadDetail 시작 - estateId: \(estateId)")
+//        print("🔍 [DEBUG] loadDetail 시작 - estateId: \(estateId)")
         state.isLoading = true
         state.errorMessage = nil
 
@@ -81,22 +81,22 @@ final class EstateDetailIntent: ObservableObject {
             async let similar = estateRepository.fetchSimilarEstates()
 
             let detailResult = try await detail
-            print("✅ [DEBUG] 상세 데이터 수신: \(detailResult.title)")
-            print("✅ [DEBUG] files 개수: \(detailResult.files.count)")
-            print("✅ [DEBUG] 옵션 데이터:")
-            print("  - option1 (에어컨): \(detailResult.options.option1)")
-            print("  - option2 (냉장고): \(detailResult.options.option2)")
-            print("  - option3 (세탁기): \(detailResult.options.option3)")
-            print("  - option4: \(detailResult.options.option4)")
-            print("  - option5: \(detailResult.options.option5)")
-            print("  - option6 (전자레인지): \(detailResult.options.option6)")
-            print("  - option7: \(detailResult.options.option7)")
-            print("  - option8: \(detailResult.options.option8)")
-            print("  - option9 (옷장): \(detailResult.options.option9)")
-            print("  - option10 (신발장): \(detailResult.options.option10)")
+//            print("✅ [DEBUG] 상세 데이터 수신: \(detailResult.title)")
+//            print("✅ [DEBUG] files 개수: \(detailResult.files.count)")
+//            print("✅ [DEBUG] 옵션 데이터:")
+//            print("  - option1 (에어컨): \(detailResult.options.option1)")
+//            print("  - option2 (냉장고): \(detailResult.options.option2)")
+//            print("  - option3 (세탁기): \(detailResult.options.option3)")
+//            print("  - option4: \(detailResult.options.option4)")
+//            print("  - option5: \(detailResult.options.option5)")
+//            print("  - option6 (전자레인지): \(detailResult.options.option6)")
+//            print("  - option7: \(detailResult.options.option7)")
+//            print("  - option8: \(detailResult.options.option8)")
+//            print("  - option9 (옷장): \(detailResult.options.option9)")
+//            print("  - option10 (신발장): \(detailResult.options.option10)")
             state.estate = detailResult
             state.similarEstates = (try? await similar) ?? []
-            print("✅ [DEBUG] 유사매물 개수: \(state.similarEstates.count)")
+//            print("✅ [DEBUG] 유사매물 개수: \(state.similarEstates.count)")
         } catch let error as NetworkError {
             print("❌ [DEBUG] NetworkError: \(error.message)")
             state.errorMessage = error.message
@@ -106,7 +106,7 @@ final class EstateDetailIntent: ObservableObject {
         }
 
         state.isLoading = false
-        print("🔍 [DEBUG] loadDetail 종료 - estate: \(state.estate != nil ? "있음" : "없음"), error: \(state.errorMessage ?? "없음")")
+//        print("🔍 [DEBUG] loadDetail 종료 - estate: \(state.estate != nil ? "있음" : "없음"), error: \(state.errorMessage ?? "없음")")
     }
 
     func toggleLike() async {
@@ -206,6 +206,13 @@ final class EstateDetailIntent: ObservableObject {
         state.reservationError = "결제가 취소되었습니다."
     }
 
+    /// 결제 실패
+    func failPayment(message: String) {
+        state.showPaymentWebView = false
+        state.createdOrder = nil
+        state.reservationError = message
+    }
+
     /// 예약 완료 모달 닫기
     func closeReservationSuccess() {
         state.showReservationSuccess = false
@@ -219,6 +226,10 @@ final class EstateDetailIntent: ObservableObject {
     /// 예약 에러 처리
     private func handleReservationError(_ error: NetworkError) {
         switch error {
+        case .badRequest:
+            state.reservationError = "필수값을 채워주세요."
+        case .notFound:
+            state.reservationError = "주문번호를 다시 확인해주세요."
         case .conflict:
             state.reservationError = "이미 예약된 매물입니다."
         case .notParticipant:

@@ -37,6 +37,26 @@ struct MyPageView: View {
                 }
             }
 
+            Section("주문/결제") {
+                NavigationLink {
+                    MyOrderListView()
+                } label: {
+                    HStack {
+                        Image(systemName: "list.clipboard")
+                        Text("내 주문 목록")
+                    }
+                }
+
+                NavigationLink {
+                    PaymentReceiptInputView()
+                } label: {
+                    HStack {
+                        Image(systemName: "doc.text.magnifyingglass")
+                        Text("결제 영수증 조회")
+                    }
+                }
+            }
+
             Section("개발") {
                 NavigationLink {
                     ServerLogView()
@@ -81,7 +101,7 @@ struct MyPageView: View {
     private func logout() async {
         do {
             try await authRepository.logout()
-            NotificationCenter.default.post(name: .didLogout, object: nil)
+            NotificationCenter.default.post(name: .didLogout, object: "사용자 수동 로그아웃")
         } catch {
             errorMessage = "로그아웃 중 오류가 발생했습니다."
             showErrorAlert = true

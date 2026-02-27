@@ -17,8 +17,8 @@ struct PostDetailView: View {
             // 네비게이션 바
             CustomNavigationBar(onBack: { dismiss() }) {
                 Text("게시글")
-                    .font(.pretendardBody1Bold)
-                    .foregroundColor(.gray90)
+                    .font(NavBarStyle.titleFont)
+                    .foregroundColor(NavBarStyle.titleColor)
             } trailing: {
                 likeButton
             }

@@ -87,6 +87,7 @@ struct PostComment: Decodable, Identifiable {
     let content: String
     let creator: UserInfo
     let createdAt: String
+    let updatedAt: String?
     let replies: [PostComment]?
 
     var id: String { comment_id }

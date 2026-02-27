@@ -10,6 +10,7 @@ struct PaymentWebView: View {
     let estateName: String
     let onSuccess: (String) -> Void
     let onCancel: () -> Void
+    let onFailure: (String) -> Void
 
     @Environment(\.dismiss) private var dismiss
 
@@ -25,8 +26,14 @@ struct PaymentWebView: View {
                     dismiss()
                 },
                 onFailed: { response in
-                    print("❌ 결제 실패: \(response?.error_msg ?? "알 수 없는 오류")")
-                    onCancel()
+                    if let impUid = response?.imp_uid, !impUid.isEmpty {
+                        print("⚠️ 실패 콜백이지만 imp_uid 존재, 서버 검증 재시도: \(impUid)")
+                        onSuccess(impUid)
+                    } else {
+                        let message = response?.error_msg ?? "결제가 완료되지 않았습니다."
+                        print("❌ 결제 실패: \(message)")
+                        onFailure(message)
+                    }
                     dismiss()
                 }
             )
@@ -40,6 +47,12 @@ struct PaymentWebView: View {
                 }
             }
         }
+        .onAppear {
+            NotificationCenter.default.post(name: .paymentFlowDidStart, object: nil)
+        }
+        .onDisappear {
+            NotificationCenter.default.post(name: .paymentFlowDidEnd, object: nil)
+        }
     }
 
     private func createPaymentData() -> IamportPayment {
@@ -52,7 +65,7 @@ struct PaymentWebView: View {
             $0.name = estateName
             $0.buyer_name = "홍길동"
             $0.buyer_email = "user@example.com"
-            $0.app_scheme = "bangdari"
+            $0.app_scheme = "bangdari://"
         }
     }
 }

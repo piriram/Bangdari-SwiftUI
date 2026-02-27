@@ -7,6 +7,8 @@ struct EstateCardSmall: View {
     let estate: EstateSummaryResponse
     var isRecommended: Bool = false
 
+    @State private var locationName: String?
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             // 썸네일
@@ -15,79 +17,69 @@ struct EstateCardSmall: View {
                 .scaledToFill()
                 .frame(width: 69, height: 69)
                 .background(Color.gray15)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
 
             // 텍스트 정보
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
                 // 태그 + 카테고리
                 HStack(spacing: 4) {
                     if isRecommended {
                         Text("추천")
-                            .font(.pretendard(.caption2))
-                            .foregroundColor(.deepWood)
-                            .padding(.horizontal, 6)
+                            .font(.pretendard(.caption3,.semiBold))
+                            .foregroundColor(.brightWood)
+                            .padding(.horizontal, 4)
                             .padding(.vertical, 2)
                             .background(Color.brightCream)
-                            .cornerRadius(6)
+                            .cornerRadius(4)
                     }
 
                     Text(estate.category)
-                        .font(.pretendard(.caption1))
-                        .foregroundColor(.gray75)
+                        .font(.pretendard(.caption2,.semiBold))
+                        .foregroundColor(.deepWood)
                 }
 
                 // 가격
-                Text(priceText)
-                    .font(.pretendard(.body2, .semiBold))
+                Text(estate.formattedPrice())
+                    .font(.pretendard(.body3, .bold))
                     .foregroundColor(.gray90)
                     .lineLimit(1)
 
                 // 면적
-                Text(areaText)
+                Text(estate.formattedArea(locationName: locationName))
                     .font(.pretendard(.caption1))
-                    .foregroundColor(.gray75)
+                    .foregroundColor(.gray60)
                     .lineLimit(1)
             }
+            .padding(.vertical,6)
 
-            Spacer(minLength: 0)
         }
         .padding(12)
         .background(Color.gray0)
         .cornerRadius(10)
         .overlay(
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.gray30, lineWidth: 1)
         )
+        .frame(minWidth:190)
+        .onAppear {
+            fetchLocationName()
+        }
     }
+
+    // MARK: - Helpers
 
     private var imageURL: URL? {
         guard let first = estate.files.first else { return nil }
         return URL(string: APIConfig.baseURL + "/" + first)
     }
 
-    private var priceText: String {
-        if estate.monthly_rent > 0 {
-            return "월세 \(formatPrice(estate.deposit))/\(estate.monthly_rent)"
-        } else {
-            return "전세 \(formatPrice(estate.deposit))"
+    private func fetchLocationName() {
+        GeolocationManager.shared.fetchLocationName(
+            latitude: estate.geolocation.latitude,
+            longitude: estate.geolocation.longitude
+        ) { [self] name in
+            locationName = name
         }
-    }
-
-    private var areaText: String {
-        String(format: "%.1fm²", estate.area)
-    }
-
-    private func formatPrice(_ price: Int) -> String {
-        if price >= 10000 {
-            let uk = price / 10000
-            let remain = price % 10000
-            if remain == 0 {
-                return "\(uk)억"
-            } else {
-                return "\(uk)억 \(remain)"
-            }
-        }
-        return "\(price)"
     }
 }
 

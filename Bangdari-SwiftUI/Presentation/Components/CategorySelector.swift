@@ -60,7 +60,7 @@ struct CategorySelector: View {
     var onSelect: ((EstateCategory) -> Void)?
 
     var body: some View {
-        HStack(spacing: 17) {
+        HStack(spacing: 20) {
             ForEach(EstateCategory.allCases) { category in
                 CategoryItem(
                     category: category,
@@ -75,7 +75,7 @@ struct CategorySelector: View {
                 }
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 2)
     }
 }
 

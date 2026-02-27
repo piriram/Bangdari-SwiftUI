@@ -7,6 +7,8 @@ struct EstateCardLarge: View {
     let estate: EstateSummaryResponse
     var viewerCount: Int? = nil
 
+    @State private var locationName: String?
+
     var body: some View {
         ZStack {
             // 배경 이미지
@@ -30,7 +32,7 @@ struct EstateCardLarge: View {
             // 좌상단 HOT 아이콘
             VStack {
                 HStack {
-                    DSIconView(.fire, size: 20, renderingMode: .template)
+                    DSIconView(.fire, size: 24, renderingMode: .template)
                         .foregroundColor(.white)
 
                     Spacer()
@@ -43,15 +45,15 @@ struct EstateCardLarge: View {
             VStack {
                 HStack {
                     Spacer()
-                    VStack(alignment: .trailing, spacing: 4) {
+                    VStack(alignment: .trailing, spacing: 2) {
                         Text(estate.title)
-                            .font(.pretendard(.caption1, .semiBold))
+                            .font(.yeongdeokCaption1())
                             .foregroundColor(.gray0)
                             .multilineTextAlignment(.trailing)
                             .lineLimit(2)
 
-                        Text(priceText)
-                            .font(.pretendard(.body3, .bold))
+                        Text(estate.formattedPrice())
+                            .font(.pretendard(.body1, .bold))
                             .foregroundColor(.gray0)
                     }
                 }
@@ -70,7 +72,7 @@ struct EstateCardLarge: View {
                             .padding(.horizontal, 6)
                             .padding(.vertical, 4)
                             .background(Color.gray60.opacity(0.5))
-                            .cornerRadius(4)
+                            .cornerRadius(6)
 
                         Spacer()
                     }
@@ -83,8 +85,8 @@ struct EstateCardLarge: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("\(estate.area.formatted())m²")
-                        .font(.pretendard(.caption3))
+                    Text(estate.formattedArea(locationName: locationName))
+                        .font(.pretendard(.caption2))
                         .foregroundColor(.gray45)
                 }
             }
@@ -93,6 +95,9 @@ struct EstateCardLarge: View {
         .frame(width: 240, height: 83)
         .cornerRadius(10)
         .clipped()
+        .onAppear {
+            fetchLocationName()
+        }
     }
 
     // MARK: - Helpers
@@ -102,21 +107,13 @@ struct EstateCardLarge: View {
         return URL(string: APIConfig.baseURL + "/" + first)
     }
 
-    private var priceText: String {
-        if estate.monthly_rent > 0 {
-            return "월세 \(formatPrice(estate.deposit))/\(estate.monthly_rent)"
-        } else {
-            return "전세 \(formatPrice(estate.deposit))"
+    private func fetchLocationName() {
+        GeolocationManager.shared.fetchLocationName(
+            latitude: estate.geolocation.latitude,
+            longitude: estate.geolocation.longitude
+        ) { [self] name in
+            locationName = name
         }
-    }
-
-    private func formatPrice(_ price: Int) -> String {
-        if price >= 10000 {
-            let uk = price / 10000
-            let remain = price % 10000
-            return remain == 0 ? "\(uk)억" : "\(uk)억 \(remain)"
-        }
-        return "\(price)"
     }
 }
 

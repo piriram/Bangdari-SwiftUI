@@ -26,6 +26,13 @@ enum DesignSystem {
 
         // MARK: - 아이콘 크기
 
+        /// 아이콘 크기 상수
+        ///
+        /// **네비게이션 바 사용 가이드:**
+        /// - `xsmall` (14pt): 안심 뱃지
+        /// - `small` (16pt): 위치 등 보조 아이콘
+        /// - `medium` (20pt): 검색, 리스트, 지도 등 주요 버튼
+        /// - `large` (24pt): 찜하기 등 강조 버튼
         enum IconSize {
             static let xsmall: CGFloat = 14
             static let small: CGFloat = 16

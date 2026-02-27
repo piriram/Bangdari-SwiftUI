@@ -93,9 +93,9 @@ final class ChatRoomIntent: ObservableObject {
 
         do {
             let messages = try await chatRepository.fetchMessages(roomId: roomId, next: nil)
-            // 메시지를 오래된 순서로 정렬 (위에서 아래로 시간순)
-            state.messages = messages.reversed()
-            state.oldestMessageDate = messages.last?.createdAt
+            // 메시지를 시간순으로 표시 (위 = 오래된 것, 아래 = 최신 것)
+            state.messages = messages
+            state.oldestMessageDate = messages.first?.createdAt
             state.hasMore = !messages.isEmpty
         } catch let error as NetworkError {
             state.errorMessage = error.message
@@ -113,9 +113,9 @@ final class ChatRoomIntent: ObservableObject {
 
         do {
             let messages = try await chatRepository.fetchMessages(roomId: roomId, next: next)
-            // 이전 메시지를 앞에 추가
-            state.messages.insert(contentsOf: messages.reversed(), at: 0)
-            state.oldestMessageDate = messages.last?.createdAt
+            // 이전 메시지를 앞에 추가 (오래된 메시지)
+            state.messages.insert(contentsOf: messages, at: 0)
+            state.oldestMessageDate = messages.first?.createdAt
             state.hasMore = !messages.isEmpty
         } catch {
             // 페이지네이션 에러는 조용히 처리

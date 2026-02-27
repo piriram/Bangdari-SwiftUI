@@ -50,7 +50,36 @@ struct EstateSummaryForOrder: Decodable {
     private enum CodingKeys: String, CodingKey {
         case id, category, title, introduction, thumbnails
         case deposit, monthly_rent, built_year, area, floors
-        case geolocation, created_at, updated_at
+        case geolocation
+        case created_at, createdAt
+        case updated_at, updatedAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        category = try container.decode(String.self, forKey: .category)
+        title = try container.decode(String.self, forKey: .title)
+        introduction = try container.decodeIfPresent(String.self, forKey: .introduction) ?? ""
+        thumbnails = try container.decodeIfPresent([String].self, forKey: .thumbnails) ?? []
+        deposit = try container.decodeIfPresent(Int.self, forKey: .deposit) ?? 0
+        monthly_rent = try container.decodeIfPresent(Int.self, forKey: .monthly_rent) ?? 0
+        built_year = try container.decodeIfPresent(String.self, forKey: .built_year) ?? ""
+        area = try container.decodeIfPresent(Double.self, forKey: .area) ?? 0
+        floors = try container.decodeIfPresent(Int.self, forKey: .floors) ?? 0
+        geolocation = try container.decode(Geolocation.self, forKey: .geolocation)
+
+        if let createdAtValue = try container.decodeIfPresent(String.self, forKey: .created_at) {
+            created_at = createdAtValue
+        } else {
+            created_at = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        }
+
+        if let updatedAtValue = try container.decodeIfPresent(String.self, forKey: .updated_at) {
+            updated_at = updatedAtValue
+        } else {
+            updated_at = try container.decodeIfPresent(String.self, forKey: .updatedAt) ?? ""
+        }
     }
 }
 

@@ -9,6 +9,9 @@ struct ContentView: View {
 
     @State private var authState: AuthState = KeychainManager.shared.isLoggedIn ? .loading : .loggedOut
     @Environment(\.scenePhase) private var scenePhase
+    @State private var isPaymentFlowActive = false
+    @State private var pendingLogoutAfterPayment = false
+    @State private var pendingLogoutReason: String?
 
     var body: some View {
         Group {
@@ -27,15 +30,34 @@ struct ContentView: View {
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active && authState == .loggedIn {
+            if newPhase == .active && authState == .loggedIn && !isPaymentFlowActive {
                 refreshTokenSilently()
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .didLogin)) { _ in
             authState = .loggedIn
         }
-        .onReceive(NotificationCenter.default.publisher(for: .didLogout)) { _ in
-            authState = .loggedOut
+        .onReceive(NotificationCenter.default.publisher(for: .didLogout)) { notification in
+            let reason = notification.object as? String ?? "원인 정보 없음"
+            if isPaymentFlowActive {
+                pendingLogoutAfterPayment = true
+                pendingLogoutReason = reason
+                print("🔒 [AUTH] 결제 진행 중 로그아웃 예약: \(reason)")
+            } else {
+                transitionToLoggedOut(reason: reason)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .paymentFlowDidStart)) { _ in
+            isPaymentFlowActive = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .paymentFlowDidEnd)) { _ in
+            isPaymentFlowActive = false
+            if pendingLogoutAfterPayment {
+                let deferredReason = pendingLogoutReason ?? "결제 플로우 종료 후 로그아웃 처리"
+                transitionToLoggedOut(reason: "\(deferredReason) (결제 플로우 종료 후 적용)")
+                pendingLogoutAfterPayment = false
+                pendingLogoutReason = nil
+            }
         }
     }
 
@@ -46,7 +68,7 @@ struct ContentView: View {
                 try await NetworkService.shared.validateAndRefreshToken()
                 authState = .loggedIn
             } catch NetworkError.refreshTokenExpired {
-                authState = .loggedOut
+                transitionToLoggedOut(reason: "앱 시작 토큰 검증 실패: refreshTokenExpired")
             } catch {
                 // 네트워크 단절 등 기타 에러 → 기존 토큰으로 진행 (API 시점에서 갱신 재시도)
                 authState = .loggedIn
@@ -60,11 +82,16 @@ struct ContentView: View {
             do {
                 try await NetworkService.shared.validateAndRefreshToken()
             } catch NetworkError.refreshTokenExpired {
-                authState = .loggedOut
+                transitionToLoggedOut(reason: "포그라운드 복귀 토큰 검증 실패: refreshTokenExpired")
             } catch {
                 // 기타 에러는 무시 (다음 API 호출 시 자동 갱신 로직이 처리)
             }
         }
+    }
+
+    private func transitionToLoggedOut(reason: String) {
+        print("🔒 [AUTH] 로그인 화면 전환 원인: \(reason)")
+        authState = .loggedOut
     }
 }
 
@@ -72,10 +99,7 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @State private var selectedTab: MainTab = .home
-
-    init() {
-        configureTabBarAppearance()
-    }
+    private static var didConfigureTabBarAppearance = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -100,16 +124,6 @@ struct MainTabView: View {
             .tag(MainTab.community)
 
             NavigationStack {
-                VideoListView()
-            }
-            .tabItem {
-                Image(systemName: selectedTab == .video ? "play.rectangle.fill" : "play.rectangle")
-                    .renderingMode(.template)
-                Text("비디오")
-            }
-            .tag(MainTab.video)
-
-            NavigationStack {
                 EstateListView(mode: .liked)
             }
             .tabItem {
@@ -129,14 +143,25 @@ struct MainTabView: View {
             }
             .tag(MainTab.my)
         }
-        .onChange(of: selectedTab) { _, newTab in
-            if newTab != .video {
-                VideoPlayerManager.shared.pause()
-            }
+        .onAppear {
+            MainTabView.configureTabBarAppearanceIfNeeded()
+        }
+        .onChange(of: selectedTab) { _, _ in
+            VideoPlayerManager.shared.pause()
         }
     }
 
-    private func configureTabBarAppearance() {
+    private static func configureTabBarAppearanceIfNeeded() {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async {
+                configureTabBarAppearanceIfNeeded()
+            }
+            return
+        }
+
+        guard !didConfigureTabBarAppearance else { return }
+        didConfigureTabBarAppearance = true
+
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(Color.gray0)
@@ -144,12 +169,14 @@ struct MainTabView: View {
         // 비선택 아이템 색상 (gray45)
         let normalItemAppearance = UITabBarItemAppearance()
         normalItemAppearance.normal.iconColor = UIColor(Color.gray45)
+        normalItemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 2)
         normalItemAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor(Color.gray45)
         ]
 
         // 선택 아이템 색상 (gray90)
         normalItemAppearance.selected.iconColor = UIColor(Color.gray90)
+        normalItemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 2)
         normalItemAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor(Color.gray90)
         ]
@@ -166,7 +193,6 @@ struct MainTabView: View {
 private enum MainTab {
     case home
     case community
-    case video
     case like
     case my
 }
@@ -176,6 +202,8 @@ private enum MainTab {
 extension Notification.Name {
     static let didLogin = Notification.Name("didLogin")
     static let didLogout = Notification.Name("didLogout")
+    static let paymentFlowDidStart = Notification.Name("paymentFlowDidStart")
+    static let paymentFlowDidEnd = Notification.Name("paymentFlowDidEnd")
 }
 
 #Preview {
