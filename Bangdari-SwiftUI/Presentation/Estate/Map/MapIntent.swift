@@ -470,15 +470,17 @@ final class MapIntent: ObservableObject {
         //        print("📍 [Clustering] 거리 기반 모드 (span: \(String(format: "%.6f", region.span.latitudeDelta)), distance: \(String(format: "%.0f", clusterDistance))m)")
         
         // 거리 기반 클러스터링
-        var remainingEstates = estates
+        // NOTE: 입력 순서에 따라 결과가 달라지면 마커 깜빡임이 생길 수 있어
+        // estate_id 기준으로 정렬해 클러스터링 결과를 안정화한다.
+        var remainingEstates = estates.sorted { $0.estate_id < $1.estate_id }
         var clusters: [[EstateSummaryResponse]] = []
-        
+
         while !remainingEstates.isEmpty {
             // 첫 번째 매물을 시드로 사용
             let seed = remainingEstates.removeFirst()
             var currentCluster = [seed]
-            
-            // 거리 임계값 내의 모든 매물을 같은 클러스터로 묶기
+
+            // 1-pass로 seed 반경 내 매물 수집
             remainingEstates = remainingEstates.filter { estate in
                 let distance = distanceBetween(seed.geolocation.coordinate, estate.geolocation.coordinate)
                 if distance <= clusterDistance {
@@ -487,21 +489,26 @@ final class MapIntent: ObservableObject {
                 }
                 return true // 남겨둠
             }
-            
+
+            // 클러스터 내부 정렬을 고정해 ID/렌더 순서 안정화
+            currentCluster.sort { $0.estate_id < $1.estate_id }
             clusters.append(currentCluster)
         }
         
         //        print("📍 [Clustering] 클러스터 개수: \(clusters.count)")
         
         // MapCluster로 변환
-        return clusters.enumerated().map { index, groupedEstates in
+        return clusters.map { groupedEstates in
             // 클러스터 중심 계산
             let avgLat = groupedEstates.map(\.geolocation.latitude).reduce(0, +) / Double(groupedEstates.count)
             let avgLng = groupedEstates.map(\.geolocation.longitude).reduce(0, +) / Double(groupedEstates.count)
-            
-            // 안정적인 ID 생성 (첫 번째 매물 ID + 카운트)
-            let id = "cluster-\(groupedEstates.first?.estate_id ?? "unknown")-\(groupedEstates.count)"
-            
+
+            // 안정적인 ID 생성: 첫/끝 estate_id + count
+            // (입력 순서 변경이나 map 순번 변화에 덜 민감)
+            let firstId = groupedEstates.first?.estate_id ?? "unknown"
+            let lastId = groupedEstates.last?.estate_id ?? "unknown"
+            let id = "cluster-\(firstId)-\(lastId)-\(groupedEstates.count)"
+
             return MapCluster(
                 id: id,
                 coordinate: CLLocationCoordinate2D(latitude: avgLat, longitude: avgLng),
