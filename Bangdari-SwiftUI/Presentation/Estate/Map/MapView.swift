@@ -61,9 +61,7 @@ struct EstateMapView: View {
 
                 MapSceneView(
                     position: $position,
-                    clusters: intent.state.clusters,
-                    regionSpan: intent.state.region.span.latitudeDelta,
-                    selectedEstate: selectedEstate,
+                    estates: intent.state.estates,
                     onClusterTap: handleClusterTap,
                     onMapCameraChange: handleMapCameraChange,
                     onMapTap: handleMapTap
