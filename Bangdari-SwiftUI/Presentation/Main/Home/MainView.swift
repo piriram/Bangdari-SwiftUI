@@ -123,11 +123,17 @@ struct MainView: View {
             }
             .navigationDestination(isPresented: $showSearchView) {
                 SearchView { coordinate, span in
-                    navigationPath.append(MapNavigationData(
-                        category: nil,
-                        initialCoordinate: coordinate,
-                        coordinateSpan: span
-                    ))
+                    // 검색 화면 dismiss와 지도 push가 같은 프레임에서 충돌하면
+                    // 간헐적으로 빈 화면이 보이는 이슈가 있어 순차 처리
+                    showSearchView = false
+
+                    DispatchQueue.main.async {
+                        navigationPath.append(MapNavigationData(
+                            category: nil,
+                            initialCoordinate: coordinate,
+                            coordinateSpan: span
+                        ))
+                    }
                 }
             }
         }

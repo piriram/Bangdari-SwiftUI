@@ -12,14 +12,17 @@ struct SearchView: View {
     }
 
     var body: some View {
-        if #available(iOS 26, *) {
-            systemNavigationContent
-                .navigationTitle("검색")
-                .navigationBarTitleDisplayMode(.inline)
-        } else {
-            customNavigationContent
-                .navigationBarHidden(true)
+        Group {
+            if #available(iOS 26, *) {
+                systemNavigationContent
+                    .navigationTitle("검색")
+                    .navigationBarTitleDisplayMode(.inline)
+            } else {
+                customNavigationContent
+                    .navigationBarHidden(true)
+            }
         }
+        .tint(.gray90) // 시스템 back button 색상을 앱 테마와 일치
     }
 
     // MARK: - iOS 26+ (시스템 네비게이션)
@@ -210,21 +213,19 @@ struct SearchView: View {
 
         let (coordinate, span) = result
 
+        if let onSearchCompleted {
+            onSearchCompleted(coordinate, span)
+            return
+        }
+
         dismiss()
 
-        DispatchQueue.main.async {
-            if let onSearchCompleted {
-                onSearchCompleted(coordinate, span)
-                return
-            }
-
-            // MapView로 네비게이션 (부모 View에서 처리)
-            NotificationCenter.default.post(
-                name: Notification.Name("SearchCompleted"),
-                object: nil,
-                userInfo: ["coordinate": coordinate, "span": span]
-            )
-        }
+        // MapView로 네비게이션 (부모 View에서 처리)
+        NotificationCenter.default.post(
+            name: Notification.Name("SearchCompleted"),
+            object: nil,
+            userInfo: ["coordinate": coordinate, "span": span]
+        )
     }
 }
 
