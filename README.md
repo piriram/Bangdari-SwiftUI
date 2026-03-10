@@ -42,12 +42,12 @@
 
 | 분류 | 기술 |
 |------|------|
-| UI / Presentation | SwiftUI, UIKit, WebKit, MapKit, AVKit |
+| UI / Presentation | SwiftUI, UIKit, WebKit, MapKit, AVKit, PhotosUI |
 | Architecture | MVI, Clean Architecture, DIContainer, Repository Pattern |
 | Reactive & State | Combine, Intent + State 기반 단방향 상태 관리 |
 | Networking | URLSession, REST API, Socket.IO, Multipart/Form-Data |
 | Auth / Security | JWT, KeychainManager, Sign in with Apple, Kakao Login |
-| Payment | iamport iOS SDK, KG이니시스 |
+| Payment | iamport iOS SDK, KG이니시스(PG) |
 | Image / Map | Kingfisher, CoreLocation, MapKit |
 | Dependency | Swift Package Manager |
 
