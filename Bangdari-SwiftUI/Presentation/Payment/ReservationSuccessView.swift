@@ -19,7 +19,7 @@ struct ReservationSuccessView: View {
                     .font(.pretendard(.title1, .bold))
                     .foregroundColor(.gray90)
 
-                Text("중개사가 확인 후 연락드릴 예정입니다")
+                Text("집주인이 예약 요청을 확인한 뒤 채팅으로 안내드릴 예정입니다")
                     .font(.pretendard(.body2))
                     .foregroundColor(.gray60)
                     .multilineTextAlignment(.center)
