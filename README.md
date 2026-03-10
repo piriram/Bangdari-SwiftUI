@@ -42,14 +42,13 @@
 
 | 분류 | 기술 |
 |------|------|
-| UI / Presentation | SwiftUI, UIKit, WebKit, MapKit, AVKit, PhotosUI |
-| Architecture | MVI, Clean Architecture, DIContainer, Repository Pattern |
-| Reactive & State | Combine, Intent + State 기반 단방향 상태 관리 |
-| Networking | URLSession, REST API, Socket.IO, Multipart/Form-Data |
+| UI / Presentation | SwiftUI, WebKit, MapKit, AVKit, PhotosUI |
+| Architecture | MVI |
+| Reactive & State | Combine |
+| Networking | URLSession, REST API, Socket.IO |
 | Auth / Security | JWT, KeychainManager, Sign in with Apple, Kakao Login |
-| Payment | iamport iOS SDK, KG이니시스(PG) |
+| Payment | iamport iOS SDK |
 | Image / Map | Kingfisher, CoreLocation, MapKit |
-| Dependency | Swift Package Manager |
 
 ## 핵심 구현
 
