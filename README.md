@@ -43,8 +43,8 @@
 | 분류 | 기술 |
 |------|------|
 | UI / Presentation | SwiftUI, UIKit, WebKit, MapKit, AVKit |
-| Architecture | MVVM, Clean Architecture, DIContainer, Repository Pattern |
-| Reactive & State | Combine, Intent 기반 상태 관리 |
+| Architecture | MVI, Clean Architecture, DIContainer, Repository Pattern |
+| Reactive & State | Combine, Intent + State 기반 단방향 상태 관리 |
 | Networking | URLSession, REST API, Socket.IO, Multipart/Form-Data |
 | Auth / Security | JWT, KeychainManager, Sign in with Apple, Kakao Login |
 | Payment | iamport iOS SDK, KG이니시스 |
