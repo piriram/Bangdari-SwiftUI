@@ -79,9 +79,9 @@ PG사 결제창은 네트워크 지연이나 앱 전환으로 결제가 완료�
 
 ## 개발자
 
-| <img alt="piri" src="https://github.com/pyoram25.png" width="100"> |
+| <img alt="Piri" src="https://github.com/DeveloperAcademy-POSTECH/2024-MC2-M3-Pilltastic/assets/62399318/d390c9ff-e232-457e-8311-fa22d56097f7" width="150"> |
 |:---:|
-| [piri](https://github.com/pyoram25) |
+| [Piri(김소람)](https://github.com/piriram) |
 | iOS 개발 |
 
 ## License
