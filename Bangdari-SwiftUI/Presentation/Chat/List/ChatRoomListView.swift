@@ -57,7 +57,7 @@ struct ChatRoomListView: View {
             Text("채팅 내역이 없습니다")
                 .font(.headline)
                 .foregroundColor(.secondary)
-            Text("매물 상세 페이지에서\n중개사에게 채팅을 시작해보세요")
+            Text("매물 상세 페이지에서\n집주인과 바로 대화를 시작해보세요")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

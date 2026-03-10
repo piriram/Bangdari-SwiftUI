@@ -18,7 +18,7 @@ struct EstateDetailView: View {
     }
 
     // TODO: API 연동 후 creator.phoneNum 사용
-    // - Estate 상세 API 응답에 중개사 전화번호 필드 추가 필요
+    // - Estate 상세 API 응답에 집주인 전화번호 필드 추가 필요
     // - UserInfo 구조체에 phoneNum: String? 필드 추가
     private let tempPhoneNumber = "010-1234-5678"
 
@@ -99,7 +99,7 @@ struct EstateDetailView: View {
                     // Z5b: Comments Section
                     commentsSection(estate)
 
-                    agentSection(estate.creator)
+                    ownerSection(estate.creator)
 
                     // 하단 여백 (CTA 영역)
                     Spacer()
@@ -590,15 +590,15 @@ struct EstateDetailView: View {
         .padding(.top, 20)
     }
 
-    // MARK: - Z5: Agent Section
+    // MARK: - Z5: Owner Section
 
-    private func agentSection(_ creator: UserInfo) -> some View {
+    private func ownerSection(_ creator: UserInfo) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 6) {
                 Image(systemName: "person.circle.fill")
                     .font(.system(size: 16))
                     .foregroundColor(.deepCoast)
-                Text("중개사 정보")
+                Text("집주인 정보")
                     .font(.pretendard(.body2, .semiBold))
                     .foregroundColor(.gray90)
             }
@@ -627,7 +627,7 @@ struct EstateDetailView: View {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 12))
                             .foregroundColor(.deepCoast)
-                        Text("공인중개사")
+                        Text("본인 인증 완료")
                             .font(.pretendard(.caption1, .medium))
                             .foregroundColor(.gray60)
                     }
@@ -653,7 +653,7 @@ struct EstateDetailView: View {
         Button {
             if icon == .chat {
                 Task {
-                    await intent.createChatRoomWithAgent()
+                    await intent.createChatRoomWithOwner()
                     if intent.state.createdChatRoom != nil {
                         navigateToChatRoom = true
                     }

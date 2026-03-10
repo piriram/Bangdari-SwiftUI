@@ -128,7 +128,7 @@ final class EstateDetailIntent: ObservableObject {
         state.isLikeLoading = false
     }
 
-    func createChatRoomWithAgent() async {
+    func createChatRoomWithOwner() async {
         guard let estate = state.estate else { return }
 
         state.isCreatingChatRoom = true
