@@ -46,7 +46,7 @@
 | Architecture | MVI |
 | Reactive & State | Combine |
 | Networking | URLSession, REST API, Socket.IO |
-| Auth / Security | JWT, KeychainManager, Sign in with Apple, Kakao Login |
+| Auth / Security | Apple / Kakao Login, JWT, Keychain Manager |
 | Payment | iamport iOS SDK |
 | Image / Map | Kingfisher, CoreLocation, MapKit |
 
